@@ -7,8 +7,8 @@
 [ext_resource path="res://Scripts/Unit_Selection_Manager.gd" type="Script" id=5]
 [ext_resource path="res://Assets/Sounds/Music/[Maplestory BGM] Chu Chu Island.mp3" type="AudioStream" id=7]
 
-[sub_resource type="ConvexPolygonShape2D" id=1]
-points = PoolVector2Array( 128, 49.9296, 0, 49.9296, 0, 0, 128, 0 )
+[sub_resource type="ConvexPolygonShape2D" id=6]
+points = PoolVector2Array( 128, 48, 0, 48, 0, 0, 128, 0 )
 
 [sub_resource type="ConvexPolygonShape2D" id=4]
 points = PoolVector2Array( 96, 32, 0, 32, 0, 0, 96, 0 )
@@ -27,14 +27,14 @@ points = PoolVector2Array( 0, 10.6644, 64, 10.6644, 64, 64, 0, 64 )
 0/navigation_offset = Vector2( 0, 0 )
 0/shape_offset = Vector2( 0, 0 )
 0/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
-0/shape = SubResource( 1 )
+0/shape = SubResource( 6 )
 0/shape_one_way = false
 0/shape_one_way_margin = 1.0
 0/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
 "one_way_margin": 1.0,
-"shape": SubResource( 1 ),
+"shape": SubResource( 6 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
 } ]
 0/z_index = 0
@@ -104,7 +104,27 @@ cell_size = Vector2( 32, 32 )
 collision_layer = 4
 collision_mask = 0
 format = 1
-tile_data = PoolIntArray( 0, 0, 0, 2, 0, 0, 4, 0, 0, 5, 0, 0, 7, 0, 0, 8, 0, 0, 12, 0, 0, 16, 0, 0, 131072, 2, 0, 131076, 2, 0, 131080, 2, 0, 131084, 2, 0, 131088, 2, 0, 393216, 2, 0, 393220, 2, 0, 393224, 2, 0, 393228, 2, 0, 393232, 2, 0, 655360, 1, 0, 655363, 1, 0, 655366, 1, 0, 655369, 1, 0, 655371, 1, 0, 655373, 1, 0, 655376, 1, 0, 655378, 1, 0 )
+tile_data = PoolIntArray( 0, 0, 0, 2, 0, 0, 4, 0, 0, 5, 0, 0, 7, 0, 0, 8, 0, 0, 12, 0, 0, 16, 0, 0, 131072, 2, 0, 131076, 2, 0, 131080, 2, 0, 131084, 2, 0, 131088, 2, 0, 393216, 2, 0, 393220, 2, 0, 393224, 2, 0, 393228, 2, 0, 393232, 2, 0 )
+
+[node name="YSort" type="YSort" parent="TileMap"]
+
+[node name="Apple" parent="TileMap/YSort" instance=ExtResource( 1 )]
+position = Vector2( 233, 182 )
+
+[node name="Enemy_Dummy" parent="TileMap/YSort" instance=ExtResource( 2 )]
+position = Vector2( 380, 184 )
+
+[node name="Apple2" parent="TileMap/YSort" instance=ExtResource( 1 )]
+position = Vector2( 257, 87 )
+
+[node name="Apple3" parent="TileMap/YSort" instance=ExtResource( 1 )]
+position = Vector2( 255, 281 )
+
+[node name="Enemy_Dummy2" parent="TileMap/YSort" instance=ExtResource( 2 )]
+position = Vector2( 501, 183 )
+
+[node name="Enemy_Dummy3" parent="TileMap/YSort" instance=ExtResource( 2 )]
+position = Vector2( 445, 185 )
 
 [node name="Unit_Selection" type="Control" parent="."]
 anchor_right = 1.0
@@ -116,24 +136,15 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Apple" parent="Unit_Selection" instance=ExtResource( 1 )]
-position = Vector2( 233, 182 )
-
-[node name="Enemy_Dummy" parent="Unit_Selection" instance=ExtResource( 2 )]
-position = Vector2( 380, 184 )
-
-[node name="Apple2" parent="Unit_Selection" instance=ExtResource( 1 )]
-position = Vector2( 257, 87 )
-
-[node name="Apple3" parent="Unit_Selection" instance=ExtResource( 1 )]
-position = Vector2( 255, 281 )
-
-[node name="Enemy_Dummy2" parent="Unit_Selection" instance=ExtResource( 2 )]
-position = Vector2( 501, 183 )
-
-[node name="Enemy_Dummy3" parent="Unit_Selection" instance=ExtResource( 2 )]
-position = Vector2( 445, 185 )
-
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 7 )
 volume_db = -6.992
+
+[node name="TileMap2" type="TileMap" parent="."]
+z_index = -1
+tile_set = SubResource( 3 )
+cell_size = Vector2( 32, 32 )
+collision_layer = 4
+collision_mask = 0
+format = 1
+tile_data = PoolIntArray( 655360, 0, 0, 655364, 0, 0, 655368, 0, 0, 655372, 0, 0, 655376, 0, 0, 655377, 0, 0 )
