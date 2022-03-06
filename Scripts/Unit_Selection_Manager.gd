@@ -10,8 +10,13 @@ var mouse_pos
 var unit_starting_pos
 var holding = false
 
+var unit_UI_scene = preload("res://Scenes/Unit_Interface.tscn")
+var unit_UI
+
 func _ready():
-	pass
+	unit_UI = unit_UI_scene.instance()
+	unit_UI.visible = false
+	add_child(unit_UI)
 	
 func _process(_delta):
 	# guard against queue free
@@ -54,7 +59,9 @@ func _process(_delta):
 			if selected != null:
 				selected.mouse_select = true
 				unit_starting_pos = selected.global_position
-				
+				unit_UI.set_initial_values(null, selected.attack_damage, selected.defense, 
+				selected.attack_speed, selected.movement_speed, selected.max_hp, selected.max_mana)
+				unit_UI.visible = true
 		
 	#-------------------------------------------
 	# Hold + move
@@ -82,4 +89,9 @@ func _process(_delta):
 	#--------------------------------------------
 	
 	#---------------------------------------------
-	# Drop unit, revert to original position if invalid
+	# Unit UI
+	if selected != null:
+		unit_UI.update_values(selected.current_hp, selected.current_mana)
+	else:
+		unit_UI.visible = false
+	

@@ -1,13 +1,17 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Assets/Sprites/GUI/GUI_UnitPanel.png" type="Texture" id=1]
-[ext_resource path="res://Assets/Sprites/GUI/GUI_Heart.png" type="Texture" id=2]
+[ext_resource path="res://Assets/Sprites/GUI/GUI_Movement.png" type="Texture" id=2]
 [ext_resource path="res://Assets/Sprites/apple.png" type="Texture" id=3]
 [ext_resource path="res://Assets/Themes/GUI_Label_Theme.tres" type="Theme" id=4]
 [ext_resource path="res://Assets/Sprites/GUI/Bar_Under.png" type="Texture" id=5]
 [ext_resource path="res://Assets/Sprites/GUI/HP_Bar_Progress.png" type="Texture" id=6]
 [ext_resource path="res://Assets/Sprites/GUI/Bar_Over.png" type="Texture" id=7]
 [ext_resource path="res://Assets/Sprites/GUI/Juice_Bar_Progress.png" type="Texture" id=8]
+[ext_resource path="res://Assets/Sprites/GUI/GUI_AttSpeed.png" type="Texture" id=9]
+[ext_resource path="res://Assets/Sprites/GUI/GUI_Shield.png" type="Texture" id=10]
+[ext_resource path="res://Assets/Sprites/GUI/GUI_Sword.png" type="Texture" id=11]
+[ext_resource path="res://Scripts/Unit_Interface.gd" type="Script" id=12]
 
 [node name="Unit_Interface" type="NinePatchRect"]
 anchor_left = 0.5
@@ -22,6 +26,7 @@ patch_margin_left = 3
 patch_margin_top = 3
 patch_margin_right = 3
 patch_margin_bottom = 3
+script = ExtResource( 12 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -43,7 +48,7 @@ margin_left = 129.0
 margin_top = 6.0
 margin_right = 169.0
 margin_bottom = 46.0
-texture = ExtResource( 2 )
+texture = ExtResource( 11 )
 stretch_mode = 3
 __meta__ = {
 "_edit_use_anchors_": false
@@ -62,7 +67,7 @@ margin_left = 129.0
 margin_top = 16.0
 margin_right = 169.0
 margin_bottom = 56.0
-texture = ExtResource( 2 )
+texture = ExtResource( 10 )
 stretch_mode = 3
 __meta__ = {
 "_edit_use_anchors_": false
@@ -81,7 +86,7 @@ margin_left = 180.0
 margin_top = 6.0
 margin_right = 220.0
 margin_bottom = 46.0
-texture = ExtResource( 2 )
+texture = ExtResource( 9 )
 
 [node name="Label" type="Label" parent="AttSpeed_Symbol"]
 margin_left = 12.0
