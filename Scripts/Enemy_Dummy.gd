@@ -5,6 +5,8 @@ onready var max_hp = 100
 onready var current_hp = 100
 onready var hp_bar = $HP_Bar/ProgressBar
 
+var apple_death_scene = preload("res://Scenes/Apple_Death.tscn")
+
 func _ready():
 	pass
 	
@@ -21,4 +23,8 @@ func attack_hit(enemy, damage):
 		die()
 		
 func die():
+	var apple_death = apple_death_scene.instance()
+	apple_death.global_position = global_position
+	get_node("/root/Testing_Area").add_child(apple_death)
+	
 	queue_free()

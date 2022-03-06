@@ -11,7 +11,10 @@ var unit_starting_pos
 var holding = false
 
 var unit_UI_scene = preload("res://Scenes/Unit_Interface.tscn")
+var drop_sfx = preload("res://Assets/Sounds/SFX/character_drop.wav")
 var unit_UI
+
+onready var sfx = $SFX
 
 func _ready():
 	unit_UI = unit_UI_scene.instance()
@@ -72,12 +75,17 @@ func _process(_delta):
 				unit_starting_pos = selected.global_position
 				
 	if Input.is_action_just_released("left_click"):
-		holding = false
+		
 		if selected != null:
 			if selected.is_colliding():
 				selected.global_position = unit_starting_pos
 				unit_starting_pos = null
 				selected.position_invalid = false
+			else:
+				if holding:
+					sfx.stream = drop_sfx
+					sfx.play()
+		holding = false
 		
 	if holding:
 		selected.global_position = mouse_pos

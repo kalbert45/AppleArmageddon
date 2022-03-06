@@ -53,6 +53,11 @@ var position_invalid = false
 
 onready var attack_range = $Attack_Range
 onready var animation_manager = $AnimationPlayer
+onready var sfx = $SFX
+
+var hit_sfx = preload("res://Assets/Sounds/SFX/attack_sfx.wav")
+var damage_number_scene = preload("res://Scenes/Damage_Number.tscn")
+var apple_death_scene = preload("res://Scenes/Apple_Death.tscn")
 
 #-------------------------------------------------------------
 
@@ -195,11 +200,22 @@ func is_colliding():
 #-----------------------------------------------------------------------
 # Taking damage
 func attack_hit(enemy, damage):
+	var damage_number = damage_number_scene.instance()
+	damage_number.amount = damage
+	damage_number.type = "Unit"
+	add_child(damage_number)
+	
+	sfx.stream = hit_sfx
+	sfx.play()
+	
 	current_hp -= damage
 	if current_hp <= 0:
 		die()
 		
 func die():
-	#play animation here
+	var apple_death = apple_death_scene.instance()
+	apple_death.global_position = global_position
+	get_node("/root/Testing_Area").add_child(apple_death)
+	
 	queue_free()
 
