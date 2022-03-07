@@ -1,10 +1,11 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Scenes/Apple.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scenes/Enemy_Dummy.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Assets/Tilesets/TX Tileset Wall.png" type="Texture" id=3]
 [ext_resource path="res://Assets/Tilesets/TX Tileset Grass.png" type="Texture" id=4]
 [ext_resource path="res://Scenes/Unit_Selection.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Scripts/Camera_Control.gd" type="Script" id=6]
 [ext_resource path="res://Assets/Sounds/Music/[Maplestory BGM] Chu Chu Island.mp3" type="AudioStream" id=7]
 
 [sub_resource type="ConvexPolygonShape2D" id=6]
@@ -104,7 +105,7 @@ cell_size = Vector2( 32, 32 )
 collision_layer = 4
 collision_mask = 0
 format = 1
-tile_data = PoolIntArray( 0, 0, 0, 2, 0, 0, 4, 0, 0, 5, 0, 0, 7, 0, 0, 8, 0, 0, 12, 0, 0, 16, 0, 0, 131072, 2, 0, 131076, 2, 0, 131080, 2, 0, 131084, 2, 0, 131088, 2, 0, 393216, 2, 0, 393220, 2, 0, 393224, 2, 0, 393228, 2, 0, 393232, 2, 0 )
+tile_data = PoolIntArray( 0, 0, 0, 4, 0, 0, 8, 0, 0, 12, 0, 0, 16, 0, 0, 20, 0, 0, 24, 0, 0, 28, 0, 0, 32, 0, 0, 36, 0, 0, 131072, 2, 0, 131076, 2, 0, 131080, 2, 0, 131084, 2, 0, 131088, 2, 0, 131092, 2, 0, 131096, 2, 0, 131100, 2, 0, 131104, 2, 0, 393216, 2, 0, 393220, 2, 0, 393224, 2, 0, 393228, 2, 0, 393232, 2, 0, 393236, 2, 0, 393240, 2, 0, 393244, 2, 0, 393248, 2, 0 )
 
 [node name="TileMap2" type="TileMap" parent="TileMap"]
 z_index = 2
@@ -113,7 +114,7 @@ cell_size = Vector2( 32, 32 )
 collision_layer = 4
 collision_mask = 0
 format = 1
-tile_data = PoolIntArray( 655360, 0, 0, 655364, 0, 0, 655368, 0, 0, 655372, 0, 0, 655376, 0, 0, 655377, 0, 0 )
+tile_data = PoolIntArray( 131108, 2, 0, 393252, 2, 0, 655360, 0, 0, 655364, 0, 0, 655368, 0, 0, 655372, 0, 0, 655376, 0, 0, 655377, 0, 0, 655381, 0, 0, 655385, 0, 0, 655389, 0, 0, 655393, 0, 0, 655397, 0, 0 )
 
 [node name="YSort" type="YSort" parent="TileMap"]
 
@@ -121,7 +122,7 @@ tile_data = PoolIntArray( 655360, 0, 0, 655364, 0, 0, 655368, 0, 0, 655372, 0, 0
 position = Vector2( 233, 182 )
 
 [node name="Enemy_Dummy" parent="TileMap/YSort" instance=ExtResource( 2 )]
-position = Vector2( 380, 184 )
+position = Vector2( 934, 184 )
 
 [node name="Apple2" parent="TileMap/YSort" instance=ExtResource( 1 )]
 position = Vector2( 257, 87 )
@@ -130,10 +131,10 @@ position = Vector2( 257, 87 )
 position = Vector2( 255, 281 )
 
 [node name="Enemy_Dummy2" parent="TileMap/YSort" instance=ExtResource( 2 )]
-position = Vector2( 501, 183 )
+position = Vector2( 1091, 184 )
 
 [node name="Enemy_Dummy3" parent="TileMap/YSort" instance=ExtResource( 2 )]
-position = Vector2( 445, 185 )
+position = Vector2( 1011, 185 )
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 7 )
@@ -151,3 +152,40 @@ margin_left = -320.0
 margin_top = -360.0
 margin_right = 320.0
 margin_bottom = 0.0
+
+[node name="Camera_Control" type="Node2D" parent="HUD"]
+script = ExtResource( 6 )
+
+[node name="Camera2D" type="Camera2D" parent="HUD/Camera_Control"]
+position = Vector2( 320, 180 )
+current = true
+smoothing_enabled = true
+
+[node name="Scout_Button" type="Button" parent="HUD/Camera_Control"]
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_left = 544.0
+margin_top = 165.0
+margin_right = 617.0
+margin_bottom = 193.0
+text = "scout"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Back_Button" type="Button" parent="HUD/Camera_Control"]
+margin_left = 661.0
+margin_top = 171.0
+margin_right = 732.0
+margin_bottom = 192.0
+text = "back"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Tween" type="Tween" parent="HUD/Camera_Control"]
+
+[connection signal="pressed" from="HUD/Camera_Control/Scout_Button" to="HUD/Camera_Control" method="_on_Scout_Button_pressed"]
+[connection signal="pressed" from="HUD/Camera_Control/Back_Button" to="HUD/Camera_Control" method="_on_Back_Button_pressed"]
