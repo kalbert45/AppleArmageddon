@@ -76,7 +76,6 @@ func _process(_delta):
 					unit_starting_pos = selected.global_position
 				
 	if Input.is_action_just_released("left_click"):
-		print(mouse_pos)
 		if selected != null:
 			if not selected.active:
 				if selected.is_colliding():

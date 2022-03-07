@@ -24,10 +24,10 @@ func _ready():
 			print(type + " is not a damage number type")
 			
 
-	tween.interpolate_property(self, 'scale', Vector2(0.7,0.7), Vector2(1,1), 0.1, Tween.TRANS_LINEAR, Tween.EASE_OUT)
+	#tween.interpolate_property(self, 'scale', Vector2(0.7,0.7), Vector2(1,1), 0.1, Tween.TRANS_LINEAR, Tween.EASE_OUT)
 	tween.interpolate_property(self, 'modulate', Color(1,1,1,0), Color(1,1,1,1), 0.1, Tween.TRANS_LINEAR, Tween.EASE_OUT)
 	
-	tween.interpolate_property(self, 'scale', Vector2(1,1), Vector2(0.5,0.5), 0.4, Tween.TRANS_LINEAR, Tween.EASE_OUT, 0.2)
+	#tween.interpolate_property(self, 'scale', Vector2(1,1), Vector2(0.5,0.5), 0.4, Tween.TRANS_LINEAR, Tween.EASE_OUT, 0.2)
 	tween.interpolate_property(self, 'modulate', Color(1,1,1,1), Color(1,1,1,0), 0.4, Tween.TRANS_LINEAR, Tween.EASE_OUT, 0.2)
 	tween.start()
 	

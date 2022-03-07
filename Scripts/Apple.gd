@@ -216,19 +216,25 @@ func is_colliding():
 #-----------------------------------------------------------------------
 # Taking damage
 func attack_hit(enemy, damage):
+	current_hp -= damage
+	if current_hp <= 0:
+		die(damage)
+	
 	var damage_number = damage_number_scene.instance()
 	damage_number.amount = damage
 	damage_number.type = "Unit"
 	add_child(damage_number)
 	
-	current_hp -= damage
-	if current_hp <= 0:
-		die()
 		
-func die():
+func die(damage):
 	var apple_death = apple_death_scene.instance()
 	apple_death.global_position = global_position
-	get_node("/root/Testing_Area").add_child(apple_death)
+	get_node("/root/Main/World").add_child(apple_death)
+	
+	var damage_number = damage_number_scene.instance()
+	damage_number.amount = damage
+	damage_number.type = "Unit"
+	apple_death.add_child(damage_number)
 	
 	queue_free()
 
