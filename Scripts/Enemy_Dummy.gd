@@ -25,6 +25,6 @@ func attack_hit(enemy, damage):
 func die():
 	var apple_death = apple_death_scene.instance()
 	apple_death.global_position = global_position
-	get_node("/root/Testing_Area").add_child(apple_death)
+	get_node("/root/Main/World").add_child(apple_death)
 	
 	queue_free()

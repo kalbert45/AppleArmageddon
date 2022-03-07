@@ -14,6 +14,7 @@ const DEACCEL = 120
 #
 #temp
 var active = false
+var first_target = false
 
 var speed = 0
 var direction = Vector2.ZERO
@@ -55,7 +56,7 @@ onready var attack_range = $Attack_Range
 onready var animation_manager = $AnimationPlayer
 onready var sfx = $SFX
 
-var hit_sfx = preload("res://Assets/Sounds/SFX/attack_sfx.wav")
+var attack_sfx = preload("res://Assets/Sounds/SFX/attack_sfx.wav")
 var damage_number_scene = preload("res://Scenes/Damage_Number.tscn")
 var apple_death_scene = preload("res://Scenes/Apple_Death.tscn")
 
@@ -68,8 +69,8 @@ func _process(delta):
 	process_stat_values(delta)
 	process_mouse(delta)
 	
-	if Input.is_action_just_pressed("ui_select"):
-		active = true
+	#if Input.is_action_just_pressed("ui_select"):
+	#	active = true
 	
 
 func _physics_process(delta):
@@ -106,8 +107,12 @@ func process_mouse(_delta):
 		$Sprite.material.set_shader_param("outline_color", Color(0.99,1,0.25,1))
 		
 	# Keep character in window
-	global_position.x = clamp(global_position.x, 0, get_viewport().size.x)
-	global_position.y = clamp(global_position.y, 0, get_viewport().size.y)
+	if not active:
+		global_position.x = clamp(global_position.x, 0, get_viewport().size.x)
+		global_position.y = clamp(global_position.y, 0, get_viewport().size.y)
+	else:
+		global_position.x = clamp(global_position.x, 0, 2*get_viewport().size.x)
+		global_position.y = clamp(global_position.y, 0, 2*get_viewport().size.y)
 #-------------------------------------------------------------
 
 #--------------------------------------------------------------
@@ -132,12 +137,19 @@ func process_movement(delta):
 			if animation_manager.current_state != ATTACK_ANIM_NAME:
 				animation_manager.set_animation(ATTACK_ANIM_NAME)
 			
-		# Return to idle
+		# Run until first target, else return to idle
 		else:
-			speed -= DEACCEL * delta
-			if animation_manager.current_state == MOVEMENT_ANIM_NAME:
-				animation_manager.set_animation(IDLE_ANIM_NAME)
+			if not first_target:
+				direction = Vector2(1,0)
+				speed += ACCEL * delta
+				if animation_manager.current_state == IDLE_ANIM_NAME:
+					animation_manager.set_animation(MOVEMENT_ANIM_NAME)
+			else:
+				speed -= DEACCEL * delta
+				if animation_manager.current_state == MOVEMENT_ANIM_NAME:
+					animation_manager.set_animation(IDLE_ANIM_NAME)
 	else:
+		# deaccel while casting
 		speed -= DEACCEL * delta
 
 	speed = clamp(speed, 0, movement_speed)
@@ -153,6 +165,7 @@ func _on_Aggro_Area_body_entered(body):
 	if target == null:
 		if body.is_in_group("Enemies"):
 			target = body
+			first_target = true
 			
 
 #Re-targeting
@@ -181,6 +194,9 @@ func basic_attack():
 		target.attack_hit(self, attack_damage)
 		current_mana += 20
 		
+		sfx.stream = attack_sfx
+		sfx.play()
+		
 func cast_attack():
 	if target != null:
 		target.attack_hit(self, 2*attack_damage)
@@ -204,9 +220,6 @@ func attack_hit(enemy, damage):
 	damage_number.amount = damage
 	damage_number.type = "Unit"
 	add_child(damage_number)
-	
-	sfx.stream = hit_sfx
-	sfx.play()
 	
 	current_hp -= damage
 	if current_hp <= 0:

@@ -28,7 +28,7 @@ func _process(_delta):
 	if not is_instance_valid(hovered):
 		hovered = null
 	
-	mouse_pos = get_node("/root/Testing_Area").get_global_mouse_position()
+	mouse_pos = get_node("/root/Main").get_global_mouse_position()
 	
 	var space_state = get_world_2d().get_direct_space_state()
 	var result = space_state.intersect_point(mouse_pos, 1, [], 1)
@@ -56,7 +56,6 @@ func _process(_delta):
 	# Selection
 	if selected != hovered:
 		if Input.is_action_just_pressed("left_click"):
-			print(mouse_pos)
 			if selected != null:
 				selected.mouse_select = false
 			selected = hovered
@@ -71,21 +70,23 @@ func _process(_delta):
 	# Hold + move
 	else:
 		if selected != null:
-			if Input.is_action_just_pressed("left_click"):
-				holding = true
-				unit_starting_pos = selected.global_position
+			if not selected.active:
+				if Input.is_action_just_pressed("left_click"):
+					holding = true
+					unit_starting_pos = selected.global_position
 				
 	if Input.is_action_just_released("left_click"):
 		print(mouse_pos)
 		if selected != null:
-			if selected.is_colliding():
-				selected.global_position = unit_starting_pos
-				unit_starting_pos = null
-				selected.position_invalid = false
-			else:
-				if holding:
-					sfx.stream = drop_sfx
-					sfx.play()
+			if not selected.active:
+				if selected.is_colliding():
+					selected.global_position = unit_starting_pos
+					unit_starting_pos = null
+					selected.position_invalid = false
+				else:
+					if holding:
+						sfx.stream = drop_sfx
+						sfx.play()
 		holding = false
 		
 	if holding:
