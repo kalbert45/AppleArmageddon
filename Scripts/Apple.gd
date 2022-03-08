@@ -39,6 +39,8 @@ var attacking_mode = "Default"
 
 var mouse_hover = false
 var mouse_select = false
+
+var initial_pos = Vector2.ZERO
 #----************************************************-----
 #----------------------------------------------------------
 
@@ -51,6 +53,9 @@ var current_mana = 20
 var position_invalid = false
 #-****************************************************---
 #--------------------------------------------------------
+# Apple exclusive variable
+var label = "Apple"
+#------------------------------------------------------
 
 onready var attack_range = $Attack_Range
 onready var animation_manager = $AnimationPlayer
@@ -64,6 +69,7 @@ var apple_death_scene = preload("res://Scenes/Apple_Death.tscn")
 
 func _ready():
 	animation_manager.set_animation(IDLE_ANIM_NAME)
+	global_position = initial_pos
 	
 func _process(delta):
 	process_stat_values(delta)

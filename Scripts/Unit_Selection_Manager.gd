@@ -90,6 +90,7 @@ func _process(_delta):
 		
 	if holding:
 		selected.global_position = mouse_pos
+		selected.initial_pos = mouse_pos
 		if selected.is_colliding():
 			selected.position_invalid = true
 		else:
