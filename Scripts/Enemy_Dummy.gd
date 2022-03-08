@@ -1,5 +1,7 @@
 extends KinematicBody2D
 
+signal death
+
 var count = 0
 onready var max_hp = 100
 onready var current_hp = 100
@@ -30,6 +32,8 @@ func attack_hit(enemy, damage):
 	
 		
 func die(damage):
+	emit_signal("death")
+	
 	var apple_death = apple_death_scene.instance()
 	apple_death.global_position = global_position
 	get_node("/root/Main/World").add_child(apple_death)

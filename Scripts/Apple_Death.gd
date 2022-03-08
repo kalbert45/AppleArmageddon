@@ -5,6 +5,7 @@ onready var sfx = $SFX
 var rng = RandomNumberGenerator.new()
 
 func _ready():
+	
 	rng.randomize()
 	sfx.pitch_scale = rng.randf_range(0.8,1.2)
 	$Particles2D.emitting = true

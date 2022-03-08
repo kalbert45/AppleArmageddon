@@ -1,10 +1,13 @@
 extends CanvasLayer
 
+signal quit_to_title
+
 onready var color_rect = $ColorRect
 onready var resume_button = $Resume_Button
 onready var options_button = $Options_Button
 onready var quit_title_button = $Quit_Title_Button
 onready var quit_game_button = $Quit_Game_Button
+onready var menu_button = $Menu_Button
 
 var active = false
 
@@ -20,6 +23,10 @@ func _process(delta):
 
 func popup():
 	get_tree().paused = true
+	
+	menu_button.visible = false
+	menu_button.mouse_filter = menu_button.MOUSE_FILTER_IGNORE
+	menu_button.disabled = true
 	
 	active = true
 	
@@ -43,6 +50,10 @@ func popup():
 func resume():
 	get_tree().paused = false
 	
+	menu_button.visible = true
+	menu_button.mouse_filter = menu_button.MOUSE_FILTER_STOP
+	menu_button.disabled = false
+	
 	active = false
 	
 	color_rect.visible = false
@@ -61,3 +72,18 @@ func resume():
 	options_button.disabled = true
 	quit_title_button.disabled = true
 	quit_game_button.disabled = true
+
+
+func _on_Resume_Button_pressed():
+	resume()
+
+func _on_Quit_Title_Button_pressed():
+	emit_signal("quit_to_title")
+
+func _on_Quit_Game_Button_pressed():
+	get_tree().quit()
+
+
+
+func _on_Menu_Button_pressed():
+	popup()

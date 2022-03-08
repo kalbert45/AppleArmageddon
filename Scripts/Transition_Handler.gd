@@ -13,7 +13,8 @@ func transition(from_scenes, to_scenes):
 	animation_player.play("fade_out")
 	yield(animation_player, "animation_finished")
 	for from_scene in from_scenes:
-		from_scene.queue_free()
+		if is_instance_valid(from_scene):
+			from_scene.queue_free()
 	for to_scene in to_scenes:
 		to_scene[0].add_child(to_scene[1])
 	get_tree().paused = false

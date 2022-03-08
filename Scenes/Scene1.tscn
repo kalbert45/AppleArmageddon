@@ -1,8 +1,9 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Assets/Sounds/Music/[Maplestory BGM] Chu Chu Island.mp3" type="AudioStream" id=1]
 [ext_resource path="res://Assets/Tilesets/TX Tileset Wall.png" type="Texture" id=2]
 [ext_resource path="res://Assets/Tilesets/TX Tileset Grass.png" type="Texture" id=3]
+[ext_resource path="res://Scripts/Scene1.gd" type="Script" id=4]
 [ext_resource path="res://Scenes/Apple.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Scenes/Enemy_Dummy.tscn" type="PackedScene" id=6]
 
@@ -95,6 +96,7 @@ points = PoolVector2Array( 0, 10.6644, 64, 10.6644, 64, 64, 0, 64 )
 3/z_index = 0
 
 [node name="Stage1" type="Node2D"]
+script = ExtResource( 4 )
 
 [node name="TileMap" type="TileMap" parent="."]
 z_index = -2
