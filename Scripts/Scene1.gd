@@ -1,10 +1,13 @@
 extends Node2D
 
+signal update_money
 signal stage_cleared
 signal defeat
 
 var enemies
-var money = 0
+
+var shop_scene = preload("res://Scenes/Shop.tscn")
+var shop
 
 var apple_scene = preload("res://Scenes/Apple.tscn")
 
@@ -16,20 +19,23 @@ func _ready():
 	for enemy in enemies:
 		enemy.connect("death", self, "_on_enemy_death")
 		
+	shop = shop_scene.instance()
+	shop.global_position = Vector2(480, 80)
+	shop.units_node_target = units_node
+	shop.connect("update_money", self, "_on_update_money")
+	add_child(shop)
+		
 func _on_enemy_death():
 	if get_tree().get_nodes_in_group("Enemies").size() == 1:
 		yield(get_tree().create_timer(0.5), "timeout")
 		emit_signal("stage_cleared")
 
 # saved_data is dictionary with keys: Money, Units, Enemies, Tilemap
-func load_data(saved_data):
-	print(saved_data)
-	for unit in saved_data["Units"]:
+func load_data():
+	for unit in Global.units:
 		var instance = unit[0].instance()
 		instance.initial_pos = unit[1]
 		units_node.add_child(instance)
-		
-	money = saved_data["Money"]
 
 func save_data():
 	var units = []
@@ -38,4 +44,10 @@ func save_data():
 			"Apple":
 				units.append([apple_scene, unit.initial_pos])
 		
-	return {"Units": units, "Money": money}
+	Global.units = units
+
+func _on_update_money():
+	emit_signal("update_money")
+	
+func disable_shop():
+	shop.queue_free()

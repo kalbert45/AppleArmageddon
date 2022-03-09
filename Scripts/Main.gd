@@ -20,15 +20,14 @@ var menu
 var title
 var map
 
-var saved_data = null
-
 func _ready():
 	title = title_screen.instance()
 	title.connect("start_game", self, "_on_Title_Screen_start_game")
 	HUD.add_child(title)
 	
-	if saved_data == null:
-		saved_data = {"Units": [[load("res://Scenes/Apple.tscn"), Vector2(240,180)]], "Money": 10}
+	if Global.units.empty():
+		Global.units.append([load("res://Scenes/Apple.tscn"), Vector2(240,180)])
+		Global.money = 10
 
 func _on_Title_Screen_start_game():
 	stage = scene1.instance()
@@ -40,17 +39,21 @@ func _on_Title_Screen_start_game():
 	[HUD, unit_UI], [HUD, camera_UI], [self, menu]])
 	
 	yield(stage, "ready")
-	stage.load_data(saved_data)
+	stage.load_data()
+	yield(camera_UI, "ready")
+	camera_UI.update_money()
 	
 	stage.connect("stage_cleared", self, "_on_stage_cleared")
+	stage.connect("update_money", self, "_on_update_money")
 	camera_UI.connect("next_stage", self, "_on_camera_control_next_stage")
+	camera_UI.connect("disable_shop", self, "_on_disable_shop")
 	menu.connect("quit_to_title", self, "_on_game_menu_quit_to_title")
 	
 func _on_game_menu_quit_to_title():
 	title = title_screen.instance()
 	
 	if is_instance_valid(stage):
-		saved_data = stage.save_data()
+		stage.save_data()
 	
 	transition_handler.transition([stage, map, unit_UI, camera_UI, menu], [[HUD, title]])
 	
@@ -59,7 +62,7 @@ func _on_game_menu_quit_to_title():
 func _on_camera_control_next_stage():
 	map = map_scene.instance()
 	
-	saved_data = stage.save_data()
+	stage.save_data()
 	
 	transition_handler.transition([stage, camera_UI], [[world, map]])
 	
@@ -72,10 +75,20 @@ func _on_map_begin_stage():
 	transition_handler.transition([map], [[world, stage], [HUD, camera_UI]])
 	
 	yield(stage, "ready")
-	stage.load_data(saved_data)
+	stage.load_data()
+	yield(camera_UI, "ready")
+	camera_UI.update_money()
 	
 	stage.connect("stage_cleared", self, "_on_stage_cleared")
+	stage.connect("update_money", self, "_on_update_money")
 	camera_UI.connect("next_stage", self, "_on_camera_control_next_stage")
+	camera_UI.connect("disable_shop", self, "_on_disable_shop")
 	
 func _on_stage_cleared():
 	camera_UI.activate_next_button()
+	
+func _on_update_money():
+	camera_UI.update_money()
+	
+func _on_disable_shop():
+	stage.disable_shop()

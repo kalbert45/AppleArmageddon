@@ -9,7 +9,7 @@ var velocity = Vector2.ZERO
 
 func _ready():
 	randomize()
-	var side_movement = randi() % 41 - 20
+	var side_movement = 10
 	velocity = Vector2(side_movement, 10)
 	
 	label.text = str(amount)
