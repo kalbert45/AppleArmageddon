@@ -6,6 +6,7 @@
 [node name="Unit_Selection" type="Control"]
 margin_right = 640.0
 margin_bottom = 360.0
+mouse_filter = 2
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false,

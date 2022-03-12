@@ -112,6 +112,9 @@ margin_right = 75.0
 margin_bottom = 18.0
 theme = ExtResource( 8 )
 text = "10"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [connection signal="pressed" from="Scout_Button" to="." method="_on_Scout_Button_pressed"]
 [connection signal="pressed" from="Back_Button" to="." method="_on_Back_Button_pressed"]

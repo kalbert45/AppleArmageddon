@@ -55,6 +55,8 @@ func _on_Play_Button_pressed():
 	
 	for unit in get_tree().get_nodes_in_group("Units"):
 		unit.active = true
+	for enemy in get_tree().get_nodes_in_group("Enemies"):
+		enemy.active = true
 		
 	emit_signal("disable_shop")
 

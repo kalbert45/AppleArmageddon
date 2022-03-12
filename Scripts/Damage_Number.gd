@@ -9,21 +9,24 @@ var velocity = Vector2.ZERO
 
 func _ready():
 	randomize()
-	var side_movement = 10
-	velocity = Vector2(side_movement, 10)
+	var side_movement = 0
 	
 	label.text = str(amount)
 	match type:
 		"Enemy":
 			label.set("custom_colors/font_color", Color("ef7d57"))
+			side_movement = 10
 		"Unit":
 			label.set("custom_colors/font_color", Color("5d275d"))
+			side_movement = -10
 		"Heal":
 			label.set("custom_colors/font_color", Color("38b764"))
+			side_movement = -10
 		_:
 			print(type + " is not a damage number type")
 			
-
+	velocity = Vector2(side_movement, 10)
+	
 	#tween.interpolate_property(self, 'scale', Vector2(0.7,0.7), Vector2(1,1), 0.1, Tween.TRANS_LINEAR, Tween.EASE_OUT)
 	tween.interpolate_property(self, 'modulate', Color(1,1,1,0), Color(1,1,1,1), 0.1, Tween.TRANS_LINEAR, Tween.EASE_OUT)
 	

@@ -38,9 +38,9 @@ func process_mouse(_delta):
 	if position_invalid:
 		$Sprite.material.set_shader_param("outline_color", Color(1,0.2,0.2,1))
 	elif mouse_select:
-		$Sprite.material.set_shader_param("outline_color", Color(0.22,0.72,0.39,1))
+		$Sprite.material.set_shader_param("outline_color", Color(1,0.8,0.46,1))
 	else:
-		$Sprite.material.set_shader_param("outline_color", Color(0.22,0.72,0.39,1))
+		$Sprite.material.set_shader_param("outline_color", Color(1,0.8,0.46,1))
 		
 	# Keep character in window
 	global_position.x = clamp(global_position.x, 0, get_viewport().size.x)

@@ -1,0 +1,185 @@
+[gd_scene load_steps=16 format=2]
+
+[ext_resource path="res://Assets/Shaders/outline_shader.tres" type="Shader" id=1]
+[ext_resource path="res://Assets/Sprites/crabapple_spritesheet.png" type="Texture" id=2]
+[ext_resource path="res://Scripts/Apple_Animation_Manager.gd" type="Script" id=3]
+[ext_resource path="res://Scripts/Crabapple.gd" type="Script" id=4]
+[ext_resource path="res://Assets/Themes/health_bar.tres" type="Theme" id=5]
+[ext_resource path="res://Assets/Sprites/apple_shadow.png" type="Texture" id=7]
+
+[sub_resource type="ShaderMaterial" id=9]
+resource_local_to_scene = true
+shader = ExtResource( 1 )
+shader_param/width = 0.0
+shader_param/outline_color = Color( 1, 0.2, 0.2, 1 )
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 3.0
+
+[sub_resource type="CircleShape2D" id=10]
+radius = 4.0
+
+[sub_resource type="CircleShape2D" id=3]
+radius = 18.0278
+
+[sub_resource type="Animation" id=4]
+resource_name = "Attack"
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 1 ), Vector2( 1, 1 ), Vector2( 2, 1 ), Vector2( 3, 1 ), Vector2( 4, 1 ), Vector2( 5, 1 ), Vector2( 6, 1 ), Vector2( 7, 1 ), Vector2( 8, 1 ), Vector2( 9, 1 ), Vector2( 8, 1 ) ]
+}
+tracks/1/type = "method"
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0.5 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "basic_attack"
+} ]
+}
+
+[sub_resource type="Animation" id=5]
+resource_name = "Idle"
+loop = true
+step = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ 0, 1 ]
+}
+
+[sub_resource type="Animation" id=6]
+resource_name = "Move"
+loop = true
+step = 0.111111
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.125, 0.25, 0.375, 0.444444, 0.666667, 0.777778, 0.888889 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 2 ), Vector2( 0, 2 ), Vector2( 1, 2 ), Vector2( 1, 2 ), Vector2( 2, 2 ), Vector2( 2, 2 ), Vector2( 1, 2 ), Vector2( 1, 2 ) ]
+}
+
+[sub_resource type="Animation" id=7]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Sprite:frame_coords")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 0, 2 ) ]
+}
+
+[sub_resource type="CircleShape2D" id=11]
+radius = 136.938
+
+[node name="Crabapple" type="KinematicBody2D" groups=["Units"]]
+collision_mask = 7
+input_pickable = true
+script = ExtResource( 4 )
+
+[node name="Sprite" type="Sprite" parent="."]
+material = SubResource( 9 )
+texture = ExtResource( 2 )
+hframes = 10
+vframes = 3
+frame = 20
+
+[node name="Shadow" type="Sprite" parent="Sprite"]
+show_behind_parent = true
+position = Vector2( -0.5, 3.5 )
+scale = Vector2( 0.5, 1 )
+texture = ExtResource( 7 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
+shape = SubResource( 1 )
+
+[node name="Body_Area" type="Area2D" parent="."]
+collision_mask = 7
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Body_Area"]
+visible = false
+shape = SubResource( 10 )
+
+[node name="Attack_Range" type="Area2D" parent="."]
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Attack_Range"]
+visible = false
+shape = SubResource( 3 )
+
+[node name="Bars" type="Node2D" parent="."]
+z_index = 2
+
+[node name="HP_Bar" type="ProgressBar" parent="Bars"]
+margin_left = -7.0
+margin_top = -10.0
+margin_right = 7.0
+margin_bottom = -7.0
+theme = ExtResource( 5 )
+step = 1.0
+value = 100.0
+percent_visible = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/Attack = SubResource( 4 )
+anims/Idle = SubResource( 5 )
+anims/Move = SubResource( 6 )
+anims/RESET = SubResource( 7 )
+script = ExtResource( 3 )
+
+[node name="SFX" type="AudioStreamPlayer" parent="."]
+
+[node name="Aggro_Area" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Aggro_Area"]
+visible = false
+shape = SubResource( 11 )
+
+[connection signal="body_exited" from="Aggro_Area" to="." method="_on_Aggro_Area_body_exited"]

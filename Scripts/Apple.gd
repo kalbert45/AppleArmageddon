@@ -3,6 +3,8 @@ extends KinematicBody2D
 # Unit/enemy shared variables
 #------------------------------------------------------------------
 #--********************************************************-----
+signal death
+
 const IDLE_ANIM_NAME = "Idle"
 const MOVEMENT_ANIM_NAME = "Move"
 const ATTACK_ANIM_NAME = "Attack"
@@ -62,14 +64,28 @@ onready var animation_manager = $AnimationPlayer
 onready var sfx = $SFX
 
 var attack_sfx = preload("res://Assets/Sounds/SFX/attack_sfx.wav")
+
 var damage_number_scene = preload("res://Scenes/Damage_Number.tscn")
 var apple_death_scene = preload("res://Scenes/Apple_Death.tscn")
 
 #-------------------------------------------------------------
 
 func _ready():
+	ready_bars()
 	animation_manager.set_animation(IDLE_ANIM_NAME)
 	global_position = initial_pos
+	# change size of bars based on max_hp max_mana
+	
+func ready_bars():
+	var hp_bar = $Bars/HP_Bar
+	var juice_bar = $Bars/Juice_Bar
+	hp_bar.max_value = max_hp
+	hp_bar.rect_size = Vector2(int(max_hp/10), 3)
+	hp_bar.rect_position = Vector2(ceil(-hp_bar.rect_size.x/2)-1, -16)
+	
+	juice_bar.max_value = max_mana
+	juice_bar.rect_size = Vector2(int(max_mana/10), 1)
+	juice_bar.rect_position = Vector2(ceil(-juice_bar.rect_size.x/2)-1, -13)
 	
 func _process(delta):
 	process_stat_values(delta)
@@ -124,21 +140,22 @@ func process_mouse(_delta):
 #--------------------------------------------------------------
 # process movement of unit
 func process_movement(delta):
+	direction += calculate_local_avoidance()
 	if animation_manager.current_state != CAST_ANIM_NAME:
 		# Movement towards target
 		if (target != null) and (!attacking):
 			$Sprite.set_flip_h(global_position.x > target.global_position.x)
 			speed += ACCEL * delta
-			direction = (target.global_position - global_position).normalized()
+			direction += (15/global_position.distance_to(target.global_position))*(target.global_position - global_position)
 			attacking = attack_range.overlaps_body(target)
-			if animation_manager.current_state == IDLE_ANIM_NAME:
+			if animation_manager.current_state != MOVEMENT_ANIM_NAME:
 				animation_manager.set_animation(MOVEMENT_ANIM_NAME)
 			
 		# Attack target
 		elif (target != null) and attacking:
 			$Sprite.set_flip_h(global_position.x > target.global_position.x)
 			speed -= DEACCEL * delta
-			direction = (target.global_position - global_position).normalized()
+			direction += (15/global_position.distance_to(target.global_position))*(target.global_position - global_position)
 			attacking = attack_range.overlaps_body(target)
 			if animation_manager.current_state != ATTACK_ANIM_NAME:
 				animation_manager.set_animation(ATTACK_ANIM_NAME)
@@ -159,11 +176,24 @@ func process_movement(delta):
 		speed -= DEACCEL * delta
 
 	speed = clamp(speed, 0, movement_speed)
-	
+	direction = direction.clamped(1)
 	velocity = direction * speed
 	velocity = move_and_slide(velocity)
 	
 #--------------------------------------------------------------
+# Local Avoidance algorithm
+func calculate_local_avoidance():
+	var total = Vector2.ZERO
+	var weight
+	var dist2
+	for body in get_tree().get_nodes_in_group("Units"):
+		if self == body:
+			continue
+		if is_instance_valid(body):
+			dist2 = global_position.distance_squared_to(body.global_position)
+			weight = 10/ dist2
+			total += weight * (global_position - body.global_position)
+	return total
 
 #----------------------------------------------------------------
 #Targeting
@@ -178,19 +208,49 @@ func _on_Aggro_Area_body_entered(body):
 func _on_Aggro_Area_body_exited(body):
 	if target == body:
 		target = null
-		var min_dist = null
-		var bodies = $Aggro_Area.get_overlapping_bodies()
-		for new_body in bodies:
-			if new_body == body:
-				continue
-			if new_body.is_in_group("Enemies"):
-				if target == null:
-					target = new_body
-					min_dist = global_position.distance_to(new_body.global_position)
-				else:
-					var dist = global_position.distance_to(new_body.global_position)
-					if dist < min_dist:
-						target = new_body
+#		var min_dist = null
+#		var bodies = $Aggro_Area.get_overlapping_bodies()
+		
+#		for new_body in bodies:
+#			if new_body == body:
+#				continue
+#			if new_body.is_in_group("Enemies"):
+#				if target == null:
+#					target = new_body
+#					min_dist = global_position.distance_to(new_body.global_position)
+#				else:
+#					var dist = global_position.distance_to(new_body.global_position)
+#					if dist < min_dist:
+#						target = new_body
+						
+	target_closest(body)
+						
+# Target closest enemy when there is no target
+func target_closest(body):
+	if not first_target:
+		return
+	if not active:
+		return
+	if target != null:
+		return
+	var enemies = get_tree().get_nodes_in_group("Enemies")
+	if enemies.empty():
+		return
+	
+	var closest = null
+	var min_dist = 0
+	for enemy in enemies:
+		if enemy == body:
+			continue
+		if closest == null:
+			closest = enemy
+			min_dist = global_position.distance_to(closest.global_position)
+		else:
+			var dist = global_position.distance_to(enemy.global_position)
+			if dist < min_dist:
+				closest = enemy
+				min_dist = dist
+	target = closest
 #----------------------------------------------------------------------------
 
 #------------------------------------------------------------------------
@@ -233,6 +293,8 @@ func attack_hit(enemy, damage):
 	
 		
 func die(damage):
+	emit_signal("death")
+	
 	var apple_death = apple_death_scene.instance()
 	apple_death.global_position = global_position
 	get_node("/root/Main/World").add_child(apple_death)

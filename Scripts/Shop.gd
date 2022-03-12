@@ -12,22 +12,27 @@ var shop_spots = [null, null, null]
 var pool = []
 
 var shop_sprite_scene = preload("res://Scenes/Shop_Sprite.tscn")
+var shop_sprite
 
 # store scene, shop sprite, price in each variable
-var apple = [preload("res://Scenes/Apple.tscn"), preload("res://Assets/Sprites/apple.png"), 1]
-var temp_apple = [preload("res://Scenes/Apple.tscn"), preload("res://Assets/Sprites/appletemp.png"), 2]
+var apple = [preload("res://Scenes/Apple.tscn"), preload("res://Assets/Sprites/apple.png"), 2]
+var crabapple = [preload("res://Scenes/Crabapple.tscn"), preload("res://Assets/Sprites/crabapple.png"), 1]
+var golden = [preload("res://Scenes/Golden.tscn"), preload("res://Assets/Sprites/golden.png"), 4]
+var green = [preload("res://Scenes/Green.tscn"), preload("res://Assets/Sprites/green2.png"), 4]
+
+onready var reroll_button = $Reroll_Button
 
 func _ready():
 	rng.randomize()
 	# adjust number of shop spots and pool based on tier of shop
 	match tier:
 		0:
-			pool = [apple, temp_apple]
+			pool = [apple, crabapple, golden, green]
 			
 	# initialize shop
 	for i in range(shop_spots.size()):
 		var roll = roll()
-		var shop_sprite = shop_sprite_scene.instance()
+		shop_sprite = shop_sprite_scene.instance()
 		shop_sprite.unit_scene = roll[0]
 		shop_sprite.set_sprite_texture(roll[1])
 		shop_sprite.price = roll[2]
@@ -35,8 +40,27 @@ func _ready():
 		shop_sprite.initial_pos = Vector2(global_position.x-40 + 40*i, global_position.y)
 		add_child(shop_sprite)
 
+	reroll_button.set_global_position(Vector2(shop_sprite.initial_pos.x + 40 - reroll_button.get_rect().size.x/2 , 
+											shop_sprite.initial_pos.y - reroll_button.get_rect().size.y/2))
 func reroll_shop():
-	pass
+	if 1 > Global.money:
+		return
+		
+	Global.money -= 1
+	emit_signal("update_money")
+	
+	for i in range(shop_spots.size()):
+		if is_instance_valid(shop_spots[i]):
+			shop_spots[i].queue_free()
+		
+		var roll = roll()
+		shop_sprite = shop_sprite_scene.instance()
+		shop_sprite.unit_scene = roll[0]
+		shop_sprite.set_sprite_texture(roll[1])
+		shop_sprite.price = roll[2]
+		shop_spots[i] = shop_sprite
+		shop_sprite.initial_pos = Vector2(global_position.x-40 + 40*i, global_position.y)
+		add_child(shop_sprite)
 
 # properly adds unit to the stage. remove from shop
 func buy_unit(unit):
@@ -55,3 +79,6 @@ func buy_unit(unit):
 func roll():
 	var size = pool.size()
 	return pool[rng.randi_range(0, size-1)]
+
+func _on_Reroll_Button_pressed():
+	reroll_shop()

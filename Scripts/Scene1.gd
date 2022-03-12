@@ -5,30 +5,41 @@ signal stage_cleared
 signal defeat
 
 var enemies
+var units
 
 var shop_scene = preload("res://Scenes/Shop.tscn")
 var shop
 
 var apple_scene = preload("res://Scenes/Apple.tscn")
+var crabapple_scene = preload("res://Scenes/Crabapple.tscn")
+var golden_scene = preload("res://Scenes/Golden.tscn")
 
 onready var units_node = $TileMap/YSort
 
 func _ready():
 	enemies = get_tree().get_nodes_in_group("Enemies")
+	units = get_tree().get_nodes_in_group("Units")
 	
 	for enemy in enemies:
 		enemy.connect("death", self, "_on_enemy_death")
+	for unit in units:
+		unit.connect("death", self, "_on_unit_death")
 		
 	shop = shop_scene.instance()
-	shop.global_position = Vector2(480, 80)
+	shop.global_position = Vector2(480, 40)
 	shop.units_node_target = units_node
 	shop.connect("update_money", self, "_on_update_money")
 	add_child(shop)
 		
 func _on_enemy_death():
-	if get_tree().get_nodes_in_group("Enemies").size() == 1:
+	if get_tree().get_nodes_in_group("Enemies").size() <= 1:
 		yield(get_tree().create_timer(0.5), "timeout")
 		emit_signal("stage_cleared")
+		
+func _on_unit_death():
+	if get_tree().get_nodes_in_group("Units").size() <= 1:
+		yield(get_tree().create_timer(0.5), "timeout")
+		emit_signal("defeat")
 
 # saved_data is dictionary with keys: Money, Units, Enemies, Tilemap
 func load_data():
@@ -43,6 +54,11 @@ func save_data():
 		match unit.label:
 			"Apple":
 				units.append([apple_scene, unit.initial_pos])
+			"Crabapple":
+				units.append([crabapple_scene, unit.initial_pos])
+			"Golden":
+				units.append([golden_scene, unit.initial_pos])
+				
 		
 	Global.units = units
 
