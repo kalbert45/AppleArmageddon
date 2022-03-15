@@ -12,6 +12,8 @@ var mouse_pos
 var unit_starting_pos
 var holding = false
 
+var shop
+
 var unit_UI_scene = preload("res://Scenes/Unit_Interface.tscn")
 var unit_UI
 
@@ -24,8 +26,11 @@ func _ready():
 	unit_UI.visible = false
 	add_child(unit_UI)
 	
+	
 func _process(_delta):
 	# guard against queue free
+	if not is_instance_valid(shop):
+		shop = null
 	if not is_instance_valid(selected):
 		selected = null
 	if not is_instance_valid(hovered):
@@ -65,7 +70,7 @@ func _process(_delta):
 				selected.mouse_select = true
 				unit_starting_pos = selected.global_position
 				if selected.is_in_group("Units"):
-					unit_UI.set_initial_values(null, selected.attack_damage, selected.defense, 
+					unit_UI.set_initial_values(selected.picture, selected.attack_damage, selected.defense, 
 					selected.attack_speed, selected.movement_speed, selected.max_hp, selected.max_mana)
 					unit_UI.visible = true
 		
@@ -78,31 +83,7 @@ func _process(_delta):
 					holding = true
 					unit_starting_pos = selected.global_position
 				
-	if Input.is_action_just_released("left_click"):
-		if selected != null:
-			if not selected.active:
-				if selected.is_colliding():
-					selected.global_position = unit_starting_pos
-					selected.initial_pos = unit_starting_pos
-					unit_starting_pos = null
-					selected.position_invalid = false
-				else:
-					if holding:
-						# has_method(set_sprite_texture) checks if selection is a shop item
-						if selected.has_method("set_sprite_texture"):
-							var shop = selected.get_parent()
-							var new_unit = shop.buy_unit(selected)
-							if new_unit == null:
-								selected.global_position = unit_starting_pos
-								selected.initial_pos = unit_starting_pos
-								unit_starting_pos = null
-								selected.position_invalid = false
-							else:
-								selected = shop.buy_unit(selected)
-							
-						sfx.stream = drop_sfx
-						sfx.play()
-		holding = false
+	handle_left_release()
 		
 	if holding:
 		selected.global_position = mouse_pos
@@ -122,3 +103,44 @@ func _process(_delta):
 	else:
 		unit_UI.visible = false
 	
+func handle_left_release():
+	if Input.is_action_just_released("left_click"):
+		if not holding:
+			return
+		if selected == null:
+			holding = false
+			return
+		if selected.active:
+			holding = false
+			return
+			
+		
+		# if selection is colliding, check if it should be sold, else return to original position
+		if selected.is_colliding():
+			if selected.has_method("attack_hit"):
+				if shop != null:
+					shop.sell_unit(selected)
+			return_to_original_pos()
+			
+		# check if selection is a shop item to be bought, otherwise just drop
+		else:
+			# has_method(set_sprite_texture) checks if selection is a shop item
+			if selected.has_method("set_sprite_texture"):
+				var new_unit = shop.buy_unit(selected)
+				if new_unit == null:
+					return_to_original_pos()
+				else:
+					selected = new_unit
+				
+			sfx.stream = drop_sfx
+			sfx.play()
+		holding = false
+		
+func return_to_original_pos():
+	if not is_instance_valid(selected):
+		selected = null
+	else:
+		selected.global_position = unit_starting_pos
+		selected.initial_pos = unit_starting_pos
+		unit_starting_pos = null
+		selected.position_invalid = false

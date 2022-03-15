@@ -1,9 +1,8 @@
 [gd_resource type="Theme" load_steps=3 format=2]
 
-[ext_resource path="res://Assets/Fonts/PressStart2P.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Assets/Fonts/m5x7.ttf" type="DynamicFontData" id=1]
 
 [sub_resource type="DynamicFont" id=1]
-size = 8
 outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 1 )
 

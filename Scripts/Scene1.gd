@@ -29,8 +29,7 @@ func _ready():
 	shop.global_position = Vector2(480, 40)
 	shop.units_node_target = units_node
 	shop.connect("update_money", self, "_on_update_money")
-	add_child(shop)
-		
+	$TileMap.add_child(shop)
 func _on_enemy_death():
 	if get_tree().get_nodes_in_group("Enemies").size() <= 1:
 		yield(get_tree().create_timer(0.5), "timeout")
@@ -66,4 +65,4 @@ func _on_update_money():
 	emit_signal("update_money")
 	
 func disable_shop():
-	shop.queue_free()
+	shop.disable()

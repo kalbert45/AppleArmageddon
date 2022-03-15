@@ -1,12 +1,13 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Assets/Sounds/Music/[Maplestory BGM] Chu Chu Island.mp3" type="AudioStream" id=1]
 [ext_resource path="res://Assets/Tilesets/TX Tileset Wall.png" type="Texture" id=2]
 [ext_resource path="res://Assets/Tilesets/TX Tileset Grass.png" type="Texture" id=3]
 [ext_resource path="res://Scripts/Scene1.gd" type="Script" id=4]
-[ext_resource path="res://Assets/Sprites/macho_apple_stache.png" type="Texture" id=5]
+[ext_resource path="res://Scenes/Gunman.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Scenes/Enemy_Dummy.tscn" type="PackedScene" id=6]
-[ext_resource path="res://Assets/Sprites/golden.png" type="Texture" id=7]
+[ext_resource path="res://Scenes/Turret.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Scenes/Golden_Lob.tscn" type="PackedScene" id=8]
 
 [sub_resource type="ConvexPolygonShape2D" id=6]
 points = PoolVector2Array( 64, 43.1982, 0, 43.1982, 0, 0, 64, 0 )
@@ -128,13 +129,14 @@ position = Vector2( 1091, 184 )
 [node name="Enemy_Dummy3" parent="TileMap/YSort" instance=ExtResource( 6 )]
 position = Vector2( 1011, 185 )
 
-[node name="Sprite" type="Sprite" parent="TileMap/YSort"]
-position = Vector2( 119, 130 )
-texture = ExtResource( 5 )
+[node name="Enemy_Dummy4" parent="TileMap/YSort" instance=ExtResource( 5 )]
+position = Vector2( 1118, 185 )
 
-[node name="Sprite2" type="Sprite" parent="TileMap/YSort"]
-position = Vector2( 117, 198 )
-texture = ExtResource( 7 )
+[node name="Turret" parent="TileMap/YSort" instance=ExtResource( 7 )]
+position = Vector2( 924, 118 )
+
+[node name="Golden_Lob" parent="TileMap/YSort" instance=ExtResource( 8 )]
+position = Vector2( 192, 214 )
 
 [node name="Music_Player" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 1 )

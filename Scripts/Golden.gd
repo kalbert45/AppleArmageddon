@@ -32,8 +32,7 @@ var current_hp = 80
 
 var attack_damage = 10
 var attack_speed = 1.0
-var attack_range_size = 1.0
-var defense = 10
+var defense = 0
 var movement_speed = 40
 
 var attacking_modes = ["Default", "Stand by", "Chase"]
@@ -64,15 +63,18 @@ onready var animation_manager = $AnimationPlayer
 onready var sfx = $SFX
 
 var attack_sfx = preload("res://Assets/Sounds/SFX/attack_sfx.wav")
+var picture = preload("res://Assets/Sprites/golden.png")
 
 var damage_number_scene = preload("res://Scenes/Damage_Number.tscn")
 var apple_death_scene = preload("res://Scenes/Apple_Death.tscn")
 var projectile_scene = preload("res://Scenes/Golden_Projectile.tscn")
+var lob_scene = preload("res://Scenes/Golden_Lob.tscn")
 
 #-------------------------------------------------------------
 
 func _ready():
 	ready_bars()
+	animation_manager.animation_speeds["Attack"] = attack_speed
 	animation_manager.set_animation(IDLE_ANIM_NAME)
 	global_position = initial_pos
 	# change size of bars based on max_hp max_mana
@@ -258,7 +260,12 @@ func target_closest(body):
 #Attacks
 func basic_attack():
 	if target != null:
-		target.attack_hit(self, attack_damage)
+		var projectile = projectile_scene.instance()
+		projectile.damage = 20
+		projectile.global_position = global_position
+		projectile.direction = (target.global_position - global_position).normalized()
+		projectile.rotation_degrees = projectile.direction.angle()
+		get_node("/root/Main/World").add_child(projectile)
 		current_mana += 20
 		
 		sfx.stream = attack_sfx
@@ -266,12 +273,11 @@ func basic_attack():
 		
 func cast_attack():
 	if target != null:
-		var projectile = projectile_scene.instance()
-		projectile.damage = 20
-		projectile.global_position = global_position
-		projectile.direction = (target.global_position - global_position).normalized()
-		projectile.rotation_degrees = projectile.direction.angle()
-		get_node("/root/Main/World").add_child(projectile)
+		var lob = lob_scene.instance()
+		lob.damage = 20
+		lob.source = global_position
+		lob.target = target.global_position
+		get_node("/root/Main/World").add_child(lob)
 		
 #------------------------------------------------------------------------
 
@@ -288,15 +294,25 @@ func is_colliding():
 #-----------------------------------------------------------------------
 # Taking damage
 func attack_hit(enemy, damage):
-	current_hp -= damage
+	var dmg = damage - defense
+	dmg = clamp(dmg, 0, damage)
+	current_hp -= dmg
 	if current_hp <= 0:
-		die(damage)
+		die(dmg)
 	
 	var damage_number = damage_number_scene.instance()
-	damage_number.amount = damage
+	damage_number.amount = dmg
 	damage_number.type = "Unit"
 	add_child(damage_number)
 	
+# Receive heal
+func heal(unit, amount):
+	current_hp += amount
+	
+	var damage_number = damage_number_scene.instance()
+	damage_number.amount = amount
+	damage_number.type = "Heal"
+	add_child(damage_number)
 		
 func die(damage):
 	emit_signal("death")
@@ -305,10 +321,11 @@ func die(damage):
 	apple_death.global_position = global_position
 	get_node("/root/Main/World").add_child(apple_death)
 	
-	var damage_number = damage_number_scene.instance()
-	damage_number.amount = damage
-	damage_number.type = "Unit"
-	apple_death.add_child(damage_number)
+	if damage >= 0:
+		var damage_number = damage_number_scene.instance()
+		damage_number.amount = damage
+		damage_number.type = "Unit"
+		apple_death.add_child(damage_number)
 	
 	queue_free()
 

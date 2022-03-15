@@ -31,8 +31,7 @@ var current_hp = 100
 
 var attack_damage = 10
 var attack_speed = 1.0
-var attack_range_size = 1.0
-var defense = 10
+var defense = 0
 var movement_speed = 50
 
 var attacking_modes = ["Default", "Stand by", "Chase"]
@@ -65,9 +64,17 @@ var apple_death_scene = preload("res://Scenes/Apple_Death.tscn")
 #-------------------------------------------------------------
 
 func _ready():
+	ready_bars()
+	animation_manager.animation_speeds["Attack"] = attack_speed
 	animation_manager.set_animation(IDLE_ANIM_NAME)
 	#global_position = initial_pos
 	# change size of bars based on max_hp max_mana
+	
+func ready_bars():
+	var hp_bar = $Bars/HP_Bar
+	hp_bar.max_value = max_hp
+	hp_bar.rect_size = Vector2(int(max_hp/10), 3)
+	hp_bar.rect_position = Vector2(ceil(-hp_bar.rect_size.x/2)-1, -15)
 	
 func _process(delta):
 	process_stat_values(delta)
@@ -203,12 +210,14 @@ func is_colliding():
 #-----------------------------------------------------------------------
 # Taking damage
 func attack_hit(enemy, damage):
-	current_hp -= damage
+	var dmg = damage - defense
+	dmg = clamp(dmg, 0, damage)
+	current_hp -= dmg
 	if current_hp <= 0:
-		die(damage)
+		die(dmg)
 	
 	var damage_number = damage_number_scene.instance()
-	damage_number.amount = damage
+	damage_number.amount = dmg
 	damage_number.type = "Enemy"
 	add_child(damage_number)
 	

@@ -6,6 +6,7 @@ signal update_money
 var units_node_target = null
 var rng = RandomNumberGenerator.new()
 
+var eat_ready = false
 var tier = 0
 var roll_odds = null
 var shop_spots = [null, null, null]
@@ -21,9 +22,11 @@ var golden = [preload("res://Scenes/Golden.tscn"), preload("res://Assets/Sprites
 var green = [preload("res://Scenes/Green.tscn"), preload("res://Assets/Sprites/green2.png"), 4]
 
 onready var reroll_button = $Reroll_Button
+onready var animation_player = $AnimationPlayer
 
 func _ready():
 	rng.randomize()
+	animation_player.connect("animation_finished", self, "animation_ended")
 	# adjust number of shop spots and pool based on tier of shop
 	match tier:
 		0:
@@ -67,7 +70,7 @@ func buy_unit(unit):
 	if unit.price > Global.money:
 		return
 
-	Global.money -= unit.price
+	#Global.money -= unit.price
 	emit_signal("update_money")
 	
 	var new_unit = unit.unit_scene.instance()
@@ -82,3 +85,38 @@ func roll():
 
 func _on_Reroll_Button_pressed():
 	reroll_shop()
+	
+	
+# Handle "selling" units
+func sell_unit(unit):
+	if not eat_ready:
+		return false
+	unit.die(-1)
+	Global.money += 1
+	emit_signal("update_money")
+	return true
+	
+
+func eat_ready():
+	if eat_ready:
+		eat_ready = false
+	else:
+		eat_ready = true
+		
+
+func _on_Face_body_entered(body):
+	if body.has_method("set_sprite_texture"):
+		return
+	animation_player.play("Open")
+
+func _on_Face_body_exited(body):
+	if body.has_method("set_sprite_texture"):
+		return
+	animation_player.play_backwards("Open")
+
+func animation_ended(animation_name):
+	pass
+	
+#handle disable
+func disable():
+	queue_free()

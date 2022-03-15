@@ -40,8 +40,10 @@ func _on_Title_Screen_start_game():
 	
 	yield(stage, "ready")
 	stage.load_data()
+	unit_UI.shop = stage.shop
 	yield(camera_UI, "ready")
 	camera_UI.update_money()
+
 	
 	stage.connect("stage_cleared", self, "_on_stage_cleared")
 	stage.connect("update_money", self, "_on_update_money")
@@ -76,6 +78,7 @@ func _on_map_begin_stage():
 	
 	yield(stage, "ready")
 	stage.load_data()
+	unit_UI.shop = stage.shop
 	yield(camera_UI, "ready")
 	camera_UI.update_money()
 	
@@ -92,3 +95,4 @@ func _on_update_money():
 	
 func _on_disable_shop():
 	stage.disable_shop()
+	

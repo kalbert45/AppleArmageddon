@@ -6,7 +6,7 @@
 [ext_resource path="res://Assets/Sprites/GUI/scout_button_hovered.png" type="Texture" id=4]
 [ext_resource path="res://Assets/Fonts/PressStart2P.ttf" type="DynamicFontData" id=5]
 [ext_resource path="res://Assets/Sounds/SFX/click3.wav" type="AudioStream" id=6]
-[ext_resource path="res://Assets/Sprites/GUI/GUI_Heart.png" type="Texture" id=7]
+[ext_resource path="res://Assets/Sprites/GUI/GUI_Seed.png" type="Texture" id=7]
 [ext_resource path="res://Assets/Themes/GUI_Label_Theme.tres" type="Theme" id=8]
 
 [sub_resource type="Theme" id=1]
@@ -100,7 +100,6 @@ margin_top = 9.0
 margin_right = 39.0
 margin_bottom = 33.0
 texture = ExtResource( 7 )
-expand = true
 __meta__ = {
 "_edit_use_anchors_": false
 }

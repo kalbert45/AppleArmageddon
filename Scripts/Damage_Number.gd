@@ -9,19 +9,19 @@ var velocity = Vector2.ZERO
 
 func _ready():
 	randomize()
-	var side_movement = 0
+	var side_movement = randi() % 5
 	
 	label.text = str(amount)
 	match type:
 		"Enemy":
 			label.set("custom_colors/font_color", Color("ef7d57"))
-			side_movement = 10
+			side_movement += 10
 		"Unit":
 			label.set("custom_colors/font_color", Color("5d275d"))
-			side_movement = -10
+			side_movement += -10
 		"Heal":
 			label.set("custom_colors/font_color", Color("38b764"))
-			side_movement = -10
+			side_movement += -10
 		_:
 			print(type + " is not a damage number type")
 			

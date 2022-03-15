@@ -163,28 +163,24 @@ position = Vector2( -0.5, 14.5 )
 texture = ExtResource( 7 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-visible = false
 shape = SubResource( 1 )
 
-[node name="Body_Area" type="Area2D" parent="."]
+[node name="Body_Area" type="Area2D" parent="CollisionShape2D"]
 collision_mask = 7
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Body_Area"]
-visible = false
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionShape2D/Body_Area"]
 shape = SubResource( 10 )
 
-[node name="Aggro_Area" type="Area2D" parent="."]
+[node name="Aggro_Area" type="Area2D" parent="CollisionShape2D"]
 collision_mask = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Aggro_Area"]
-visible = false
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionShape2D/Aggro_Area"]
 shape = SubResource( 2 )
 
-[node name="Attack_Range" type="Area2D" parent="."]
+[node name="Attack_Range" type="Area2D" parent="CollisionShape2D"]
 collision_mask = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Attack_Range"]
-visible = false
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionShape2D/Attack_Range"]
 shape = SubResource( 3 )
 
 [node name="Bars" type="Node2D" parent="."]
@@ -226,5 +222,5 @@ script = ExtResource( 4 )
 
 [node name="SFX" type="AudioStreamPlayer" parent="."]
 
-[connection signal="body_entered" from="Aggro_Area" to="." method="_on_Aggro_Area_body_entered"]
-[connection signal="body_exited" from="Aggro_Area" to="." method="_on_Aggro_Area_body_exited"]
+[connection signal="body_entered" from="CollisionShape2D/Aggro_Area" to="." method="_on_Aggro_Area_body_entered"]
+[connection signal="body_exited" from="CollisionShape2D/Aggro_Area" to="." method="_on_Aggro_Area_body_exited"]
