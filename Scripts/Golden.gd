@@ -143,6 +143,8 @@ func process_mouse(_delta):
 #--------------------------------------------------------------
 # process movement of unit
 func process_movement(delta):
+	if not is_instance_valid(target):
+		target = null
 	direction += calculate_local_avoidance()
 	if animation_manager.current_state != CAST_ANIM_NAME:
 		# Movement towards target

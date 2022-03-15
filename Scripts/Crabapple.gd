@@ -136,6 +136,10 @@ func process_mouse(_delta):
 #--------------------------------------------------------------
 # process movement of unit
 func process_movement(delta):
+	if not is_instance_valid(target):
+		target = null
+	
+	# specific movement pattern of crabapple
 	if not first_target and global_position.x > 2*get_viewport().size.x - 30:
 		first_target = true
 		target_closest(null)
