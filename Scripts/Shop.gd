@@ -20,6 +20,7 @@ var apple = [preload("res://Scenes/Apple.tscn"), preload("res://Assets/Sprites/a
 var crabapple = [preload("res://Scenes/Crabapple.tscn"), preload("res://Assets/Sprites/crabapple.png"), 1]
 var golden = [preload("res://Scenes/Golden.tscn"), preload("res://Assets/Sprites/golden.png"), 4]
 var green = [preload("res://Scenes/Green.tscn"), preload("res://Assets/Sprites/green2.png"), 4]
+var pink = [preload("res://Scenes/Pink.tscn"), preload("res://Assets/Sprites/red.png"), 4]
 
 onready var reroll_button = $Reroll_Button
 onready var animation_player = $AnimationPlayer
@@ -30,7 +31,7 @@ func _ready():
 	# adjust number of shop spots and pool based on tier of shop
 	match tier:
 		0:
-			pool = [apple, crabapple, golden, green]
+			pool = [apple, crabapple, golden, green, pink]
 			
 	# initialize shop
 	for i in range(shop_spots.size()):

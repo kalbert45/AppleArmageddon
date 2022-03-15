@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Assets/Sounds/Music/[Maplestory BGM] Chu Chu Island.mp3" type="AudioStream" id=1]
 [ext_resource path="res://Assets/Tilesets/TX Tileset Wall.png" type="Texture" id=2]
@@ -7,7 +7,6 @@
 [ext_resource path="res://Scenes/Gunman.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Scenes/Enemy_Dummy.tscn" type="PackedScene" id=6]
 [ext_resource path="res://Scenes/Turret.tscn" type="PackedScene" id=7]
-[ext_resource path="res://Scenes/Golden_Lob.tscn" type="PackedScene" id=8]
 
 [sub_resource type="ConvexPolygonShape2D" id=6]
 points = PoolVector2Array( 64, 43.1982, 0, 43.1982, 0, 0, 64, 0 )
@@ -134,9 +133,6 @@ position = Vector2( 1118, 185 )
 
 [node name="Turret" parent="TileMap/YSort" instance=ExtResource( 7 )]
 position = Vector2( 924, 118 )
-
-[node name="Golden_Lob" parent="TileMap/YSort" instance=ExtResource( 8 )]
-position = Vector2( 192, 214 )
 
 [node name="Music_Player" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 1 )

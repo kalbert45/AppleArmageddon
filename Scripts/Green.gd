@@ -260,7 +260,7 @@ func target_closest(body):
 #Attacks
 func basic_attack():
 	if target != null:
-		target.attack_hit(self, attack_damage)
+		target.attack_hit(self, attack_damage, false)
 		current_mana += 20
 		
 		sfx.stream = attack_sfx

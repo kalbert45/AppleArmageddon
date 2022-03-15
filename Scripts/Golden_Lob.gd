@@ -47,7 +47,7 @@ func explode():
 	var bodies = aoe.get_overlapping_bodies()
 	for body in bodies:
 		if body.is_in_group("Enemies"):
-			body.attack_hit(self, damage)
+			body.attack_hit(self, damage, true, 30)
 			
 	tween.interpolate_property(self, 'modulate', Color(1,1,1,1), Color(1,1,1,0), 1, Tween.TRANS_LINEAR, Tween.TRANS_LINEAR, 0.2)
 	tween.start()

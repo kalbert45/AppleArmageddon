@@ -21,6 +21,9 @@ var speed = 0
 var direction = Vector2.ZERO
 var velocity = Vector2.ZERO
 
+var knock_speed = 0
+var knock_direction = Vector2.ZERO
+
 var target = null
 var attacking = false
 var casting = false
@@ -119,22 +122,28 @@ func process_mouse(_delta):
 
 #--------------------------------------------------------------
 # process movement of unit
+# process movement of unit
 func process_movement(delta):
+	if not is_instance_valid(target):
+		target = null
+	
+	
+	direction += calculate_local_avoidance()
 	if animation_manager.current_state != CAST_ANIM_NAME:
 		# Movement towards target
 		if (target != null) and (!attacking):
 			$Sprite.set_flip_h(global_position.x < target.global_position.x)
 			speed += ACCEL * delta
-			direction = (target.global_position - global_position).normalized()
+			direction += (15/global_position.distance_to(target.global_position))*(target.global_position - global_position)
 			attacking = attack_range.overlaps_body(target)
-			if animation_manager.current_state == IDLE_ANIM_NAME:
+			if animation_manager.current_state != MOVEMENT_ANIM_NAME:
 				animation_manager.set_animation(MOVEMENT_ANIM_NAME)
 			
 		# Attack target
 		elif (target != null) and attacking:
 			$Sprite.set_flip_h(global_position.x < target.global_position.x)
 			speed -= DEACCEL * delta
-			direction = (target.global_position - global_position).normalized()
+			direction += (15/global_position.distance_to(target.global_position))*(target.global_position - global_position)
 			attacking = attack_range.overlaps_body(target)
 			if animation_manager.current_state != ATTACK_ANIM_NAME:
 				animation_manager.set_animation(ATTACK_ANIM_NAME)
@@ -149,9 +158,28 @@ func process_movement(delta):
 		speed -= DEACCEL * delta
 
 	speed = clamp(speed, 0, movement_speed)
-	
+	direction = direction.clamped(1)
 	velocity = direction * speed
+	velocity += knock_direction * knock_speed
 	velocity = move_and_slide(velocity)
+	
+	if knock_speed > 0:
+		knock_speed -= 100 * delta
+	knock_speed = clamp(knock_speed, 0, 100)
+#--------------------------------------------------------------
+# Local Avoidance algorithm
+func calculate_local_avoidance():
+	var total = Vector2.ZERO
+	var weight
+	var dist2
+	for body in get_tree().get_nodes_in_group("Enemies"):
+		if self == body:
+			continue
+		if is_instance_valid(body):
+			dist2 = global_position.distance_squared_to(body.global_position)
+			weight = 10/ dist2
+			total += weight * (global_position - body.global_position)
+	return total
 	
 #--------------------------------------------------------------
 
@@ -209,7 +237,11 @@ func is_colliding():
 
 #-----------------------------------------------------------------------
 # Taking damage
-func attack_hit(enemy, damage):
+func attack_hit(enemy, damage, knock, knock_power=50):
+	if knock:
+		knock_direction = (global_position - enemy.global_position).normalized()
+		knock_speed = knock_power
+	
 	var dmg = damage - defense
 	dmg = clamp(dmg, 0, damage)
 	current_hp -= dmg

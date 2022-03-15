@@ -184,7 +184,7 @@ frame = 20
 
 [node name="Shadow" type="Sprite" parent="Sprite"]
 show_behind_parent = true
-position = Vector2( -1, 11.5 )
+position = Vector2( -1, 9.5 )
 scale = Vector2( 1.41176, 1 )
 texture = ExtResource( 2 )
 
@@ -200,6 +200,7 @@ visible = false
 shape = SubResource( 1 )
 
 [node name="Body_Area" type="Area2D" parent="."]
+visible = false
 collision_mask = 7
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Body_Area"]
@@ -207,6 +208,7 @@ visible = false
 shape = SubResource( 10 )
 
 [node name="Aggro_Area" type="Area2D" parent="."]
+visible = false
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Aggro_Area"]
@@ -214,6 +216,7 @@ visible = false
 shape = SubResource( 2 )
 
 [node name="Attack_Range" type="Area2D" parent="."]
+visible = false
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Attack_Range"]

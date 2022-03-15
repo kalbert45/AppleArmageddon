@@ -13,6 +13,8 @@ var shop
 var apple_scene = preload("res://Scenes/Apple.tscn")
 var crabapple_scene = preload("res://Scenes/Crabapple.tscn")
 var golden_scene = preload("res://Scenes/Golden.tscn")
+var green_scene = preload("res://Scenes/Green.tscn")
+var pink_scene = preload("res://Scenes/Pink.tscn")
 
 onready var units_node = $TileMap/YSort
 
@@ -57,6 +59,10 @@ func save_data():
 				units.append([crabapple_scene, unit.initial_pos])
 			"Golden":
 				units.append([golden_scene, unit.initial_pos])
+			"Green":
+				units.append([green_scene, unit.initial_pos])
+			"Pink":
+				units.append([pink_scene, unit.initial_pos])
 				
 		
 	Global.units = units

@@ -1,10 +1,9 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://Assets/Sprites/apple_spritesheet.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/Apple.gd" type="Script" id=2]
 [ext_resource path="res://Assets/Themes/health_bar.tres" type="Theme" id=3]
 [ext_resource path="res://Scripts/Apple_Animation_Manager.gd" type="Script" id=4]
-[ext_resource path="res://Assets/Themes/juice_bar.tres" type="Theme" id=5]
 [ext_resource path="res://Assets/Shaders/outline_shader.tres" type="Shader" id=6]
 [ext_resource path="res://Assets/Sprites/apple_shadow.png" type="Texture" id=7]
 
@@ -52,35 +51,6 @@ tracks/1/keys = {
 "values": [ {
 "args": [  ],
 "method": "basic_attack"
-} ]
-}
-
-[sub_resource type="Animation" id=8]
-resource_name = "Cast"
-tracks/0/type = "value"
-tracks/0/path = NodePath("Sprite:frame_coords")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0, 1 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 0,
-"values": [ Vector2( 0, 3 ), Vector2( 0, 3 ) ]
-}
-tracks/1/type = "method"
-tracks/1/path = NodePath(".")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/keys = {
-"times": PoolRealArray( 0.7 ),
-"transitions": PoolRealArray( 1 ),
-"values": [ {
-"args": [  ],
-"method": "cast_attack"
 } ]
 }
 
@@ -199,22 +169,8 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Juice_Bar" type="ProgressBar" parent="Bars"]
-margin_left = -7.0
-margin_top = -13.0
-margin_right = 7.0
-margin_bottom = -12.0
-theme = ExtResource( 5 )
-step = 1.0
-value = 20.0
-percent_visible = false
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/Attack = SubResource( 4 )
-anims/Cast = SubResource( 8 )
 anims/Idle = SubResource( 5 )
 anims/Move = SubResource( 6 )
 anims/RESET = SubResource( 7 )

@@ -48,7 +48,7 @@ var initial_pos = Vector2.ZERO
 #----------------------------------------------------------
 #-----*******************************************-------
 #Unit-type exclusive variables
-var max_mana = 0
+var max_mana = 1
 var current_mana = 0
 
 var position_invalid = false
@@ -256,7 +256,7 @@ func target_closest(body):
 #Attacks
 func basic_attack():
 	if target != null:
-		target.attack_hit(self, attack_damage)
+		target.attack_hit(self, attack_damage, false)
 		current_mana += 20
 		
 		sfx.stream = attack_sfx

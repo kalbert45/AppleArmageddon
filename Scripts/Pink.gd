@@ -31,8 +31,8 @@ var max_hp = 100
 var current_hp = 100
 
 var attack_damage = 10
-var attack_speed = 1.5
-var defense = 1
+var attack_speed = 1.0
+var defense = 0
 var movement_speed = 50
 
 var attacking_modes = ["Default", "Stand by", "Chase"]
@@ -48,13 +48,14 @@ var initial_pos = Vector2.ZERO
 #----------------------------------------------------------
 #-----*******************************************-------
 #Unit-type exclusive variables
-var max_mana = 100
-var current_mana = 20
+var max_mana = 1
+var current_mana = 0
 
 var position_invalid = false
 #-****************************************************---
 #--------------------------------------------------------
-# Apple exclusive variable
+# Pink exclusive variables
+var movement_target = Vector2.ZERO
 var label = "Pink"
 #------------------------------------------------------
 
@@ -63,6 +64,7 @@ onready var animation_manager = $AnimationPlayer
 onready var sfx = $SFX
 
 var attack_sfx = preload("res://Assets/Sounds/SFX/attack_sfx.wav")
+var picture = preload("res://Assets/Sprites/red.png")
 
 var damage_number_scene = preload("res://Scenes/Damage_Number.tscn")
 var apple_death_scene = preload("res://Scenes/Apple_Death.tscn")
@@ -78,14 +80,14 @@ func _ready():
 	
 func ready_bars():
 	var hp_bar = $Bars/HP_Bar
-	var juice_bar = $Bars/Juice_Bar
+	#var juice_bar = $Bars/Juice_Bar
 	hp_bar.max_value = max_hp
 	hp_bar.rect_size = Vector2(int(max_hp/10), 3)
 	hp_bar.rect_position = Vector2(ceil(-hp_bar.rect_size.x/2)-1, -16)
 	
-	juice_bar.max_value = max_mana
-	juice_bar.rect_size = Vector2(int(max_mana/10), 1)
-	juice_bar.rect_position = Vector2(ceil(-juice_bar.rect_size.x/2)-1, -13)
+	#juice_bar.max_value = max_mana
+	#juice_bar.rect_size = Vector2(int(max_mana/10), 1)
+	#juice_bar.rect_position = Vector2(ceil(-juice_bar.rect_size.x/2)-1, -13)
 	
 func _process(delta):
 	process_stat_values(delta)
@@ -102,12 +104,12 @@ func _physics_process(delta):
 #------------------------------------------------------------
 # process in-game stat values, i.e. hp, mana, armor, etc.
 func process_stat_values(_delta):
-	if current_mana >= max_mana:
-		if animation_manager.current_state == IDLE_ANIM_NAME:
-			current_mana = 0
-			animation_manager.set_animation(CAST_ANIM_NAME)
+	#if current_mana >= max_mana:
+	#	if animation_manager.current_state == IDLE_ANIM_NAME:
+	#		current_mana = 0
+	#		animation_manager.set_animation(CAST_ANIM_NAME)
 			
-	$Bars/Juice_Bar.value = current_mana
+	#$Bars/Juice_Bar.value = current_mana
 	$Bars/HP_Bar.value = current_hp
 #-----------------------------------------------------------
 
@@ -140,22 +142,26 @@ func process_mouse(_delta):
 #--------------------------------------------------------------
 # process movement of unit
 func process_movement(delta):
+	if not is_instance_valid(target):
+		target = null
 	direction += calculate_local_avoidance()
 	if animation_manager.current_state != CAST_ANIM_NAME:
 		# Movement towards target
 		if (target != null) and (!attacking):
+			movement_target = set_movement_target()
 			$Sprite.set_flip_h(global_position.x > target.global_position.x)
 			speed += ACCEL * delta
-			direction += (15/global_position.distance_to(target.global_position))*(target.global_position - global_position)
+			direction += (15/global_position.distance_to(movement_target))*(movement_target - global_position)
 			attacking = attack_range.overlaps_body(target)
 			if animation_manager.current_state != MOVEMENT_ANIM_NAME:
 				animation_manager.set_animation(MOVEMENT_ANIM_NAME)
 			
 		# Attack target
 		elif (target != null) and attacking:
+			movement_target = set_movement_target()
 			$Sprite.set_flip_h(global_position.x > target.global_position.x)
 			speed -= DEACCEL * delta
-			direction += (15/global_position.distance_to(target.global_position))*(target.global_position - global_position)
+			direction += (15/global_position.distance_to(movement_target))*(movement_target - global_position)
 			attacking = attack_range.overlaps_body(target)
 			if animation_manager.current_state != ATTACK_ANIM_NAME:
 				animation_manager.set_animation(ATTACK_ANIM_NAME)
@@ -180,6 +186,23 @@ func process_movement(delta):
 	velocity = direction * speed
 	velocity = move_and_slide(velocity)
 	
+	if $Sprite.flip_h:
+		$Sprite.offset = Vector2(-32, 0)
+	else:
+		$Sprite.offset = Vector2(32, 0)
+	
+# Pink has different movement target due to strange attack area
+func set_movement_target():
+	var target1 = Vector2(target.global_position.x - 64, target.global_position.y)
+	var target2 = Vector2(target.global_position.x + 64, target.global_position.y)
+	target1.x = clamp(target1.x, get_viewport().size.x, 2*get_viewport().size.x)
+	target1.y = clamp(target1.y, 0, get_viewport().size.y)
+	target2.x = clamp(target2.x, get_viewport().size.x, 2*get_viewport().size.x)
+	target2.y = clamp(target2.y, 0, get_viewport().size.y)
+	if global_position.distance_to(target1) < global_position.distance_to(target2):
+		return target1
+	else:
+		return target2
 #--------------------------------------------------------------
 # Local Avoidance algorithm
 func calculate_local_avoidance():
@@ -257,11 +280,14 @@ func target_closest(body):
 #Attacks
 func basic_attack():
 	if target != null:
-		target.attack_hit(self, attack_damage)
-		current_mana += 20
+		target.attack_hit(self, attack_damage, true, 50)
+		#current_mana += 20
 		
 		sfx.stream = attack_sfx
 		sfx.play()
+		
+		target = null
+		target_closest(null)
 		
 func cast_attack():
 	if target != null:

@@ -1,12 +1,11 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=17 format=2]
 
-[ext_resource path="res://Assets/Sprites/apple_spritesheet.png" type="Texture" id=1]
+[ext_resource path="res://Assets/Sprites/pink_spritesheet.png" type="Texture" id=1]
 [ext_resource path="res://Assets/Sprites/apple_shadow.png" type="Texture" id=2]
 [ext_resource path="res://Scripts/Pink.gd" type="Script" id=3]
 [ext_resource path="res://Scripts/Apple_Animation_Manager.gd" type="Script" id=4]
 [ext_resource path="res://Assets/Shaders/outline_shader.tres" type="Shader" id=5]
 [ext_resource path="res://Assets/Themes/health_bar.tres" type="Theme" id=6]
-[ext_resource path="res://Assets/Themes/juice_bar.tres" type="Theme" id=7]
 
 [sub_resource type="ShaderMaterial" id=9]
 resource_local_to_scene = true
@@ -23,8 +22,9 @@ radius = 9.05539
 [sub_resource type="CircleShape2D" id=2]
 radius = 172.754
 
-[sub_resource type="CircleShape2D" id=3]
-radius = 18.0278
+[sub_resource type="CapsuleShape2D" id=11]
+radius = 9.0
+height = 138.0
 
 [sub_resource type="Animation" id=4]
 resource_name = "Attack"
@@ -47,7 +47,7 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0.5 ),
+"times": PoolRealArray( 0.3 ),
 "transitions": PoolRealArray( 1 ),
 "values": [ {
 "args": [  ],
@@ -86,8 +86,9 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id=5]
 resource_name = "Idle"
+length = 4.0
 loop = true
-step = 0.5
+step = 0.2
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
 tracks/0/interp = 1
@@ -95,16 +96,16 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.5 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PoolRealArray( 0, 1, 1.2, 1.4, 1.6, 1.8, 2, 2.2, 2.4, 2.6, 2.8, 3, 3.2, 3.4, 3.6, 4 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
 "update": 1,
-"values": [ 0, 1 ]
+"values": [ 0, 0, 1, 2, 3, 4, 5, 4, 5, 4, 4, 3, 2, 1, 0, 0 ]
 }
 
 [sub_resource type="Animation" id=6]
 resource_name = "Move"
+length = 0.4
 loop = true
-step = 0.111111
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame_coords")
 tracks/0/interp = 1
@@ -112,10 +113,10 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.125, 0.25, 0.375, 0.444444, 0.666667, 0.777778, 0.888889 ),
-"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1 ),
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
 "update": 0,
-"values": [ Vector2( 0, 2 ), Vector2( 0, 2 ), Vector2( 1, 2 ), Vector2( 1, 2 ), Vector2( 2, 2 ), Vector2( 2, 2 ), Vector2( 1, 2 ), Vector2( 1, 2 ) ]
+"values": [ Vector2( 0, 2 ), Vector2( 1, 2 ), Vector2( 2, 2 ), Vector2( 3, 2 ), Vector2( 4, 2 ) ]
 }
 
 [sub_resource type="Animation" id=7]
@@ -153,13 +154,14 @@ script = ExtResource( 3 )
 [node name="Sprite" type="Sprite" parent="."]
 material = SubResource( 9 )
 texture = ExtResource( 1 )
+offset = Vector2( 32, 0 )
 hframes = 10
 vframes = 4
 frame = 20
 
 [node name="Shadow" type="Sprite" parent="Sprite"]
 show_behind_parent = true
-position = Vector2( -0.5, 14.5 )
+position = Vector2( -0.5, 10.5 )
 texture = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -184,8 +186,8 @@ shape = SubResource( 2 )
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Attack_Range"]
-visible = false
-shape = SubResource( 3 )
+rotation = 1.5708
+shape = SubResource( 11 )
 
 [node name="Bars" type="Node2D" parent="."]
 z_index = 2
@@ -198,19 +200,6 @@ margin_bottom = -13.0
 theme = ExtResource( 6 )
 step = 1.0
 value = 100.0
-percent_visible = false
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Juice_Bar" type="ProgressBar" parent="Bars"]
-margin_left = -7.0
-margin_top = -13.0
-margin_right = 7.0
-margin_bottom = -12.0
-theme = ExtResource( 7 )
-step = 1.0
-value = 20.0
 percent_visible = false
 __meta__ = {
 "_edit_use_anchors_": false

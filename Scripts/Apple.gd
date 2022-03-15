@@ -48,8 +48,8 @@ var initial_pos = Vector2.ZERO
 #----------------------------------------------------------
 #-----*******************************************-------
 #Unit-type exclusive variables
-var max_mana = 100
-var current_mana = 20
+var max_mana = 1
+var current_mana = 0
 
 var position_invalid = false
 #-****************************************************---
@@ -79,14 +79,11 @@ func _ready():
 	
 func ready_bars():
 	var hp_bar = $Bars/HP_Bar
-	var juice_bar = $Bars/Juice_Bar
+	
 	hp_bar.max_value = max_hp
 	hp_bar.rect_size = Vector2(int(max_hp/10), 3)
 	hp_bar.rect_position = Vector2(ceil(-hp_bar.rect_size.x/2)-1, -16)
 	
-	juice_bar.max_value = max_mana
-	juice_bar.rect_size = Vector2(int(max_mana/10), 1)
-	juice_bar.rect_position = Vector2(ceil(-juice_bar.rect_size.x/2)-1, -13)
 	
 func _process(delta):
 	process_stat_values(delta)
@@ -103,12 +100,12 @@ func _physics_process(delta):
 #------------------------------------------------------------
 # process in-game stat values, i.e. hp, mana, armor, etc.
 func process_stat_values(_delta):
-	if current_mana >= max_mana:
-		if animation_manager.current_state == IDLE_ANIM_NAME:
-			current_mana = 0
-			animation_manager.set_animation(CAST_ANIM_NAME)
+	#if current_mana >= max_mana:
+	#	if animation_manager.current_state == IDLE_ANIM_NAME:
+	#		current_mana = 0
+	#		animation_manager.set_animation(CAST_ANIM_NAME)
 			
-	$Bars/Juice_Bar.value = current_mana
+	#$Bars/Juice_Bar.value = current_mana
 	$Bars/HP_Bar.value = current_hp
 #-----------------------------------------------------------
 
@@ -182,6 +179,7 @@ func process_movement(delta):
 	direction = direction.clamped(1)
 	velocity = direction * speed
 	velocity = move_and_slide(velocity)
+	
 	
 #--------------------------------------------------------------
 # Local Avoidance algorithm
@@ -260,7 +258,7 @@ func target_closest(body):
 #Attacks
 func basic_attack():
 	if target != null:
-		target.attack_hit(self, attack_damage)
+		target.attack_hit(self, attack_damage, false)
 		current_mana += 20
 		
 		sfx.stream = attack_sfx
