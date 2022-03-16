@@ -127,7 +127,6 @@ func process_movement(delta):
 	if not is_instance_valid(target):
 		target = null
 	
-	
 	direction += calculate_local_avoidance()
 	if animation_manager.current_state != CAST_ANIM_NAME:
 		# Movement towards target
@@ -157,6 +156,7 @@ func process_movement(delta):
 		# deaccel while casting
 		speed -= DEACCEL * delta
 
+	
 	speed = clamp(speed, 0, movement_speed)
 	direction = direction.clamped(1)
 	velocity = direction * speed

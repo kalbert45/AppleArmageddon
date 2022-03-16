@@ -7,6 +7,7 @@ var units_node_target = null
 var rng = RandomNumberGenerator.new()
 
 var eat_ready = false
+var eat = false
 var tier = 0
 var roll_odds = null
 var shop_spots = [null, null, null]
@@ -92,6 +93,8 @@ func _on_Reroll_Button_pressed():
 func sell_unit(unit):
 	if not eat_ready:
 		return false
+		
+	eat = true
 	unit.die(-1)
 	Global.money += 1
 	emit_signal("update_money")
@@ -113,7 +116,11 @@ func _on_Face_body_entered(body):
 func _on_Face_body_exited(body):
 	if body.has_method("set_sprite_texture"):
 		return
-	animation_player.play_backwards("Open")
+	if eat:
+		animation_player.play("Eat")
+		eat = false
+	else:
+		animation_player.play_backwards("Open")
 
 func animation_ended(animation_name):
 	pass

@@ -144,6 +144,7 @@ func process_mouse(_delta):
 func process_movement(delta):
 	if not is_instance_valid(target):
 		target = null
+		
 	direction += calculate_local_avoidance()
 	if animation_manager.current_state != CAST_ANIM_NAME:
 		# Movement towards target
@@ -161,6 +162,7 @@ func process_movement(delta):
 			movement_target = set_movement_target()
 			$Sprite.set_flip_h(global_position.x > target.global_position.x)
 			speed -= DEACCEL * delta
+	
 			direction += (15/global_position.distance_to(movement_target))*(movement_target - global_position)
 			attacking = attack_range.overlaps_body(target)
 			if animation_manager.current_state != ATTACK_ANIM_NAME:
@@ -180,7 +182,9 @@ func process_movement(delta):
 	else:
 		# deaccel while casting
 		speed -= DEACCEL * delta
-
+	
+	
+	
 	speed = clamp(speed, 0, movement_speed)
 	direction = direction.clamped(1)
 	velocity = direction * speed

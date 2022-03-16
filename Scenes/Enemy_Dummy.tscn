@@ -5,12 +5,12 @@
 [ext_resource path="res://Assets/Themes/health_bar.tres" type="Theme" id=3]
 [ext_resource path="res://Assets/Sprites/soldier_spritesheet.png" type="Texture" id=4]
 [ext_resource path="res://Scripts/Apple_Animation_Manager.gd" type="Script" id=5]
-[ext_resource path="res://Assets/Sprites/apple_shadow.png" type="Texture" id=6]
+[ext_resource path="res://Assets/Sprites/soldier_shadow.png" type="Texture" id=6]
 
 [sub_resource type="ShaderMaterial" id=1]
 resource_local_to_scene = true
 shader = ExtResource( 1 )
-shader_param/width = 1.0
+shader_param/width = 0.0
 shader_param/outline_color = Color( 1, 0.2, 0.2, 1 )
 
 [sub_resource type="CircleShape2D" id=2]
@@ -103,8 +103,9 @@ tracks/0/keys = {
 
 [sub_resource type="Animation" id=9]
 resource_name = "Move"
+length = 0.4
 loop = true
-step = 0.111111
+step = 0.2
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame_coords")
 tracks/0/interp = 1
@@ -112,10 +113,10 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.125, 0.25, 0.375, 0.444444, 0.666667, 0.777778, 0.888889 ),
-"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1 ),
+"times": PoolRealArray( 0, 0.2, 0.4 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
 "update": 0,
-"values": [ Vector2( 0, 2 ), Vector2( 0, 2 ), Vector2( 1, 2 ), Vector2( 1, 2 ), Vector2( 2, 2 ), Vector2( 2, 2 ), Vector2( 1, 2 ), Vector2( 1, 2 ) ]
+"values": [ Vector2( 0, 2 ), Vector2( 1, 2 ), Vector2( 1, 2 ) ]
 }
 
 [sub_resource type="Animation" id=10]
@@ -159,8 +160,7 @@ frame = 20
 
 [node name="Shadow" type="Sprite" parent="Sprite"]
 show_behind_parent = true
-position = Vector2( -1, 10.5 )
-scale = Vector2( 0.6, 1 )
+position = Vector2( -0.5, 10.5 )
 texture = ExtResource( 6 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -213,6 +213,7 @@ anims/RESET = SubResource( 10 )
 script = ExtResource( 5 )
 
 [node name="SFX" type="AudioStreamPlayer" parent="."]
+volume_db = -80.0
 
 [connection signal="body_entered" from="Aggro_Area" to="." method="_on_Aggro_Area_body_entered"]
 [connection signal="body_exited" from="Aggro_Area" to="." method="_on_Aggro_Area_body_exited"]

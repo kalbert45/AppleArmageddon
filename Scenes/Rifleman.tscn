@@ -1,32 +1,31 @@
 [gd_scene load_steps=17 format=2]
 
-[ext_resource path="res://Assets/Sprites/pink_spritesheet.png" type="Texture" id=1]
-[ext_resource path="res://Assets/Sprites/apple_shadow.png" type="Texture" id=2]
-[ext_resource path="res://Scripts/Pink.gd" type="Script" id=3]
+[ext_resource path="res://Scripts/Rifleman.gd" type="Script" id=1]
+[ext_resource path="res://Assets/Sprites/soldier_shadow.png" type="Texture" id=2]
+[ext_resource path="res://Assets/Sprites/rifleman_spritesheet.png" type="Texture" id=3]
 [ext_resource path="res://Scripts/Apple_Animation_Manager.gd" type="Script" id=4]
 [ext_resource path="res://Assets/Shaders/outline_shader.tres" type="Shader" id=5]
 [ext_resource path="res://Assets/Themes/health_bar.tres" type="Theme" id=6]
 
-[sub_resource type="ShaderMaterial" id=9]
+[sub_resource type="ShaderMaterial" id=1]
 resource_local_to_scene = true
 shader = ExtResource( 5 )
 shader_param/width = 0.0
 shader_param/outline_color = Color( 1, 0.2, 0.2, 1 )
 
-[sub_resource type="CircleShape2D" id=1]
+[sub_resource type="CircleShape2D" id=2]
 radius = 7.0
 
-[sub_resource type="CircleShape2D" id=10]
+[sub_resource type="CircleShape2D" id=3]
 radius = 9.05539
 
-[sub_resource type="CircleShape2D" id=2]
-radius = 172.754
+[sub_resource type="CircleShape2D" id=4]
+radius = 227.0
 
-[sub_resource type="CapsuleShape2D" id=11]
-radius = 9.0
-height = 138.0
+[sub_resource type="CircleShape2D" id=5]
+radius = 139.032
 
-[sub_resource type="Animation" id=4]
+[sub_resource type="Animation" id=6]
 resource_name = "Attack"
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame_coords")
@@ -47,7 +46,7 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0.3 ),
+"times": PoolRealArray( 0.4 ),
 "transitions": PoolRealArray( 1 ),
 "values": [ {
 "args": [  ],
@@ -55,7 +54,7 @@ tracks/1/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=8]
+[sub_resource type="Animation" id=7]
 resource_name = "Cast"
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame_coords")
@@ -84,11 +83,11 @@ tracks/1/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=5]
+[sub_resource type="Animation" id=8]
 resource_name = "Idle"
-length = 4.0
+length = 1.2
 loop = true
-step = 0.2
+step = 0.3
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
 tracks/0/interp = 1
@@ -96,16 +95,17 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 1, 1.2, 1.4, 1.6, 1.8, 2, 2.2, 2.4, 2.6, 2.8, 3, 3.2, 3.4, 3.6, 4 ),
-"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"times": PoolRealArray( 0, 0.3, 0.6, 0.9, 1.2 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
 "update": 1,
-"values": [ 0, 0, 1, 2, 3, 4, 5, 4, 5, 4, 4, 3, 2, 1, 0, 0 ]
+"values": [ 0, 1, 2, 3, 0 ]
 }
 
-[sub_resource type="Animation" id=6]
+[sub_resource type="Animation" id=9]
 resource_name = "Move"
 length = 0.4
 loop = true
+step = 0.2
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame_coords")
 tracks/0/interp = 1
@@ -113,13 +113,13 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4 ),
-"transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
+"times": PoolRealArray( 0, 0.2, 0.4 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
 "update": 0,
-"values": [ Vector2( 0, 2 ), Vector2( 1, 2 ), Vector2( 2, 2 ), Vector2( 3, 2 ), Vector2( 4, 2 ) ]
+"values": [ Vector2( 0, 2 ), Vector2( 1, 2 ), Vector2( 1, 2 ) ]
 }
 
-[sub_resource type="Animation" id=7]
+[sub_resource type="Animation" id=10]
 length = 0.001
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
@@ -146,17 +146,16 @@ tracks/1/keys = {
 "values": [ Vector2( 0, 2 ) ]
 }
 
-[node name="Pink" type="KinematicBody2D" groups=["Units"]]
+[node name="Rifleman" type="KinematicBody2D" groups=["Enemies"]]
+collision_layer = 2
 collision_mask = 7
-input_pickable = true
-script = ExtResource( 3 )
+script = ExtResource( 1 )
 
 [node name="Sprite" type="Sprite" parent="."]
-material = SubResource( 9 )
-texture = ExtResource( 1 )
-offset = Vector2( 32, 0 )
+material = SubResource( 1 )
+texture = ExtResource( 3 )
 hframes = 10
-vframes = 4
+vframes = 3
 frame = 20
 
 [node name="Shadow" type="Sprite" parent="Sprite"]
@@ -166,28 +165,28 @@ texture = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 visible = false
-shape = SubResource( 1 )
+shape = SubResource( 2 )
 
 [node name="Body_Area" type="Area2D" parent="."]
 collision_mask = 7
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Body_Area"]
 visible = false
-shape = SubResource( 10 )
+shape = SubResource( 3 )
 
 [node name="Aggro_Area" type="Area2D" parent="."]
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Aggro_Area"]
 visible = false
-shape = SubResource( 2 )
+shape = SubResource( 4 )
 
 [node name="Attack_Range" type="Area2D" parent="."]
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Attack_Range"]
-rotation = 1.5708
-shape = SubResource( 11 )
+visible = false
+shape = SubResource( 5 )
 
 [node name="Bars" type="Node2D" parent="."]
 z_index = 2
@@ -206,15 +205,14 @@ __meta__ = {
 }
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/Attack = SubResource( 4 )
-anims/Cast = SubResource( 8 )
-anims/Idle = SubResource( 5 )
-anims/Move = SubResource( 6 )
-anims/RESET = SubResource( 7 )
+anims/Attack = SubResource( 6 )
+anims/Cast = SubResource( 7 )
+anims/Idle = SubResource( 8 )
+anims/Move = SubResource( 9 )
+anims/RESET = SubResource( 10 )
 script = ExtResource( 4 )
 
 [node name="SFX" type="AudioStreamPlayer" parent="."]
-volume_db = -80.0
 
 [connection signal="body_entered" from="Aggro_Area" to="." method="_on_Aggro_Area_body_entered"]
 [connection signal="body_exited" from="Aggro_Area" to="." method="_on_Aggro_Area_body_exited"]

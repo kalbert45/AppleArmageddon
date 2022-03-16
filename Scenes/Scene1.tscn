@@ -6,7 +6,7 @@
 [ext_resource path="res://Scripts/Scene1.gd" type="Script" id=4]
 [ext_resource path="res://Scenes/Gunman.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Scenes/Enemy_Dummy.tscn" type="PackedScene" id=6]
-[ext_resource path="res://Scenes/Turret.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Scenes/Rifleman.tscn" type="PackedScene" id=7]
 
 [sub_resource type="ConvexPolygonShape2D" id=6]
 points = PoolVector2Array( 64, 43.1982, 0, 43.1982, 0, 0, 64, 0 )
@@ -120,19 +120,40 @@ tile_data = PoolIntArray( 655360, 0, 0, 655362, 0, 0, 655364, 0, 0, 655366, 0, 0
 [node name="YSort" type="YSort" parent="TileMap"]
 
 [node name="Enemy_Dummy" parent="TileMap/YSort" instance=ExtResource( 6 )]
-position = Vector2( 934, 184 )
+position = Vector2( 909, 107 )
 
 [node name="Enemy_Dummy2" parent="TileMap/YSort" instance=ExtResource( 6 )]
-position = Vector2( 1091, 184 )
+position = Vector2( 910, 136 )
 
 [node name="Enemy_Dummy3" parent="TileMap/YSort" instance=ExtResource( 6 )]
-position = Vector2( 1011, 185 )
+position = Vector2( 911, 158 )
 
-[node name="Enemy_Dummy4" parent="TileMap/YSort" instance=ExtResource( 5 )]
-position = Vector2( 1118, 185 )
+[node name="Enemy_Dummy4" parent="TileMap/YSort" instance=ExtResource( 6 )]
+position = Vector2( 913, 183 )
 
-[node name="Turret" parent="TileMap/YSort" instance=ExtResource( 7 )]
-position = Vector2( 924, 118 )
+[node name="Enemy_Dummy5" parent="TileMap/YSort" instance=ExtResource( 6 )]
+position = Vector2( 914, 208 )
+
+[node name="Enemy_Dummy6" parent="TileMap/YSort" instance=ExtResource( 6 )]
+position = Vector2( 913, 231 )
+
+[node name="Enemy_Dummy7" parent="TileMap/YSort" instance=ExtResource( 6 )]
+position = Vector2( 912, 251 )
+
+[node name="Gunman" parent="TileMap/YSort" instance=ExtResource( 5 )]
+position = Vector2( 1006, 111 )
+
+[node name="Gunman2" parent="TileMap/YSort" instance=ExtResource( 5 )]
+position = Vector2( 1010, 170 )
+
+[node name="Gunman3" parent="TileMap/YSort" instance=ExtResource( 5 )]
+position = Vector2( 1013, 231 )
+
+[node name="Gunman4" parent="TileMap/YSort" instance=ExtResource( 7 )]
+position = Vector2( 1066, 183 )
+
+[node name="Rifleman" parent="TileMap/YSort" instance=ExtResource( 7 )]
+position = Vector2( 1066, 146 )
 
 [node name="Music_Player" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 1 )
