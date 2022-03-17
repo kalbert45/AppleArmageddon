@@ -22,6 +22,9 @@ var speed = 0
 var direction = Vector2.ZERO
 var velocity = Vector2.ZERO
 
+var knock_speed = 100
+var knock_direction = Vector2.ZERO
+
 var target = null
 var attacking = false
 var casting = false
@@ -186,7 +189,12 @@ func process_movement(delta):
 	speed = clamp(speed, 0, movement_speed)
 	direction = direction.clamped(1)
 	velocity = direction * speed
+	velocity += knock_direction * knock_speed
 	velocity = move_and_slide(velocity)
+	
+	if knock_speed > 0:
+		knock_speed -= 100 * delta
+	knock_speed = clamp(knock_speed, 0, 100)
 	
 #--------------------------------------------------------------
 # Local Avoidance algorithm
@@ -269,7 +277,7 @@ func basic_attack():
 		projectile.damage = 20
 		projectile.global_position = global_position
 		projectile.direction = (target.global_position - global_position).normalized()
-		projectile.rotation_degrees = projectile.direction.angle()
+		projectile.rotation = projectile.direction.angle()
 		get_node("/root/Main/World").add_child(projectile)
 		current_mana += 20
 		
@@ -298,7 +306,11 @@ func is_colliding():
 
 #-----------------------------------------------------------------------
 # Taking damage
-func attack_hit(enemy, damage):
+func attack_hit(enemy_position, damage, knock, knock_power=50):
+	if knock:
+		knock_direction = (global_position - enemy_position).normalized()
+		knock_speed = knock_power
+	
 	var dmg = damage - defense
 	dmg = clamp(dmg, 0, damage)
 	current_hp -= dmg

@@ -22,6 +22,9 @@ var speed = 0
 var direction = Vector2.ZERO
 var velocity = Vector2.ZERO
 
+var knock_speed = 100
+var knock_direction = Vector2.ZERO
+
 var target = null
 var attacking = false
 var casting = false
@@ -188,12 +191,17 @@ func process_movement(delta):
 	speed = clamp(speed, 0, movement_speed)
 	direction = direction.clamped(1)
 	velocity = direction * speed
+	velocity += knock_direction * knock_speed
 	velocity = move_and_slide(velocity)
 	
 	if $Sprite.flip_h:
 		$Sprite.offset = Vector2(-32, 0)
 	else:
 		$Sprite.offset = Vector2(32, 0)
+		
+	if knock_speed > 0:
+		knock_speed -= 100 * delta
+	knock_speed = clamp(knock_speed, 0, 100)
 	
 # Pink has different movement target due to strange attack area
 func set_movement_target():
@@ -284,7 +292,7 @@ func target_closest(body):
 #Attacks
 func basic_attack():
 	if target != null:
-		target.attack_hit(self, attack_damage, true, 50)
+		target.attack_hit(self.global_position, attack_damage, true, 50)
 		#current_mana += 20
 		
 		sfx.stream = attack_sfx
@@ -312,7 +320,11 @@ func is_colliding():
 
 #-----------------------------------------------------------------------
 # Taking damage
-func attack_hit(enemy, damage):
+func attack_hit(enemy_position, damage, knock, knock_power=50):
+	if knock:
+		knock_direction = (global_position - enemy_position).normalized()
+		knock_speed = knock_power
+	
 	var dmg = damage - defense
 	dmg = clamp(dmg, 0, damage)
 	current_hp -= dmg

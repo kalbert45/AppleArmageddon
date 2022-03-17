@@ -1,11 +1,9 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Assets/Sounds/Music/[Maplestory BGM] Chu Chu Island.mp3" type="AudioStream" id=1]
 [ext_resource path="res://Assets/Tilesets/TX Tileset Wall.png" type="Texture" id=2]
 [ext_resource path="res://Assets/Tilesets/TX Tileset Grass.png" type="Texture" id=3]
 [ext_resource path="res://Scripts/Scene1.gd" type="Script" id=4]
-[ext_resource path="res://Scenes/Gunman.tscn" type="PackedScene" id=5]
-[ext_resource path="res://Scenes/Enemy_Dummy.tscn" type="PackedScene" id=6]
 [ext_resource path="res://Scenes/Rifleman.tscn" type="PackedScene" id=7]
 
 [sub_resource type="ConvexPolygonShape2D" id=6]
@@ -119,41 +117,11 @@ tile_data = PoolIntArray( 655360, 0, 0, 655362, 0, 0, 655364, 0, 0, 655366, 0, 0
 
 [node name="YSort" type="YSort" parent="TileMap"]
 
-[node name="Enemy_Dummy" parent="TileMap/YSort" instance=ExtResource( 6 )]
-position = Vector2( 909, 107 )
-
-[node name="Enemy_Dummy2" parent="TileMap/YSort" instance=ExtResource( 6 )]
-position = Vector2( 910, 136 )
-
-[node name="Enemy_Dummy3" parent="TileMap/YSort" instance=ExtResource( 6 )]
-position = Vector2( 911, 158 )
-
-[node name="Enemy_Dummy4" parent="TileMap/YSort" instance=ExtResource( 6 )]
-position = Vector2( 913, 183 )
-
-[node name="Enemy_Dummy5" parent="TileMap/YSort" instance=ExtResource( 6 )]
-position = Vector2( 914, 208 )
-
-[node name="Enemy_Dummy6" parent="TileMap/YSort" instance=ExtResource( 6 )]
-position = Vector2( 913, 231 )
-
-[node name="Enemy_Dummy7" parent="TileMap/YSort" instance=ExtResource( 6 )]
-position = Vector2( 912, 251 )
-
-[node name="Gunman" parent="TileMap/YSort" instance=ExtResource( 5 )]
-position = Vector2( 1006, 111 )
-
-[node name="Gunman2" parent="TileMap/YSort" instance=ExtResource( 5 )]
-position = Vector2( 1010, 170 )
-
-[node name="Gunman3" parent="TileMap/YSort" instance=ExtResource( 5 )]
-position = Vector2( 1013, 231 )
-
-[node name="Gunman4" parent="TileMap/YSort" instance=ExtResource( 7 )]
-position = Vector2( 1066, 183 )
-
 [node name="Rifleman" parent="TileMap/YSort" instance=ExtResource( 7 )]
 position = Vector2( 1066, 146 )
+
+[node name="Rifleman2" parent="TileMap/YSort" instance=ExtResource( 7 )]
+position = Vector2( 1064, 230 )
 
 [node name="Music_Player" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 1 )

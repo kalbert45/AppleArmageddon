@@ -63,6 +63,7 @@ var attack_sfx = preload("res://Assets/Sounds/SFX/attack_sfx.wav")
 
 var damage_number_scene = preload("res://Scenes/Damage_Number.tscn")
 var apple_death_scene = preload("res://Scenes/Apple_Death.tscn")
+var bullet_scene = preload("res://Scenes/Rifle_Bullet.tscn")
 
 #-------------------------------------------------------------
 
@@ -167,6 +168,11 @@ func process_movement(delta):
 	if knock_speed > 0:
 		knock_speed -= 100 * delta
 	knock_speed = clamp(knock_speed, 0, 100)
+	
+	if $Sprite.flip_h:
+		$Bullet_Position.position.x = 12.5
+	else:
+		$Bullet_Position.position.x = -12.5
 #--------------------------------------------------------------
 # Local Avoidance algorithm
 func calculate_local_avoidance():
@@ -209,16 +215,50 @@ func _on_Aggro_Area_body_exited(body):
 					var dist = global_position.distance_to(new_body.global_position)
 					if dist < min_dist:
 						target = new_body
+						
+# Target closest enemy when there is no target
+func target_closest(body):
+	if not active:
+		return
+	if target != null:
+		return
+	var enemies = get_tree().get_nodes_in_group("Units")
+	if enemies.empty():
+		return
+	
+	var closest = null
+	var min_dist = 0
+	for enemy in enemies:
+		if enemy == body:
+			continue
+		if closest == null:
+			closest = enemy
+			min_dist = global_position.distance_to(closest.global_position)
+		else:
+			var dist = global_position.distance_to(enemy.global_position)
+			if dist < min_dist:
+				closest = enemy
+				min_dist = dist
+	target = closest
 #----------------------------------------------------------------------------
 
 #------------------------------------------------------------------------
 #Attacks
 func basic_attack():
 	if target != null:
-		target.attack_hit(self, attack_damage)
+		var bullet = bullet_scene.instance()
+		bullet.damage = 20
+		bullet.global_position = $Bullet_Position.global_position
+		bullet.direction = (target.global_position - $Bullet_Position.global_position).normalized()
+		bullet.rotation = bullet.direction.angle()
+		get_node("/root/Main/World").add_child(bullet)
+
 		
 		sfx.stream = attack_sfx
 		sfx.play()
+		
+		target = null
+		target_closest(null)
 		
 func cast_attack():
 	if target != null:
@@ -238,9 +278,9 @@ func is_colliding():
 
 #-----------------------------------------------------------------------
 # Taking damage
-func attack_hit(enemy, damage, knock, knock_power=50):
+func attack_hit(enemy_position, damage, knock, knock_power=50):
 	if knock:
-		knock_direction = (global_position - enemy.global_position).normalized()
+		knock_direction = (global_position - enemy_position).normalized()
 		knock_speed = knock_power
 	
 	var dmg = damage - defense

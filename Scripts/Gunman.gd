@@ -214,7 +214,7 @@ func _on_Aggro_Area_body_exited(body):
 #Attacks
 func basic_attack():
 	if target != null:
-		target.attack_hit(self, attack_damage)
+		target.attack_hit(self.global_position, attack_damage, false)
 		
 		sfx.stream = attack_sfx
 		sfx.play()
@@ -237,9 +237,9 @@ func is_colliding():
 
 #-----------------------------------------------------------------------
 # Taking damage
-func attack_hit(enemy, damage, knock, knock_power=50):
+func attack_hit(enemy_position, damage, knock, knock_power=50):
 	if knock:
-		knock_direction = (global_position - enemy.global_position).normalized()
+		knock_direction = (global_position - enemy_position).normalized()
 		knock_speed = knock_power
 	
 	var dmg = damage - defense

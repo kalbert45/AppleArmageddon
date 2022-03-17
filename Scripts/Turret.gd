@@ -209,7 +209,7 @@ func is_colliding():
 
 #-----------------------------------------------------------------------
 # Taking damage
-func attack_hit(enemy, damage, _knock, _knock_power=50):
+func attack_hit(_enemy, damage, _knock, _knock_power=50):
 	var dmg = damage - defense
 	dmg = clamp(dmg, 0, damage)
 	current_hp -= dmg

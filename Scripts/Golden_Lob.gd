@@ -24,7 +24,7 @@ func _ready():
 	
 	rng.randomize()
 	curve_point = Vector2((source.x + target.x)/2, min(source.y, target.y) - 40)
-	full_rotation = rng.randi_range(-720,720)
+	full_rotation = rng.randi_range(-720,720) 
 	var scale_factor = rng.randf_range(1, 1.2)
 	scale = Vector2(scale_factor, scale_factor)
 
@@ -47,7 +47,7 @@ func explode():
 	var bodies = aoe.get_overlapping_bodies()
 	for body in bodies:
 		if body.is_in_group("Enemies"):
-			body.attack_hit(self, damage, true, 30)
+			body.attack_hit(self.global_position, damage, true, 30)
 			
 	tween.interpolate_property(self, 'modulate', Color(1,1,1,1), Color(1,1,1,0), 1, Tween.TRANS_LINEAR, Tween.TRANS_LINEAR, 0.2)
 	tween.start()
