@@ -185,7 +185,6 @@ shape = SubResource( 4 )
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Attack_Range"]
-visible = false
 shape = SubResource( 5 )
 
 [node name="Bars" type="Node2D" parent="."]

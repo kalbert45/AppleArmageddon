@@ -25,7 +25,8 @@ func _ready():
 		_:
 			print(type + " is not a damage number type")
 			
-	velocity = Vector2(side_movement, 10)
+	side_movement = 0
+	velocity = Vector2(side_movement, -10)
 	
 	#tween.interpolate_property(self, 'scale', Vector2(0.7,0.7), Vector2(1,1), 0.1, Tween.TRANS_LINEAR, Tween.EASE_OUT)
 	tween.interpolate_property(self, 'modulate', Color(1,1,1,0), Color(1,1,1,1), 0.1, Tween.TRANS_LINEAR, Tween.EASE_OUT)

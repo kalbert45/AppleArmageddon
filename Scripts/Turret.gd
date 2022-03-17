@@ -5,10 +5,7 @@ extends KinematicBody2D
 #--********************************************************-----
 signal death
 
-const IDLE_ANIM_NAME = "Idle"
-const MOVEMENT_ANIM_NAME = "Move"
-const ATTACK_ANIM_NAME = "Attack"
-const CAST_ANIM_NAME = "Cast"
+
 
 const ACCEL = 100
 const DEACCEL = 120
@@ -17,22 +14,21 @@ const DEACCEL = 120
 #temp
 var active = false
 
-var speed = 0
+
 var direction = Vector2.ZERO
-var velocity = Vector2.ZERO
+
 
 var target = null
 var attacking = false
 var casting = false
 #----------------------------------------------------------
 # Unit stats
-var max_hp = 100
-var current_hp = 100
+var max_hp = 500
+var current_hp = 500
 
 var attack_damage = 10
 var attack_speed = 1.0
-var defense = 0
-var movement_speed = 50
+var defense = 5
 
 var attacking_modes = ["Default", "Stand by", "Chase"]
 var attacking_mode = "Default"
@@ -48,24 +44,47 @@ var mouse_select = false
 
 #-****************************************************---
 #--------------------------------------------------------
-# Grunt exclusive variable
+# Turret exclusive variables
 var label = "Turret"
+
+const IDLE_ANIM_NAME = "Idle"
+const ATTACK_LEFT_ANIM_NAME = "Attack_Left"
+const ATTACK_UP_ANIM_NAME = "Attack_Up"
+const ATTACK_RIGHT_ANIM_NAME = "Attack_Right"
+const ATTACK_DOWN_ANIM_NAME = "Attack_Down"
+
+var bullet_position1 = Vector2.ZERO
+var bullet_position2 = Vector2.ZERO
 #------------------------------------------------------
 
 onready var attack_range = $Attack_Range
 onready var animation_manager = $AnimationPlayer
 onready var sfx = $SFX
 
+onready var bullet_position_left1 = $Bullet_Positions/Bullet_Position_Left1
+onready var bullet_position_left2 = $Bullet_Positions/Bullet_Position_Left2
+onready var bullet_position_up1 = $Bullet_Positions/Bullet_Position_Up1
+onready var bullet_position_up2 = $Bullet_Positions/Bullet_Position_Up2
+onready var bullet_position_right1 = $Bullet_Positions/Bullet_Position_Right1
+onready var bullet_position_right2 = $Bullet_Positions/Bullet_Position_Right2
+onready var bullet_position_down1 = $Bullet_Positions/Bullet_Position_Down1
+onready var bullet_position_down2 = $Bullet_Positions/Bullet_Position_Down2
+
 var attack_sfx = preload("res://Assets/Sounds/SFX/attack_sfx.wav")
 
 var damage_number_scene = preload("res://Scenes/Damage_Number.tscn")
 var apple_death_scene = preload("res://Scenes/Apple_Death.tscn")
+var rifleman_scene = preload("res://Scenes/Rifleman.tscn")
+var bullet_scene = preload("res://Scenes/Rifle_Bullet.tscn")
 
 #-------------------------------------------------------------
 
 func _ready():
 	ready_bars()
-	animation_manager.animation_speeds["Attack"] = attack_speed
+	animation_manager.animation_speeds["Attack_Left"] = attack_speed
+	animation_manager.animation_speeds["Attack_Up"] = attack_speed
+	animation_manager.animation_speeds["Attack_Right"] = attack_speed
+	animation_manager.animation_speeds["Attack_Down"] = attack_speed
 	animation_manager.set_animation(IDLE_ANIM_NAME)
 	#global_position = initial_pos
 	# change size of bars based on max_hp max_mana
@@ -120,38 +139,39 @@ func process_mouse(_delta):
 #--------------------------------------------------------------
 # process movement of unit
 func process_movement(delta):
-	if animation_manager.current_state != CAST_ANIM_NAME:
-		# Movement towards target
-		if (target != null) and (!attacking):
-			$Sprite.set_flip_h(global_position.x < target.global_position.x)
-			speed += ACCEL * delta
-			direction = (target.global_position - global_position).normalized()
-			attacking = attack_range.overlaps_body(target)
+	# Movement towards target
+	if (target != null) and (!attacking):
+		attacking = attack_range.overlaps_body(target)
+		
+	# Attack target
+	elif (target != null) and attacking:
+		direction = (target.global_position - global_position).normalized()
+		attacking = attack_range.overlaps_body(target)
+		var angle = rad2deg(direction.angle())
+		if (angle >= 45) and (angle <= 135):
 			if animation_manager.current_state == IDLE_ANIM_NAME:
-				animation_manager.set_animation(MOVEMENT_ANIM_NAME)
-			
-		# Attack target
-		elif (target != null) and attacking:
-			$Sprite.set_flip_h(global_position.x < target.global_position.x)
-			speed -= DEACCEL * delta
-			direction = (target.global_position - global_position).normalized()
-			attacking = attack_range.overlaps_body(target)
-			if animation_manager.current_state != ATTACK_ANIM_NAME:
-				animation_manager.set_animation(ATTACK_ANIM_NAME)
-			
-		# Run until first target, else return to idle
+				bullet_position1 = bullet_position_down1.global_position
+				bullet_position2 = bullet_position_down2.global_position
+				animation_manager.set_animation(ATTACK_DOWN_ANIM_NAME)
+		elif (angle >= 135) or (angle <= -135):
+			if animation_manager.current_state == IDLE_ANIM_NAME:
+				bullet_position1 = bullet_position_left1.global_position
+				bullet_position2 = bullet_position_left2.global_position
+				animation_manager.set_animation(ATTACK_LEFT_ANIM_NAME)
+		elif (angle <= -45) and (angle >= -135):
+			if animation_manager.current_state == IDLE_ANIM_NAME:
+				bullet_position1 = bullet_position_up1.global_position
+				bullet_position2 = bullet_position_up2.global_position
+				animation_manager.set_animation(ATTACK_UP_ANIM_NAME)
 		else:
-			speed -= DEACCEL * delta
-			if animation_manager.current_state == MOVEMENT_ANIM_NAME:
-				animation_manager.set_animation(IDLE_ANIM_NAME)
+			if animation_manager.current_state == IDLE_ANIM_NAME:
+				bullet_position1 = bullet_position_right1.global_position
+				bullet_position2 = bullet_position_right2.global_position
+				animation_manager.set_animation(ATTACK_RIGHT_ANIM_NAME)
 	else:
-		# deaccel while casting
-		speed -= DEACCEL * delta
+		if animation_manager.current_state != IDLE_ANIM_NAME:
+			animation_manager.set_animation(IDLE_ANIM_NAME)
 
-	speed = clamp(speed, 0, movement_speed)
-	
-	velocity = Vector2(0,0)
-	velocity = move_and_slide(velocity)
 	
 #--------------------------------------------------------------
 
@@ -180,16 +200,66 @@ func _on_Aggro_Area_body_exited(body):
 					var dist = global_position.distance_to(new_body.global_position)
 					if dist < min_dist:
 						target = new_body
+						
+# Target closest enemy when there is no target
+func target_closest(body):
+	if not active:
+		return
+	if target != null:
+		return
+	var enemies = get_tree().get_nodes_in_group("Units")
+	if enemies.empty():
+		return
+	
+	var closest = null
+	var min_dist = 0
+	for enemy in enemies:
+		if enemy == body:
+			continue
+		if closest == null:
+			closest = enemy
+			min_dist = global_position.distance_to(closest.global_position)
+		else:
+			var dist = global_position.distance_to(enemy.global_position)
+			if dist < min_dist:
+				closest = enemy
+				min_dist = dist
+	target = closest
 #----------------------------------------------------------------------------
 
 #------------------------------------------------------------------------
 #Attacks
-func basic_attack():
+func basic_attack1():
 	if target != null:
-		target.attack_hit(self, attack_damage)
+		var bullet = bullet_scene.instance()
+		bullet.damage = 20
+		bullet.global_position = bullet_position1
+		bullet.direction = (target.global_position - bullet_position1).normalized()
+		bullet.rotation = bullet.direction.angle()
+		get_node("/root/Main/World").add_child(bullet)
+
 		
 		sfx.stream = attack_sfx
 		sfx.play()
+		
+		target = null
+		target_closest(null)
+		
+func basic_attack2():
+	if target != null:
+		var bullet = bullet_scene.instance()
+		bullet.damage = 20
+		bullet.global_position = bullet_position2
+		bullet.direction = (target.global_position - bullet_position2).normalized()
+		bullet.rotation = bullet.direction.angle()
+		get_node("/root/Main/World").add_child(bullet)
+
+		
+		sfx.stream = attack_sfx
+		sfx.play()
+		
+		target = null
+		target_closest(null)
 		
 func cast_attack():
 	if target != null:
@@ -233,6 +303,12 @@ func die(damage):
 	damage_number.amount = damage
 	damage_number.type = "Enemy"
 	apple_death.add_child(damage_number)
+	
+	for i in range(4):
+		var rifleman = rifleman_scene.instance()
+		rifleman.active = true
+		rifleman.global_position = Vector2(global_position.x+i, global_position.y)
+		get_parent().call_deferred("add_child", rifleman)
 	
 	queue_free()
 

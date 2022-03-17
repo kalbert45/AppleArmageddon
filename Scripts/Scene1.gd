@@ -35,7 +35,12 @@ func _ready():
 func _on_enemy_death():
 	if get_tree().get_nodes_in_group("Enemies").size() <= 1:
 		yield(get_tree().create_timer(0.5), "timeout")
-		emit_signal("stage_cleared")
+		enemies = get_tree().get_nodes_in_group("Enemies")
+		if enemies.empty():
+			emit_signal("stage_cleared")
+		else:
+			for enemy in enemies:
+				enemy.connect("death", self, "_on_enemy_death")
 		
 func _on_unit_death():
 	if get_tree().get_nodes_in_group("Units").size() <= 1:
