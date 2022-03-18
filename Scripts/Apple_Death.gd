@@ -16,3 +16,7 @@ func _ready():
 
 func _on_Tween_tween_all_completed():
 	queue_free()
+
+
+func _on_SFX_finished():
+	queue_free()

@@ -214,7 +214,7 @@ anims/RESET = SubResource( 7 )
 script = ExtResource( 4 )
 
 [node name="SFX" type="AudioStreamPlayer" parent="."]
-volume_db = -80.0
+volume_db = -7.0
 
 [connection signal="body_entered" from="Aggro_Area" to="." method="_on_Aggro_Area_body_entered"]
 [connection signal="body_exited" from="Aggro_Area" to="." method="_on_Aggro_Area_body_exited"]

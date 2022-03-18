@@ -13,6 +13,9 @@ var rng = RandomNumberGenerator.new()
 var burst = false
 var t = 0
 
+var splat_sfx = preload("res://Assets/Sounds/SFX/golden_lob_splat_sfx2.wav")
+var sfx_scene = preload("res://Scenes/SFX.tscn")
+
 onready var aoe = $AOE
 onready var lob = $Lob
 onready var splatter = $Splatter
@@ -41,6 +44,11 @@ func _process(delta):
 			explode()
 	
 func explode():
+	var sfx = sfx_scene.instance()
+	sfx.stream = splat_sfx
+	sfx.pitch_scale = 1.0
+	get_node("/root/Main/World").add_child(sfx)
+	
 	lob.visible = false
 	splatter.visible = true
 	

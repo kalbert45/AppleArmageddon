@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/park_ambience.ogg-b3c7755240039700e44f120c103a2b19.oggstr"
+
+[deps]
+
+source_file="res://Assets/Sounds/Music/park_ambience.ogg"
+dest_files=[ "res://.import/park_ambience.ogg-b3c7755240039700e44f120c103a2b19.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

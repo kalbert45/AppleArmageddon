@@ -32,7 +32,7 @@ var casting = false
 var max_hp = 100
 var current_hp = 100
 
-var attack_damage = 10
+var attack_damage = 0
 var attack_speed = 1.0
 var defense = 0
 var movement_speed = 50
@@ -59,10 +59,10 @@ onready var attack_range = $Attack_Range
 onready var animation_manager = $AnimationPlayer
 onready var sfx = $SFX
 
-var attack_sfx = preload("res://Assets/Sounds/SFX/attack_sfx.wav")
+var attack_sfx = preload("res://Assets/Sounds/SFX/punch_sfx.wav")
 
 var damage_number_scene = preload("res://Scenes/Damage_Number.tscn")
-var apple_death_scene = preload("res://Scenes/Apple_Death.tscn")
+var apple_death_scene = preload("res://Scenes/Person_Death.tscn")
 
 #-------------------------------------------------------------
 
@@ -200,6 +200,8 @@ func _on_Aggro_Area_body_exited(body):
 		var min_dist = null
 		var bodies = $Aggro_Area.get_overlapping_bodies()
 		for new_body in bodies:
+			if not is_instance_valid(new_body):
+				continue
 			if new_body == body:
 				continue
 			if new_body.is_in_group("Units"):

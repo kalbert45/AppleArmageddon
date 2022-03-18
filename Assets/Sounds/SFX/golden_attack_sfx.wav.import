@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/golden_attack_sfx.wav-d0d10f1f4c27557817e39e4ed54a0e90.sample"
+
+[deps]
+
+source_file="res://Assets/Sounds/SFX/golden_attack_sfx.wav"
+dest_files=[ "res://.import/golden_attack_sfx.wav-d0d10f1f4c27557817e39e4ed54a0e90.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

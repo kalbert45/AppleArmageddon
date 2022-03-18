@@ -13,6 +13,9 @@ var roll_odds = null
 var shop_spots = [null, null, null]
 var pool = []
 
+var eat_sfx1 = preload("res://Assets/Sounds/SFX/apple_eat1.wav")
+var eat_sfx2 = preload("res://Assets/Sounds/SFX/apple_eat2.wav")
+
 var shop_sprite_scene = preload("res://Scenes/Shop_Sprite.tscn")
 var shop_sprite
 
@@ -25,8 +28,10 @@ var pink = [preload("res://Scenes/Pink.tscn"), preload("res://Assets/Sprites/red
 
 onready var reroll_button = $Reroll_Button
 onready var animation_player = $AnimationPlayer
+onready var sfx = $SFX
 
 func _ready():
+	randomize()
 	rng.randomize()
 	animation_player.connect("animation_finished", self, "animation_ended")
 	# adjust number of shop spots and pool based on tier of shop
@@ -98,6 +103,14 @@ func sell_unit(unit):
 	unit.die(-1)
 	Global.money += 1
 	emit_signal("update_money")
+	
+	var i = randi() % 2
+	if i == 0:
+		sfx.stream = eat_sfx1
+	else:
+		sfx.stream = eat_sfx2
+	sfx.play()
+	
 	return true
 	
 

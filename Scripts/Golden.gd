@@ -33,7 +33,7 @@ var casting = false
 var max_hp = 80
 var current_hp = 80
 
-var attack_damage = 10
+var attack_damage = 0
 var attack_speed = 1.0
 var defense = 0
 var movement_speed = 40
@@ -65,7 +65,8 @@ onready var attack_range = $Attack_Range
 onready var animation_manager = $AnimationPlayer
 onready var sfx = $SFX
 
-var attack_sfx = preload("res://Assets/Sounds/SFX/attack_sfx.wav")
+var attack_sfx = preload("res://Assets/Sounds/SFX/golden_attack_sfx.wav")
+var attack_sfx2 = preload("res://Assets/Sounds/SFX/golden_attack_sfx2.wav")
 var picture = preload("res://Assets/Sprites/golden.png")
 
 var damage_number_scene = preload("res://Scenes/Damage_Number.tscn")
@@ -274,23 +275,28 @@ func target_closest(body):
 func basic_attack():
 	if target != null:
 		var projectile = projectile_scene.instance()
-		projectile.damage = 20
+		projectile.damage = attack_damage
 		projectile.global_position = global_position
 		projectile.direction = (target.global_position - global_position).normalized()
 		projectile.rotation = projectile.direction.angle()
 		get_node("/root/Main/World").add_child(projectile)
 		current_mana += 20
 		
-		sfx.stream = attack_sfx
+		sfx.pitch_scale = 1.0
+		sfx.stream = attack_sfx2
 		sfx.play()
 		
 func cast_attack():
 	if target != null:
 		var lob = lob_scene.instance()
-		lob.damage = 20
+		lob.damage = 2*attack_damage
 		lob.source = global_position
 		lob.target = target.global_position
 		get_node("/root/Main/World").add_child(lob)
+		
+		sfx.pitch_scale = 0.6
+		sfx.stream = attack_sfx
+		sfx.play()
 		
 #------------------------------------------------------------------------
 

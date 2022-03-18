@@ -14,6 +14,7 @@ func _process(delta):
 	global_position += velocity * delta
 
 func _on_Area2D_body_entered(body):
+	
 	body.attack_hit(null, damage, false)
 	queue_free()
 	

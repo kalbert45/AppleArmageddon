@@ -23,7 +23,7 @@ radius = 9.05539
 radius = 227.0
 
 [sub_resource type="CircleShape2D" id=5]
-radius = 139.032
+radius = 150.0
 
 [sub_resource type="Animation" id=6]
 resource_name = "Attack"
@@ -212,6 +212,8 @@ anims/RESET = SubResource( 10 )
 script = ExtResource( 4 )
 
 [node name="SFX" type="AudioStreamPlayer" parent="."]
+volume_db = -10.0
+bus = "SFX"
 
 [node name="Bullet_Position" type="Position2D" parent="."]
 position = Vector2( -12.5, -4.5 )

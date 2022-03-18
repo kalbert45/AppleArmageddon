@@ -185,7 +185,6 @@ shape = SubResource( 4 )
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Attack_Range"]
-visible = false
 shape = SubResource( 5 )
 
 [node name="Bars" type="Node2D" parent="."]
@@ -213,6 +212,7 @@ anims/RESET = SubResource( 10 )
 script = ExtResource( 4 )
 
 [node name="SFX" type="AudioStreamPlayer" parent="."]
+volume_db = -10.0
 
 [connection signal="body_entered" from="Aggro_Area" to="." method="_on_Aggro_Area_body_entered"]
 [connection signal="body_exited" from="Aggro_Area" to="." method="_on_Aggro_Area_body_exited"]

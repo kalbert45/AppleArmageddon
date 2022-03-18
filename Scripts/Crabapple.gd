@@ -65,7 +65,7 @@ onready var attack_range = $Attack_Range
 onready var animation_manager = $AnimationPlayer
 onready var sfx = $SFX
 
-var attack_sfx = preload("res://Assets/Sounds/SFX/attack_sfx.wav")
+var attack_sfx = preload("res://Assets/Sounds/SFX/punch_sfx.wav")
 var picture = preload("res://Assets/Sprites/crabapple.png")
 
 var damage_number_scene = preload("res://Scenes/Damage_Number.tscn")

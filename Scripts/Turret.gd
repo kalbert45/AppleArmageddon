@@ -23,12 +23,12 @@ var attacking = false
 var casting = false
 #----------------------------------------------------------
 # Unit stats
-var max_hp = 500
-var current_hp = 500
+var max_hp = 100
+var current_hp = 100
 
 var attack_damage = 10
 var attack_speed = 1.0
-var defense = 5
+var defense = 0
 
 var attacking_modes = ["Default", "Stand by", "Chase"]
 var attacking_mode = "Default"
@@ -59,7 +59,8 @@ var bullet_position2 = Vector2.ZERO
 
 onready var attack_range = $Attack_Range
 onready var animation_manager = $AnimationPlayer
-onready var sfx = $SFX
+onready var sfx1 = $SFX
+onready var sfx2 = $SFX2
 
 onready var bullet_position_left1 = $Bullet_Positions/Bullet_Position_Left1
 onready var bullet_position_left2 = $Bullet_Positions/Bullet_Position_Left2
@@ -70,10 +71,10 @@ onready var bullet_position_right2 = $Bullet_Positions/Bullet_Position_Right2
 onready var bullet_position_down1 = $Bullet_Positions/Bullet_Position_Down1
 onready var bullet_position_down2 = $Bullet_Positions/Bullet_Position_Down2
 
-var attack_sfx = preload("res://Assets/Sounds/SFX/attack_sfx.wav")
+var attack_sfx = preload("res://Assets/Sounds/SFX/rifle_sfx2.wav")
 
 var damage_number_scene = preload("res://Scenes/Damage_Number.tscn")
-var apple_death_scene = preload("res://Scenes/Apple_Death.tscn")
+var apple_death_scene = preload("res://Scenes/Turret_Death.tscn")
 var rifleman_scene = preload("res://Scenes/Rifleman.tscn")
 var bullet_scene = preload("res://Scenes/Rifle_Bullet.tscn")
 
@@ -93,7 +94,7 @@ func ready_bars():
 	var hp_bar = $Bars/HP_Bar
 	hp_bar.max_value = max_hp
 	hp_bar.rect_size = Vector2(int(max_hp/10), 3)
-	hp_bar.rect_position = Vector2(ceil(-hp_bar.rect_size.x/2)-1, -15)
+	hp_bar.rect_position = Vector2(ceil(-hp_bar.rect_size.x/2)-1, -21)
 	
 func _process(delta):
 	process_stat_values(delta)
@@ -190,6 +191,8 @@ func _on_Aggro_Area_body_exited(body):
 		var min_dist = null
 		var bodies = $Aggro_Area.get_overlapping_bodies()
 		for new_body in bodies:
+			if not is_instance_valid(new_body):
+				continue
 			if new_body == body:
 				continue
 			if new_body.is_in_group("Units"):
@@ -239,8 +242,8 @@ func basic_attack1():
 		get_node("/root/Main/World").add_child(bullet)
 
 		
-		sfx.stream = attack_sfx
-		sfx.play()
+		sfx1.stream = attack_sfx
+		sfx1.play()
 		
 		target = null
 		target_closest(null)
@@ -255,8 +258,8 @@ func basic_attack2():
 		get_node("/root/Main/World").add_child(bullet)
 
 		
-		sfx.stream = attack_sfx
-		sfx.play()
+		sfx2.stream = attack_sfx
+		sfx2.play()
 		
 		target = null
 		target_closest(null)

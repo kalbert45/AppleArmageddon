@@ -59,10 +59,10 @@ onready var attack_range = $Attack_Range
 onready var animation_manager = $AnimationPlayer
 onready var sfx = $SFX
 
-var attack_sfx = preload("res://Assets/Sounds/SFX/attack_sfx.wav")
+var attack_sfx = preload("res://Assets/Sounds/SFX/rifle_sfx2.wav")
 
 var damage_number_scene = preload("res://Scenes/Damage_Number.tscn")
-var apple_death_scene = preload("res://Scenes/Apple_Death.tscn")
+var apple_death_scene = preload("res://Scenes/Person_Death.tscn")
 var bullet_scene = preload("res://Scenes/Rifle_Bullet.tscn")
 
 #-------------------------------------------------------------
@@ -205,6 +205,8 @@ func _on_Aggro_Area_body_exited(body):
 		var min_dist = null
 		var bodies = $Aggro_Area.get_overlapping_bodies()
 		for new_body in bodies:
+			if not is_instance_valid(new_body):
+				continue
 			if new_body == body:
 				continue
 			if new_body.is_in_group("Units"):
