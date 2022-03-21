@@ -8,4 +8,4 @@ var money = 0
 var paths = []
 var current_point = null
 var current_path = []
-var stage_difficulty = 0
+var map_stages = {}

@@ -24,12 +24,15 @@ onready var units_node = $TileMap/YSort
 func _ready():
 	var enemy_generator = enemy_generator_scene.instance()
 	enemy_generator.generate_enemies(difficulty, units_node)
+	enemy_generator.queue_free()
 	
 	enemies = get_tree().get_nodes_in_group("Enemies")
 	units = get_tree().get_nodes_in_group("Units")
 	
 	for enemy in enemies:
 		enemy.connect("death", self, "_on_enemy_death")
+		if "spawn_enemies" in enemy.get_signal_list():
+			enemy.connect("spawn_enemies", self, "_on_enemy_spawn")
 	for unit in units:
 		unit.connect("death", self, "_on_unit_death")
 		
@@ -44,9 +47,11 @@ func _on_enemy_death():
 		enemies = get_tree().get_nodes_in_group("Enemies")
 		if enemies.empty():
 			emit_signal("stage_cleared")
-		else:
-			for enemy in enemies:
-				enemy.connect("death", self, "_on_enemy_death")
+
+func _on_enemy_spawn():
+	enemies = get_tree().get_nodes_in_group("Enemies")
+	for enemy in enemies:
+		enemy.connect("death", self, "_on_enemy_death")
 		
 func _on_unit_death():
 	if get_tree().get_nodes_in_group("Units").size() <= 1:
@@ -58,6 +63,8 @@ func load_data():
 	for unit in Global.units:
 		var instance = unit[0].instance()
 		instance.initial_pos = unit[1]
+		instance.current_hp = unit[2]
+		instance.current_mana = unit[3]
 		units_node.add_child(instance)
 
 func save_data():
@@ -65,15 +72,15 @@ func save_data():
 	for unit in get_tree().get_nodes_in_group("Units"):
 		match unit.label:
 			"Apple":
-				units.append([apple_scene, unit.initial_pos])
+				units.append([apple_scene, unit.initial_pos, unit.current_hp, unit.current_mana])
 			"Crabapple":
-				units.append([crabapple_scene, unit.initial_pos])
+				units.append([crabapple_scene, unit.initial_pos, unit.current_hp, unit.current_mana])
 			"Golden":
-				units.append([golden_scene, unit.initial_pos])
+				units.append([golden_scene, unit.initial_pos, unit.current_hp, unit.current_mana])
 			"Green":
-				units.append([green_scene, unit.initial_pos])
+				units.append([green_scene, unit.initial_pos, unit.current_hp, unit.current_mana])
 			"Pink":
-				units.append([pink_scene, unit.initial_pos])
+				units.append([pink_scene, unit.initial_pos, unit.current_hp, unit.current_mana])
 				
 		
 	Global.units = units

@@ -252,10 +252,10 @@ func attack_hit(enemy_position, damage, knock, knock_power=50):
 	if current_hp <= 0:
 		die(dmg)
 	
-	var damage_number = damage_number_scene.instance()
-	damage_number.amount = dmg
-	damage_number.type = "Enemy"
-	add_child(damage_number)
+	#var damage_number = damage_number_scene.instance()
+	#damage_number.amount = dmg
+	#damage_number.type = "Enemy"
+	#add_child(damage_number)
 	
 		
 func die(damage):
@@ -265,10 +265,10 @@ func die(damage):
 	apple_death.global_position = global_position
 	get_node("/root/Main/World").add_child(apple_death)
 	
-	var damage_number = damage_number_scene.instance()
-	damage_number.amount = damage
-	damage_number.type = "Enemy"
-	apple_death.add_child(damage_number)
+	#var damage_number = damage_number_scene.instance()
+	#damage_number.amount = damage
+	#damage_number.type = "Enemy"
+	#apple_death.add_child(damage_number)
 	
 	queue_free()
 

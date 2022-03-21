@@ -4,6 +4,7 @@ extends KinematicBody2D
 #------------------------------------------------------------------
 #--********************************************************-----
 signal death
+signal spawn_enemies
 
 
 
@@ -312,6 +313,8 @@ func die(damage):
 		rifleman.active = true
 		rifleman.global_position = Vector2(global_position.x+i, global_position.y)
 		get_parent().call_deferred("add_child", rifleman)
+		
+	emit_signal("spawn_enemies")
 	
 	queue_free()
 

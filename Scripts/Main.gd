@@ -28,7 +28,7 @@ func _ready():
 	HUD.add_child(title)
 	
 	if Global.units.empty():
-		Global.units.append([load("res://Scenes/Apple.tscn"), Vector2(240,180)])
+		Global.units.append([load("res://Scenes/Apple.tscn"), Vector2(240,180), 100, 0])
 		Global.money = 10
 
 func _on_Title_Screen_start_game():

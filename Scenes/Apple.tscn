@@ -27,6 +27,7 @@ radius = 18.0278
 
 [sub_resource type="Animation" id=4]
 resource_name = "Attack"
+length = 2.0
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame_coords")
 tracks/0/interp = 1
@@ -37,7 +38,7 @@ tracks/0/keys = {
 "times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1 ),
 "transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
 "update": 0,
-"values": [ Vector2( 0, 1 ), Vector2( 1, 1 ), Vector2( 2, 1 ), Vector2( 3, 1 ), Vector2( 4, 1 ), Vector2( 5, 1 ), Vector2( 6, 1 ), Vector2( 7, 1 ), Vector2( 8, 1 ), Vector2( 9, 1 ), Vector2( 8, 1 ) ]
+"values": [ Vector2( 8, 1 ), Vector2( 1, 1 ), Vector2( 2, 1 ), Vector2( 3, 1 ), Vector2( 4, 1 ), Vector2( 5, 1 ), Vector2( 6, 1 ), Vector2( 7, 1 ), Vector2( 8, 1 ), Vector2( 9, 1 ), Vector2( 8, 1 ) ]
 }
 tracks/1/type = "method"
 tracks/1/path = NodePath(".")

@@ -28,6 +28,7 @@ height = 138.0
 
 [sub_resource type="Animation" id=4]
 resource_name = "Attack"
+length = 2.0
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame_coords")
 tracks/0/interp = 1

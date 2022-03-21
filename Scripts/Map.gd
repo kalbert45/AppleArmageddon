@@ -3,11 +3,13 @@ extends Node2D
 signal begin_stage(difficulty, type)
 
 var new = false
+var buttons = {}
+
 var paths = []
 var current_path = []
 # points -> buttons
-var buttons = {}
 var current_point = null
+var map_stages = {}
 
 var map_button_scene = preload("res://Scenes/Map_Button.tscn")
 var map_generator_scene = preload("res://Scenes/Map_Generator.tscn")
@@ -17,27 +19,28 @@ func _ready():
 		Global.paths = []
 		Global.current_point = null
 		Global.current_path = []
-		Global.stage_difficulty = 0
+		Global.map_stages = {}
 		generate()
 		new = false
 	else:
 		paths = Global.paths
 		current_point = Global.current_point
 		current_path = Global.current_path
+		map_stages = Global.map_stages
 		update()
 		
 
-func _on_Next_Stage_Button_pressed(point):
-	Global.stage_difficulty += 1
+func _on_Next_Stage_Button_pressed(point, difficulty, type):
 	current_point = point
 	current_path.append(current_point)
 	save_data()
-	emit_signal("begin_stage", Global.stage_difficulty, null)
+	emit_signal("begin_stage", difficulty, type)
 	
 func save_data():
 	Global.paths = paths
 	Global.current_point = current_point
 	Global.current_path = current_path
+	Global.map_stages = map_stages
 
 
 func generate():
@@ -55,21 +58,42 @@ func generate():
 	update()
 				
 func _draw():
-	# draw entire map in grey, disabled buttons
+	# if map already exists, add all buttons
+	for index in map_stages:
+		var button_properties = map_stages[index]
+		var map_button = map_button_scene.instance()
+		map_button.difficulty = button_properties[0]
+		map_button.type = button_properties[1]
+		map_button.set_position(index - Vector2(12,12))
+		map_button.disabled = true
+		map_button.connect("pressed", self, "_on_Next_Stage_Button_pressed")
+		add_child(map_button)
+		map_button.point = index
+		buttons[index] = map_button
+	
+	# draw entire map in grey, add disabled buttons if necessary
 	for path in paths:
-		var prev_point = null
-		for point in path:
-			if not buttons.has(point):
+		for i in range(path.size()):
+			if not buttons.has(path[i]):
 				var map_button = map_button_scene.instance()
-				map_button.set_position(point - Vector2(12,12))
+				# set difficulty of map stage based on progress in path
+				map_button.difficulty = int(floor((i+1) * 2 / path.size()))
+				# randomly make some points mystery stages
+				if i % 2 == 1:
+					var rand = randi() % 2
+					if rand == 0:
+						map_button.type = "Question"
+				# make last point boss stage
+				#--
+				map_button.set_position(path[i] - Vector2(12,12))
 				map_button.disabled = true
 				map_button.connect("pressed", self, "_on_Next_Stage_Button_pressed")
 				add_child(map_button)
-				buttons[point] = map_button
-				map_button.point = point
-			if prev_point != null:
-				draw_line(prev_point, point, Color(0.5,0.5,0.5,1))
-			prev_point = point
+				map_button.point = path[i]
+				buttons[path[i]] = map_button
+				map_stages[path[i]] = [map_button.difficulty, map_button.type]
+			if i != 0:
+				draw_line(path[i-1], path[i], Color(0.5,0.5,0.5,1))
 				
 	# draw available paths in white, enable appropriate buttons
 	for path in paths:
@@ -87,4 +111,4 @@ func _draw():
 
 	# draw path thus far
 	for i in range(current_path.size()-1):
-		draw_line(current_path[i], current_path[i+1], Color(1,1,1,1))
+		draw_line(current_path[i], current_path[i+1], Color(1,1,1,1), 2)
