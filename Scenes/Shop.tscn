@@ -136,6 +136,11 @@ shape = SubResource( 5 )
 volume_db = -3.0
 bus = "SFX"
 
+[node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="."]
+position = Vector2( -2, -2 )
+scale = Vector2( 7.6, 5.8 )
+
 [connection signal="pressed" from="Reroll_Button" to="." method="_on_Reroll_Button_pressed"]
 [connection signal="body_entered" from="Face" to="." method="_on_Face_body_entered"]
 [connection signal="body_exited" from="Face" to="." method="_on_Face_body_exited"]
+[connection signal="screen_exited" from="VisibilityNotifier2D" to="." method="_on_VisibilityNotifier2D_screen_exited"]

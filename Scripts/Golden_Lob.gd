@@ -60,10 +60,10 @@ func explode():
 	tween.interpolate_property(self, 'modulate', Color(1,1,1,1), Color(1,1,1,0), 1, Tween.TRANS_LINEAR, Tween.TRANS_LINEAR, 0.2)
 	tween.start()
 	
-func _quadratic_bezier(p0, p1, p2, t):
-	var q0 = lerp(p0, p1, t)
-	var q1 = lerp(p1, p2, t)
-	var r = lerp(q0, q1, t)
+func _quadratic_bezier(p0, p1, p2, t_):
+	var q0 = lerp(p0, p1, t_)
+	var q1 = lerp(p1, p2, t_)
+	var r = lerp(q0, q1, t_)
 	return r
 
 

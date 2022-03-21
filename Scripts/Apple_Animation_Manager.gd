@@ -21,7 +21,7 @@ func _ready():
 	
 func set_animation(animation_name):
 	if animation_name == current_state:
-		print("Apple_Animation_Manager.gd -- WARNING: animation is already ", animation_name)
+		#print("Apple_Animation_Manager.gd -- WARNING: animation is already ", animation_name)
 		return true
 		
 	if has_animation(animation_name):

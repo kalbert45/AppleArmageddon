@@ -73,7 +73,7 @@ onready var bullet_position_down2 = $Bullet_Positions/Bullet_Position_Down2
 
 var attack_sfx = preload("res://Assets/Sounds/SFX/rifle_sfx2.wav")
 
-var damage_number_scene = preload("res://Scenes/Damage_Number.tscn")
+#var damage_number_scene = preload("res://Scenes/Damage_Number.tscn")
 var apple_death_scene = preload("res://Scenes/Turret_Death.tscn")
 var rifleman_scene = preload("res://Scenes/Rifleman.tscn")
 var bullet_scene = preload("res://Scenes/Rifle_Bullet.tscn")
@@ -289,10 +289,10 @@ func attack_hit(_enemy, damage, _knock, _knock_power=50):
 	if current_hp <= 0:
 		die(dmg)
 	
-	var damage_number = damage_number_scene.instance()
-	damage_number.amount = dmg
-	damage_number.type = "Enemy"
-	add_child(damage_number)
+	#var damage_number = damage_number_scene.instance()
+	#damage_number.amount = dmg
+	#damage_number.type = "Enemy"
+	#add_child(damage_number)
 	
 		
 func die(damage):
@@ -302,10 +302,10 @@ func die(damage):
 	apple_death.global_position = global_position
 	get_node("/root/Main/World").add_child(apple_death)
 	
-	var damage_number = damage_number_scene.instance()
-	damage_number.amount = damage
-	damage_number.type = "Enemy"
-	apple_death.add_child(damage_number)
+	#var damage_number = damage_number_scene.instance()
+	#damage_number.amount = damage
+	#damage_number.type = "Enemy"
+	#apple_death.add_child(damage_number)
 	
 	for i in range(4):
 		var rifleman = rifleman_scene.instance()

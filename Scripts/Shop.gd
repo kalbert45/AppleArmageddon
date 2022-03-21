@@ -2,11 +2,13 @@ extends Node2D
 
 signal update_money
 
+var disabled = false
+
 # Scene only works as a child of stage, must pass in node that units become a children of
 var units_node_target = null
 var rng = RandomNumberGenerator.new()
 
-var eat_ready = false
+var eat_readied = false
 var eat = false
 var tier = 0
 var roll_odds = null
@@ -15,7 +17,11 @@ var pool = []
 
 var eat_sfx1 = preload("res://Assets/Sounds/SFX/apple_eat1.wav")
 var eat_sfx2 = preload("res://Assets/Sounds/SFX/apple_eat2.wav")
+var tree_shake_sfx1 = preload("res://Assets/Sounds/SFX/tree_shake_sfx1.wav")
+var tree_shake_sfx2 = preload("res://Assets/Sounds/SFX/tree_shake_sfx2.wav")
+var tree_shake_sfx3 = preload("res://Assets/Sounds/SFX/tree_shake_sfx3.wav")
 
+var sfx_scene = preload("res://Scenes/SFX.tscn")
 var shop_sprite_scene = preload("res://Scenes/Shop_Sprite.tscn")
 var shop_sprite
 
@@ -33,7 +39,7 @@ onready var sfx = $SFX
 func _ready():
 	randomize()
 	rng.randomize()
-	animation_player.connect("animation_finished", self, "animation_ended")
+	#animation_player.connect("animation_finished", self, "animation_ended")
 	# adjust number of shop spots and pool based on tier of shop
 	match tier:
 		0:
@@ -72,6 +78,19 @@ func reroll_shop():
 		shop_sprite.initial_pos = Vector2(global_position.x-40 + 40*i, global_position.y)
 		add_child(shop_sprite)
 
+	var tree_sfx = sfx_scene.instance()
+	tree_sfx.pitch_scale = rng.randf_range(0.8, 1.2)
+	tree_sfx.db = -10
+	var j = rng.randi_range(0, 2)
+	match j:
+		0:
+			tree_sfx.stream = tree_shake_sfx1
+		1:
+			tree_sfx.stream = tree_shake_sfx2
+		2:
+			tree_sfx.stream = tree_shake_sfx3
+	units_node_target.add_child(tree_sfx)
+	
 # properly adds unit to the stage. remove from shop
 func buy_unit(unit):
 	if unit.price > Global.money:
@@ -85,6 +104,7 @@ func buy_unit(unit):
 	
 	units_node_target.add_child(new_unit)
 	unit.queue_free()
+	return new_unit
 	
 func roll():
 	var size = pool.size()
@@ -96,7 +116,7 @@ func _on_Reroll_Button_pressed():
 	
 # Handle "selling" units
 func sell_unit(unit):
-	if not eat_ready:
+	if not eat_readied:
 		return false
 		
 	eat = true
@@ -115,10 +135,10 @@ func sell_unit(unit):
 	
 
 func eat_ready():
-	if eat_ready:
-		eat_ready = false
+	if eat_readied:
+		eat_readied = false
 	else:
-		eat_ready = true
+		eat_readied = true
 		
 
 func _on_Face_body_entered(body):
@@ -135,9 +155,14 @@ func _on_Face_body_exited(body):
 	else:
 		animation_player.play_backwards("Open")
 
-func animation_ended(animation_name):
-	pass
+#func animation_ended(animation_name):
+#	pass
 	
 #handle disable
 func disable():
-	queue_free()
+	disabled = true
+
+
+func _on_VisibilityNotifier2D_screen_exited():
+	if disabled:
+		queue_free()

@@ -66,7 +66,7 @@ onready var attack_range = $Attack_Range
 onready var animation_manager = $AnimationPlayer
 onready var sfx = $SFX
 
-var attack_sfx = preload("res://Assets/Sounds/SFX/attack_sfx.wav")
+var attack_sfx = preload("res://Assets/Sounds/SFX/pink_attack_sfx.wav")
 var picture = preload("res://Assets/Sprites/red.png")
 
 var damage_number_scene = preload("res://Scenes/Damage_Number.tscn")
@@ -169,6 +169,8 @@ func process_movement(delta):
 			direction += (15/global_position.distance_to(movement_target))*(movement_target - global_position)
 			attacking = attack_range.overlaps_body(target)
 			if animation_manager.current_state != ATTACK_ANIM_NAME:
+				sfx.stream = attack_sfx
+				sfx.play()
 				animation_manager.set_animation(ATTACK_ANIM_NAME)
 			
 		# Run until first target, else return to idle
@@ -295,8 +297,8 @@ func basic_attack():
 		target.attack_hit(self.global_position, attack_damage, true, 50)
 		#current_mana += 20
 		
-		sfx.stream = attack_sfx
-		sfx.play()
+		#sfx.stream = attack_sfx
+		#sfx.play()
 		
 		target = null
 		target_closest(null)
@@ -331,10 +333,10 @@ func attack_hit(enemy_position, damage, knock, knock_power=50):
 	if current_hp <= 0:
 		die(dmg)
 	
-	var damage_number = damage_number_scene.instance()
-	damage_number.amount = dmg
-	damage_number.type = "Unit"
-	add_child(damage_number)
+	#var damage_number = damage_number_scene.instance()
+	#damage_number.amount = dmg
+	#damage_number.type = "Unit"
+	#add_child(damage_number)
 	
 # Receive heal
 func heal(unit, amount):
@@ -352,11 +354,11 @@ func die(damage):
 	apple_death.global_position = global_position
 	get_node("/root/Main/World").add_child(apple_death)
 	
-	if damage >= 0:
-		var damage_number = damage_number_scene.instance()
-		damage_number.amount = damage
-		damage_number.type = "Unit"
-		apple_death.add_child(damage_number)
+	#if damage >= 0:
+	#	var damage_number = damage_number_scene.instance()
+	#	damage_number.amount = damage
+	#	damage_number.type = "Unit"
+	#	apple_death.add_child(damage_number)
 	
 	queue_free()
 

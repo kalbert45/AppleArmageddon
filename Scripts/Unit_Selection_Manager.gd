@@ -18,8 +18,14 @@ var unit_UI_scene = preload("res://Scenes/Unit_Interface.tscn")
 var unit_UI
 
 var drop_sfx = preload("res://Assets/Sounds/SFX/character_drop.wav")
+var tree_shake_sfx1 = preload("res://Assets/Sounds/SFX/tree_shake_sfx1.wav")
+var tree_shake_sfx2 = preload("res://Assets/Sounds/SFX/tree_shake_sfx2.wav")
+var tree_shake_sfx3 = preload("res://Assets/Sounds/SFX/tree_shake_sfx3.wav")
+var pick_apple_sfx = preload("res://Assets/Sounds/SFX/pick_apple_sfx.wav")
 
 onready var sfx = $SFX
+onready var sfx2 = $SFX2
+onready var sfx3 = $SFX3
 
 func _ready():
 	unit_UI = unit_UI_scene.instance()
@@ -76,12 +82,26 @@ func _process(_delta):
 		
 	#-------------------------------------------
 	# Hold + move
-	else:
+	if selected != hovered:
 		if selected != null:
 			if not selected.active:
-				if Input.is_action_just_pressed("left_click"):
-					holding = true
-					unit_starting_pos = selected.global_position
+				if not holding:
+					if Input.is_action_pressed("left_click"):
+						holding = true
+						unit_starting_pos = selected.global_position
+						if selected.has_method("set_sprite_texture"):
+							sfx2.stream = pick_apple_sfx
+							sfx2.play()
+							var i = randi() % 3
+							match i:
+								0:
+									sfx3.stream = tree_shake_sfx1
+								1:
+									sfx3.stream = tree_shake_sfx2
+								2:
+									sfx3.stream = tree_shake_sfx3
+							sfx3.pitch_scale = ((randi() % 3) + 4)/5.0
+							sfx3.play()
 				
 	handle_left_release()
 		
@@ -130,10 +150,11 @@ func handle_left_release():
 				if new_unit == null:
 					return_to_original_pos()
 				else:
-					selected = new_unit
-				
-			sfx.stream = drop_sfx
-			sfx.play()
+					sfx.stream = drop_sfx
+					sfx.play()
+			else:
+				sfx.stream = drop_sfx
+				sfx.play()
 		holding = false
 		
 func return_to_original_pos():

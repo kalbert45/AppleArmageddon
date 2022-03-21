@@ -4,6 +4,8 @@ onready var transition_handler = $Transition_Handler
 onready var HUD = $HUD
 onready var world = $World
 
+var new_game = true
+
 # UI and stage scenes
 var scene1 = preload("res://Scenes/Scene1.tscn")
 var unit_selection = preload("res://Scenes/Unit_Selection.tscn")
@@ -63,6 +65,9 @@ func _on_game_menu_quit_to_title():
 	
 func _on_camera_control_next_stage():
 	map = map_scene.instance()
+	if new_game:
+		map.new = true
+		new_game = false
 	
 	stage.save_data()
 	
@@ -70,8 +75,9 @@ func _on_camera_control_next_stage():
 	
 	map.connect("begin_stage", self, "_on_map_begin_stage")
 	
-func _on_map_begin_stage():
+func _on_map_begin_stage(difficulty, _type):
 	stage = scene1.instance()
+	stage.difficulty = difficulty
 	camera_UI = camera_control.instance()
 
 	transition_handler.transition([map], [[world, stage], [HUD, camera_UI]])

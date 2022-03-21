@@ -6,6 +6,9 @@ signal defeat
 
 var enemies
 var units
+var difficulty = 0
+
+var enemy_generator_scene = preload("res://Scenes/Enemy_Generator.tscn")
 
 var shop_scene = preload("res://Scenes/Shop.tscn")
 var shop
@@ -19,6 +22,9 @@ var pink_scene = preload("res://Scenes/Pink.tscn")
 onready var units_node = $TileMap/YSort
 
 func _ready():
+	var enemy_generator = enemy_generator_scene.instance()
+	enemy_generator.generate_enemies(difficulty, units_node)
+	
 	enemies = get_tree().get_nodes_in_group("Enemies")
 	units = get_tree().get_nodes_in_group("Units")
 	
@@ -55,7 +61,7 @@ func load_data():
 		units_node.add_child(instance)
 
 func save_data():
-	var units = []
+	units = []
 	for unit in get_tree().get_nodes_in_group("Units"):
 		match unit.label:
 			"Apple":

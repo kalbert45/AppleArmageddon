@@ -33,7 +33,7 @@ var casting = false
 var max_hp = 80
 var current_hp = 80
 
-var attack_damage = 0
+var attack_damage = 10
 var attack_speed = 1.0
 var defense = 0
 var movement_speed = 40
@@ -323,10 +323,10 @@ func attack_hit(enemy_position, damage, knock, knock_power=50):
 	if current_hp <= 0:
 		die(dmg)
 	
-	var damage_number = damage_number_scene.instance()
-	damage_number.amount = dmg
-	damage_number.type = "Unit"
-	add_child(damage_number)
+	#var damage_number = damage_number_scene.instance()
+	#damage_number.amount = dmg
+	#damage_number.type = "Unit"
+	#add_child(damage_number)
 	
 # Receive heal
 func heal(unit, amount):
@@ -344,11 +344,11 @@ func die(damage):
 	apple_death.global_position = global_position
 	get_node("/root/Main/World").add_child(apple_death)
 	
-	if damage >= 0:
-		var damage_number = damage_number_scene.instance()
-		damage_number.amount = damage
-		damage_number.type = "Unit"
-		apple_death.add_child(damage_number)
+	#if damage >= 0:
+	#	var damage_number = damage_number_scene.instance()
+	#	damage_number.amount = damage
+	#	damage_number.type = "Unit"
+	#	apple_death.add_child(damage_number)
 	
 	queue_free()
 

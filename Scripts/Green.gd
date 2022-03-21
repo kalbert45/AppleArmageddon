@@ -65,7 +65,8 @@ onready var attack_range = $Attack_Range
 onready var animation_manager = $AnimationPlayer
 onready var sfx = $SFX
 
-var attack_sfx = preload("res://Assets/Sounds/SFX/attack_sfx.wav")
+var attack_sfx = preload("res://Assets/Sounds/SFX/green_attack_sfx.wav")
+var cast_sfx = preload("res://Assets/Sounds/SFX/green_cast_sfx.wav")
 var picture = preload("res://Assets/Sprites/green2.png")
 
 var damage_number_scene = preload("res://Scenes/Damage_Number.tscn")
@@ -85,11 +86,11 @@ func ready_bars():
 	var juice_bar = $Bars/Juice_Bar
 	hp_bar.max_value = max_hp
 	hp_bar.rect_size = Vector2(int(max_hp/10), 3)
-	hp_bar.rect_position = Vector2(ceil(-hp_bar.rect_size.x/2)-1, -19)
+	hp_bar.rect_position = Vector2(ceil(-hp_bar.rect_size.x/2)+2, -16)
 	
 	juice_bar.max_value = max_mana
 	juice_bar.rect_size = Vector2(int(max_mana/10), 1)
-	juice_bar.rect_position = Vector2(ceil(-juice_bar.rect_size.x/2)-1, -16)
+	juice_bar.rect_position = Vector2(ceil(-juice_bar.rect_size.x/2)+2, -13)
 	
 func _process(delta):
 	process_stat_values(delta)
@@ -191,6 +192,11 @@ func process_movement(delta):
 	velocity += knock_direction * knock_speed
 	velocity = move_and_slide(velocity)
 	
+	if $Sprite.flip_h:
+		$Sprite.position = Vector2(6, 0)
+	else:
+		$Sprite.position = Vector2(0, 0)
+	
 	if knock_speed > 0:
 		knock_speed -= 100 * delta
 	knock_speed = clamp(knock_speed, 0, 100)
@@ -291,6 +297,8 @@ func cast_attack():
 				heal_target = body
 				min_hp = body.current_hp
 				
+	sfx.stream = cast_sfx
+	sfx.play()
 	heal_target.heal(self, 4*attack_damage)
 		
 #------------------------------------------------------------------------
@@ -318,10 +326,10 @@ func attack_hit(enemy_position, damage, knock, knock_power=50):
 	if current_hp <= 0:
 		die(dmg)
 	
-	var damage_number = damage_number_scene.instance()
-	damage_number.amount = dmg
-	damage_number.type = "Unit"
-	add_child(damage_number)
+	#var damage_number = damage_number_scene.instance()
+	#damage_number.amount = dmg
+	#damage_number.type = "Unit"
+	#add_child(damage_number)
 	
 # Receive heal
 func heal(unit, amount):
@@ -339,11 +347,11 @@ func die(damage):
 	apple_death.global_position = global_position
 	get_node("/root/Main/World").add_child(apple_death)
 	
-	if damage >= 0:
-		var damage_number = damage_number_scene.instance()
-		damage_number.amount = damage
-		damage_number.type = "Unit"
-		apple_death.add_child(damage_number)
+	#if damage >= 0:
+	#	var damage_number = damage_number_scene.instance()
+	#	damage_number.amount = damage
+	#	damage_number.type = "Unit"
+	#	apple_death.add_child(damage_number)
 	
 	queue_free()
 

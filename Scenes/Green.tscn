@@ -16,9 +16,10 @@ shader_param/width = 0.0
 shader_param/outline_color = Color( 1, 0.2, 0.2, 1 )
 
 [sub_resource type="CircleShape2D" id=1]
+radius = 8.0
 
 [sub_resource type="CircleShape2D" id=10]
-radius = 11.0454
+radius = 9.0
 
 [sub_resource type="CircleShape2D" id=2]
 radius = 195.003
@@ -196,31 +197,31 @@ scale = Vector2( 1.2, 1.2 )
 texture = ExtResource( 8 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-visible = false
+position = Vector2( 3, 0 )
 shape = SubResource( 1 )
 
 [node name="Body_Area" type="Area2D" parent="."]
 visible = false
+position = Vector2( 3, 0 )
 collision_mask = 7
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Body_Area"]
-visible = false
 shape = SubResource( 10 )
 
 [node name="Aggro_Area" type="Area2D" parent="."]
 visible = false
+position = Vector2( 3, 0 )
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Aggro_Area"]
-visible = false
 shape = SubResource( 2 )
 
 [node name="Attack_Range" type="Area2D" parent="."]
 visible = false
+position = Vector2( 3, 0 )
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Attack_Range"]
-visible = false
 shape = SubResource( 3 )
 
 [node name="Bars" type="Node2D" parent="."]
@@ -261,7 +262,8 @@ anims/RESET = SubResource( 7 )
 script = ExtResource( 4 )
 
 [node name="SFX" type="AudioStreamPlayer" parent="."]
-volume_db = -80.0
+volume_db = -10.0
+pitch_scale = 0.8
 
 [connection signal="body_entered" from="Aggro_Area" to="." method="_on_Aggro_Area_body_entered"]
 [connection signal="body_exited" from="Aggro_Area" to="." method="_on_Aggro_Area_body_exited"]
