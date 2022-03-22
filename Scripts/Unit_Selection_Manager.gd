@@ -15,7 +15,9 @@ var holding = false
 var shop
 
 var unit_UI_scene = preload("res://Scenes/Unit_Interface.tscn")
+var enemy_UI_scene = preload("res://Scenes/Enemy_Interface.tscn")
 var unit_UI
+var enemy_UI
 
 var drop_sfx = preload("res://Assets/Sounds/SFX/character_drop.wav")
 var tree_shake_sfx1 = preload("res://Assets/Sounds/SFX/tree_shake_sfx1.wav")
@@ -30,7 +32,10 @@ onready var sfx3 = $SFX3
 func _ready():
 	unit_UI = unit_UI_scene.instance()
 	unit_UI.visible = false
+	enemy_UI = enemy_UI_scene.instance()
+	enemy_UI.visible = false
 	add_child(unit_UI)
+	add_child(enemy_UI)
 	
 	
 func _process(_delta):
@@ -46,10 +51,13 @@ func _process(_delta):
 	
 	var space_state = get_world_2d().get_direct_space_state()
 	var result = space_state.intersect_point(mouse_pos, 1, [], 1)
+	var enemy_result = space_state.intersect_point(mouse_pos, 1, [], 2)
 	
 	var body = null
 	if result.size() > 0:
 		body = result[0]["collider"]
+	elif enemy_result.size() > 0:
+		body = enemy_result[0]["collider"]
 	#--------------------------------------------------
 	
 	#----------------------------------------------
@@ -77,8 +85,14 @@ func _process(_delta):
 				unit_starting_pos = selected.global_position
 				if selected.is_in_group("Units"):
 					unit_UI.set_initial_values(selected.picture, selected.attack_damage, selected.defense, 
-					selected.attack_speed, selected.movement_speed, selected.max_hp, selected.max_mana)
+					selected.attack_speed, selected.movement_speed, selected.max_hp, selected.max_mana, selected.current_hp, selected.current_mana)
 					unit_UI.visible = true
+					enemy_UI.visible = false
+				elif selected.is_in_group("Enemies"):
+					enemy_UI.set_initial_values(selected.picture, selected.attack_damage, selected.defense, 
+					selected.attack_speed, selected.movement_speed, selected.max_hp, selected.current_hp)
+					enemy_UI.visible = true
+					unit_UI.visible = false
 		
 	#-------------------------------------------
 	# Hold + move
@@ -103,7 +117,7 @@ func _process(_delta):
 							sfx3.pitch_scale = ((randi() % 3) + 4)/5.0
 							sfx3.play()
 				
-	handle_left_release()
+	
 		
 	if holding:
 		selected.global_position = mouse_pos
@@ -112,6 +126,8 @@ func _process(_delta):
 			selected.position_invalid = true
 		else:
 			selected.position_invalid = false
+			
+	handle_left_release()
 				
 	#--------------------------------------------
 	
@@ -119,9 +135,12 @@ func _process(_delta):
 	# Unit UI
 	if selected != null:
 		if selected.is_in_group("Units"):
-			unit_UI.update_values(selected.current_hp, selected.current_mana)
+			unit_UI.update_values(selected.current_hp, selected.max_hp, selected.current_mana, selected.max_mana)
+		elif selected.is_in_group("Enemies"):
+			enemy_UI.update_values(selected.current_hp, selected.max_hp)
 	else:
 		unit_UI.visible = false
+		enemy_UI.visible = false
 	
 func handle_left_release():
 	if Input.is_action_just_released("left_click"):
@@ -133,7 +152,6 @@ func handle_left_release():
 		if selected.active:
 			holding = false
 			return
-			
 		
 		# if selection is colliding, check if it should be sold, else return to original position
 		if selected.is_colliding():

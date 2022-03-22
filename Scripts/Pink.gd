@@ -313,6 +313,7 @@ func cast_attack():
 #Check if colliding with anything (for select and drag)
 func is_colliding():
 	var bodies = $Body_Area.get_overlapping_bodies()
+	
 	if bodies.size() > 1:
 		return true
 	else:

@@ -29,7 +29,7 @@ func _ready():
 	
 	if Global.units.empty():
 		Global.units.append([load("res://Scenes/Apple.tscn"), Vector2(240,180), 100, 0])
-		Global.money = 10
+		Global.money = 20
 
 func _on_Title_Screen_start_game():
 	stage = scene1.instance()

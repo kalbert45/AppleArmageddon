@@ -46,6 +46,7 @@ func _on_enemy_death():
 		yield(get_tree().create_timer(0.5), "timeout")
 		enemies = get_tree().get_nodes_in_group("Enemies")
 		if enemies.empty():
+			Global.money += 20 * (difficulty + 1)
 			emit_signal("stage_cleared")
 
 func _on_enemy_spawn():

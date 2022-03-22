@@ -60,6 +60,7 @@ onready var animation_manager = $AnimationPlayer
 onready var sfx = $SFX
 
 var attack_sfx = preload("res://Assets/Sounds/SFX/rifle_sfx2.wav")
+var picture = preload("res://Assets/Sprites/rifleman.png")
 
 #var damage_number_scene = preload("res://Scenes/Damage_Number.tscn")
 var apple_death_scene = preload("res://Scenes/Person_Death.tscn")
@@ -111,9 +112,9 @@ func process_mouse(_delta):
 		$Sprite.z_index = 0
 		
 	if mouse_select:
-		$Sprite.material.set_shader_param("outline_color", Color(1,0.75,0.2,1))
+		$Sprite.material.set_shader_param("outline_color", Color(1,0.2,0.2,1))
 	else:
-		$Sprite.material.set_shader_param("outline_color", Color(0.99,1,0.25,1))
+		$Sprite.material.set_shader_param("outline_color", Color(1,0.2,0.2,1))
 		
 	# Keep character in window
 

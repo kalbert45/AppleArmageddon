@@ -13,7 +13,7 @@ func generate():
 	points.append(Vector2(PLANE_LENGTH, PLANE_LENGTH/2))
 	
 	var center = Vector2(PLANE_LENGTH/2, PLANE_LENGTH/2)
-	for i in range(NODE_COUNT):
+	for _i in range(NODE_COUNT):
 		while true:
 			var point = Vector2(randi()%PLANE_LENGTH, randi()%PLANE_LENGTH)
 			
@@ -47,7 +47,7 @@ func generate():
 	var paths = []
 
 	
-	for i in range(PATH_COUNT):
+	for _i in range(PATH_COUNT):
 		var id_path = astar.get_id_path(0, 1)
 		if id_path.size() == 0:
 			break
@@ -56,7 +56,7 @@ func generate():
 		paths.append(astar.get_point_path(0,1))
 		
 		# step 4: nodes dropout for multiple paths
-		for j in range(randi() % 2 + 1):
+		for _j in range(randi() % 2 + 1):
 			var index = randi() % (id_path.size() - 2) + 1
 			
 			var id = id_path[index]

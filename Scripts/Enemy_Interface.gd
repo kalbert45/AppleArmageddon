@@ -6,14 +6,14 @@ onready var tooltip_label = $Tooltip/Label
 func _ready():
 	tooltip.visible = false
 	
-func set_initial_values(unit_texture, attack, defense, attack_speed, move_speed, max_hp, max_mana, current_hp, current_mana):
+func set_initial_values(unit_texture, attack, defense, attack_speed, move_speed, max_hp, current_hp):
 	if unit_texture != null:
 		$Unit_Pic.texture = unit_texture
 		
-	if max_mana == 1:
-		$Juice_Bar.visible = false
-	else:
-		$Juice_Bar.visible = true
+	#if max_mana == 1:
+	#	$Juice_Bar.visible = false
+	#else:
+	#	$Juice_Bar.visible = true
 		
 	$Attack_Symbol/Label.text = str(attack)
 	$Defense_Symbol/Label.text = str(defense)
@@ -22,12 +22,12 @@ func set_initial_values(unit_texture, attack, defense, attack_speed, move_speed,
 	$HP_Bar.value = current_hp
 	$HP_Bar.max_value = max_hp
 	$HP_Bar/Label2.text = str(current_hp) + "/" + str(max_hp)
-	$Juice_Bar.max_value = max_mana
+	#$Juice_Bar.max_value = max_mana
 	
-func update_values(hp,max_hp, mana, max_mana):
+func update_values(hp,max_hp):
 	$HP_Bar.value = hp
 	$HP_Bar/Label2.text = str(hp) + "/" + str(max_hp)
-	$Juice_Bar.value = mana
+	#$Juice_Bar.value = mana
 
 
 func _on_Attack_Symbol_mouse_entered():

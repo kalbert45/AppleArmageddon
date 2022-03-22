@@ -1,10 +1,11 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Scripts/Shop.gd" type="Script" id=1]
 [ext_resource path="res://Assets/Sprites/GUI/reroll_button_pressed.png" type="Texture" id=2]
 [ext_resource path="res://Assets/Sprites/GUI/reroll_button_hover.png" type="Texture" id=3]
 [ext_resource path="res://Assets/Sprites/GUI/reroll_button.png" type="Texture" id=4]
 [ext_resource path="res://Assets/Sprites/tree_spritesheet.png" type="Texture" id=5]
+[ext_resource path="res://Assets/Themes/GUI_Label_Theme.tres" type="Theme" id=6]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 48, 43.75 )
@@ -139,6 +140,54 @@ bus = "SFX"
 [node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="."]
 position = Vector2( -2, -2 )
 scale = Vector2( 7.6, 5.8 )
+
+[node name="Label1" type="Label" parent="."]
+margin_left = -44.0
+margin_top = -26.0
+margin_right = -4.0
+margin_bottom = -12.0
+theme = ExtResource( 6 )
+custom_colors/font_color = Color( 1, 0.803922, 0.458824, 1 )
+text = "1"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label2" type="Label" parent="."]
+margin_left = -11.0
+margin_top = -26.0
+margin_right = 29.0
+margin_bottom = -12.0
+theme = ExtResource( 6 )
+custom_colors/font_color = Color( 1, 0.803922, 0.458824, 1 )
+text = "1"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label3" type="Label" parent="."]
+margin_left = 28.0
+margin_top = -28.0
+margin_right = 68.0
+margin_bottom = -14.0
+theme = ExtResource( 6 )
+custom_colors/font_color = Color( 1, 0.803922, 0.458824, 1 )
+text = "1"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label4" type="Label" parent="."]
+margin_left = 92.0
+margin_top = -29.0
+margin_right = 132.0
+margin_bottom = -15.0
+theme = ExtResource( 6 )
+custom_colors/font_color = Color( 1, 0.803922, 0.458824, 1 )
+text = "1"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [connection signal="pressed" from="Reroll_Button" to="." method="_on_Reroll_Button_pressed"]
 [connection signal="body_entered" from="Face" to="." method="_on_Face_body_entered"]

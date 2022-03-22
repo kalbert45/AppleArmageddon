@@ -36,6 +36,8 @@ onready var reroll_button = $Reroll_Button
 onready var animation_player = $AnimationPlayer
 onready var sfx = $SFX
 
+onready var labels = [$Label1, $Label2, $Label3, $Label4]
+
 func _ready():
 	randomize()
 	rng.randomize()
@@ -55,9 +57,12 @@ func _ready():
 		shop_spots[i] = shop_sprite
 		shop_sprite.initial_pos = Vector2(global_position.x-40 + 40*i, global_position.y)
 		add_child(shop_sprite)
+		labels[i].set_position(Vector2(-40+40*i-3, -30))
+		labels[i].text = str(shop_sprite.price)
 
 	reroll_button.set_global_position(Vector2(shop_sprite.initial_pos.x + 40 - reroll_button.get_rect().size.x/2 , 
 											shop_sprite.initial_pos.y - reroll_button.get_rect().size.y/2))
+	labels[3].set_position(Vector2(77, -30))
 func reroll_shop():
 	if 1 > Global.money:
 		return
@@ -77,6 +82,7 @@ func reroll_shop():
 		shop_spots[i] = shop_sprite
 		shop_sprite.initial_pos = Vector2(global_position.x-40 + 40*i, global_position.y)
 		add_child(shop_sprite)
+		labels[i].text = str(shop_sprite.price)
 
 	var tree_sfx = sfx_scene.instance()
 	tree_sfx.pitch_scale = rng.randf_range(0.8, 1.2)
@@ -96,7 +102,7 @@ func buy_unit(unit):
 	if unit.price > Global.money:
 		return
 
-	#Global.money -= unit.price
+	Global.money -= unit.price
 	emit_signal("update_money")
 	
 	var new_unit = unit.unit_scene.instance()
