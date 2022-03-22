@@ -14,7 +14,8 @@ const ACCEL = 100
 const DEACCEL = 120
 
 
-var colliding_bodies = []
+var _timer = null
+var retarget_loop = true
 
 var active = false
 var first_target = false
@@ -39,8 +40,8 @@ var attack_speed = 1.0
 var defense = 2
 var movement_speed = 50
 
-var attacking_modes = ["Default", "Stand by", "Chase"]
-var attacking_mode = "Default"
+#var attacking_modes = ["Default", "Stand by", "Chase"]
+#var attacking_mode = "Default"
 
 var mouse_hover = false
 var mouse_select = false
@@ -66,6 +67,7 @@ onready var attack_range = $CollisionShape2D/Attack_Range
 onready var animation_manager = $AnimationPlayer
 onready var sfx = $SFX
 onready var raycasts_node = $CollisionShape2D/Raycasts
+onready var hp_bar = $Bars/HP_Bar
 
 var attack_sfx = preload("res://Assets/Sounds/SFX/attack_sfx.wav")
 var picture = preload("res://Assets/Sprites/apple.png")
@@ -83,6 +85,14 @@ func _ready():
 	
 	for raycast in raycasts_node.get_children():
 		raycast.add_exception(self)
+		
+	_timer = Timer.new()
+	add_child(_timer)
+	
+	_timer.connect("timeout", self, "_on_Timer_timeout")
+	_timer.set_wait_time(1.0)
+	_timer.set_one_shot(true)
+	_timer.start()
 	
 func ready_bars():
 	var hp_bar = $Bars/HP_Bar
@@ -93,7 +103,7 @@ func ready_bars():
 	
 	
 func _process(delta):
-	process_stat_values(delta)
+
 	process_mouse(delta)
 	
 	#if Input.is_action_just_pressed("ui_select"):
@@ -106,14 +116,14 @@ func _physics_process(delta):
 
 #------------------------------------------------------------
 # process in-game stat values, i.e. hp, mana, armor, etc.
-func process_stat_values(_delta):
+#func process_stat_values(_delta):
 	#if current_mana >= max_mana:
 	#	if animation_manager.current_state == IDLE_ANIM_NAME:
 	#		current_mana = 0
 	#		animation_manager.set_animation(CAST_ANIM_NAME)
 			
 	#$Bars/Juice_Bar.value = current_mana
-	$Bars/HP_Bar.value = current_hp
+#	$Bars/HP_Bar.value = current_hp
 #-----------------------------------------------------------
 
 #-----------------------------------------------------------
@@ -147,16 +157,17 @@ func process_mouse(_delta):
 func process_movement(delta):
 	if not is_instance_valid(target):
 		target = null
-	if (first_target) and (target == null):
-			target_closest(null)
-
-		
-	direction += calculate_local_avoidance()
+	if (first_target) and (target == null) and (retarget_loop):
+		target_closest(null)
+		retarget_loop = false
+		_timer.start()
+	
 	if animation_manager.current_state != CAST_ANIM_NAME:
 		# Movement towards target
 		if (target != null) and (!attacking):
 			$Sprite.set_flip_h(global_position.x > target.global_position.x)
 			speed += ACCEL * delta
+			direction += calculate_local_avoidance()
 			direction += (15/global_position.distance_to(target.global_position))*(target.global_position - global_position)
 			attacking = attack_range.overlaps_body(target)
 			if (animation_manager.current_state != MOVEMENT_ANIM_NAME) and (speed > 10):
@@ -201,7 +212,7 @@ func process_movement(delta):
 	
 	var slide_count = get_slide_count()
 	if slide_count:
-		if first_target:
+		if first_target and !attacking:
 			target_closest(null)
 	
 #----------------------------------------------------------
@@ -318,6 +329,7 @@ func attack_hit(enemy_position, damage, knock, knock_power=50):
 	var dmg = damage - defense
 	dmg = clamp(dmg, 0, damage)
 	current_hp -= dmg
+	hp_bar.value = current_hp
 	if current_hp <= 0:
 		die(dmg)
 	
@@ -329,6 +341,7 @@ func attack_hit(enemy_position, damage, knock, knock_power=50):
 # Receive heal
 func heal(unit, amount):
 	current_hp += amount
+	hp_bar.value = current_hp
 	
 	var damage_number = damage_number_scene.instance()
 	damage_number.amount = amount
@@ -352,3 +365,6 @@ func die(damage):
 
 #--------------------------------------------------------------------------
 
+# make retargetting loop slow
+func _on_Timer_timeout():
+	retarget_loop = true
