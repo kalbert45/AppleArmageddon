@@ -4,6 +4,7 @@ extends Control
 # Note: only works for units at the moment
 
 # assumes selectable units have variables mouse_select, mouse_hover, position_invalid
+var mouse_in_window = true
 
 var selected = null
 var hovered = null
@@ -38,7 +39,7 @@ func _ready():
 	add_child(enemy_UI)
 	
 	
-func _process(_delta):
+func _physics_process(_delta):
 	# guard against queue free
 	if not is_instance_valid(shop):
 		shop = null
@@ -50,6 +51,7 @@ func _process(_delta):
 	mouse_pos = get_node("/root/Main").get_global_mouse_position()
 	
 	var space_state = get_world_2d().get_direct_space_state()
+	var overall_result = space_state.intersect_point(mouse_pos, 2, [selected])
 	var result = space_state.intersect_point(mouse_pos, 1, [], 1)
 	var enemy_result = space_state.intersect_point(mouse_pos, 1, [], 2)
 	
@@ -101,9 +103,12 @@ func _process(_delta):
 			if not selected.active:
 				if not holding:
 					if Input.is_action_pressed("left_click"):
-						holding = true
-						unit_starting_pos = selected.global_position
+						if selected.is_in_group("Units"):
+							holding = true
+							unit_starting_pos = selected.global_position
 						if selected.has_method("set_sprite_texture"):
+							holding = true
+							unit_starting_pos = selected.global_position
 							sfx2.stream = pick_apple_sfx
 							sfx2.play()
 							var i = randi() % 3
@@ -118,11 +123,11 @@ func _process(_delta):
 							sfx3.play()
 				
 	
-		
+	# handle mouse hold and drag, check if position invalid
 	if holding:
 		selected.global_position = mouse_pos
 		selected.initial_pos = mouse_pos
-		if selected.is_colliding():
+		if (overall_result.size() > 0) or (!mouse_in_viewport()):
 			selected.position_invalid = true
 		else:
 			selected.position_invalid = false
@@ -153,8 +158,9 @@ func handle_left_release():
 			holding = false
 			return
 		
+		
 		# if selection is colliding, check if it should be sold, else return to original position
-		if selected.is_colliding():
+		if selected.position_invalid:
 			if selected.has_method("attack_hit"):
 				if shop != null:
 					shop.sell_unit(selected)
@@ -183,3 +189,14 @@ func return_to_original_pos():
 		selected.initial_pos = unit_starting_pos
 		unit_starting_pos = null
 		selected.position_invalid = false
+		
+func mouse_in_viewport():
+	if mouse_pos.x <= 0:
+		return false
+	if mouse_pos.x >= get_viewport().size.x:
+		return false
+	if mouse_pos.y <= 0:
+		return false
+	if mouse_pos.y >= get_viewport().size.y:
+		return false
+	return true

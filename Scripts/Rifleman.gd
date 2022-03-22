@@ -185,6 +185,8 @@ func calculate_local_avoidance():
 			continue
 		if is_instance_valid(body):
 			dist2 = global_position.distance_squared_to(body.global_position)
+			if dist2 == 0:
+				dist2 = 1
 			weight = 10/ dist2
 			total += weight * (global_position - body.global_position)
 	return total

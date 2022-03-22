@@ -14,6 +14,7 @@ const ACCEL = 100
 const DEACCEL = 120
 
 
+var colliding_bodies = []
 
 var active = false
 var first_target = false
@@ -64,6 +65,7 @@ var label = "Apple"
 onready var attack_range = $CollisionShape2D/Attack_Range
 onready var animation_manager = $AnimationPlayer
 onready var sfx = $SFX
+onready var raycasts_node = $CollisionShape2D/Raycasts
 
 var attack_sfx = preload("res://Assets/Sounds/SFX/attack_sfx.wav")
 var picture = preload("res://Assets/Sprites/apple.png")
@@ -78,7 +80,9 @@ func _ready():
 	animation_manager.animation_speeds["Attack"] = attack_speed
 	animation_manager.set_animation(IDLE_ANIM_NAME)
 	global_position = initial_pos
-	# change size of bars based on max_hp max_mana
+	
+	for raycast in raycasts_node.get_children():
+		raycast.add_exception(self)
 	
 func ready_bars():
 	var hp_bar = $Bars/HP_Bar
@@ -143,6 +147,10 @@ func process_mouse(_delta):
 func process_movement(delta):
 	if not is_instance_valid(target):
 		target = null
+	if (first_target) and (target == null):
+			target_closest(null)
+
+		
 	direction += calculate_local_avoidance()
 	if animation_manager.current_state != CAST_ANIM_NAME:
 		# Movement towards target
@@ -151,7 +159,7 @@ func process_movement(delta):
 			speed += ACCEL * delta
 			direction += (15/global_position.distance_to(target.global_position))*(target.global_position - global_position)
 			attacking = attack_range.overlaps_body(target)
-			if animation_manager.current_state != MOVEMENT_ANIM_NAME:
+			if (animation_manager.current_state != MOVEMENT_ANIM_NAME) and (speed > 10):
 				animation_manager.set_animation(MOVEMENT_ANIM_NAME)
 			
 		# Attack target
@@ -191,7 +199,34 @@ func process_movement(delta):
 		knock_speed -= 100 * delta
 	knock_speed = clamp(knock_speed, 0, 100)
 	
+	var slide_count = get_slide_count()
+	if slide_count:
+		if first_target:
+			target_closest(null)
 	
+#----------------------------------------------------------
+# use raycasts for retargetting or stopping
+func process_raycasts(potential_target):
+	var retarget = true
+	var new_target = null
+	var raycasts = raycasts_node.get_children()
+	var potential_direction = potential_target.global_position-global_position
+	if potential_direction.length() > 0:
+		raycasts_node.rotation = potential_direction.angle()
+	for raycast in raycasts:
+		var body = raycast.get_collider()
+		if (body == potential_target) or (body == null):
+			retarget = false
+			break
+		if body.is_in_group("Enemies"):
+			new_target = body
+	if retarget:
+		return new_target
+	else:
+		return potential_target
+		#if target == null:
+		#	target_closest(null)
+		
 #--------------------------------------------------------------
 # Local Avoidance algorithm
 func calculate_local_avoidance():
@@ -220,22 +255,9 @@ func _on_Aggro_Area_body_entered(body):
 func _on_Aggro_Area_body_exited(body):
 	if target == body:
 		target = null
-#		var min_dist = null
-#		var bodies = $Aggro_Area.get_overlapping_bodies()
-		
-#		for new_body in bodies:
-#			if new_body == body:
-#				continue
-#			if new_body.is_in_group("Enemies"):
-#				if target == null:
-#					target = new_body
-#					min_dist = global_position.distance_to(new_body.global_position)
-#				else:
-#					var dist = global_position.distance_to(new_body.global_position)
-#					if dist < min_dist:
-#						target = new_body
+
 						
-	target_closest(body)
+	#target_closest(body)
 						
 # Target closest enemy when there is no target
 func target_closest(body):
@@ -243,8 +265,8 @@ func target_closest(body):
 		return
 	if not active:
 		return
-	if target != null:
-		return
+	#if target != null:
+	#	return
 	var enemies = get_tree().get_nodes_in_group("Enemies")
 	if enemies.empty():
 		return
@@ -262,7 +284,9 @@ func target_closest(body):
 			if dist < min_dist:
 				closest = enemy
 				min_dist = dist
-	target = closest
+	target = process_raycasts(closest)
+
+
 #----------------------------------------------------------------------------
 
 #------------------------------------------------------------------------
@@ -282,18 +306,7 @@ func cast_attack():
 #------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------
-#Check if colliding with anything (for select and drag)
-func is_colliding():
-	var bodies = $CollisionShape2D/Body_Area.get_overlapping_bodies()
-	if self in bodies:
-		bodies.erase(self)
-	print(bodies)
-	if bodies.size() >= 1:
-		return true
-	else:
-		return false
-		
-#--------------------------------------------------------------------------
+
 
 #-----------------------------------------------------------------------
 # Taking damage
@@ -336,4 +349,6 @@ func die(damage):
 	#	apple_death.add_child(damage_number)
 	
 	queue_free()
+
+#--------------------------------------------------------------------------
 

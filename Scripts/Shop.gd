@@ -102,7 +102,7 @@ func buy_unit(unit):
 	if unit.price > Global.money:
 		return
 
-	Global.money -= unit.price
+	#Global.money -= unit.price
 	emit_signal("update_money")
 	
 	var new_unit = unit.unit_scene.instance()
