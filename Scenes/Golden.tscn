@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://Scripts/Golden.gd" type="Script" id=1]
 [ext_resource path="res://Assets/Sprites/apple_shadow.png" type="Texture" id=2]
@@ -16,9 +16,6 @@ shader_param/outline_color = Color( 1, 0.2, 0.2, 1 )
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 7.0
-
-[sub_resource type="CircleShape2D" id=10]
-radius = 9.05539
 
 [sub_resource type="CircleShape2D" id=2]
 radius = 195.003
@@ -168,13 +165,6 @@ texture = ExtResource( 2 )
 visible = false
 shape = SubResource( 1 )
 
-[node name="Body_Area" type="Area2D" parent="."]
-collision_mask = 7
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Body_Area"]
-visible = false
-shape = SubResource( 10 )
-
 [node name="Aggro_Area" type="Area2D" parent="."]
 collision_mask = 2
 
@@ -188,6 +178,24 @@ collision_mask = 2
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Attack_Range"]
 visible = false
 shape = SubResource( 3 )
+
+[node name="Raycasts" type="Node2D" parent="."]
+visible = false
+
+[node name="RayCast1" type="RayCast2D" parent="Raycasts"]
+enabled = true
+cast_to = Vector2( 50, 0 )
+collision_mask = 7
+
+[node name="RayCast2" type="RayCast2D" parent="Raycasts"]
+enabled = true
+cast_to = Vector2( 40, 20 )
+collision_mask = 7
+
+[node name="RayCast3" type="RayCast2D" parent="Raycasts"]
+enabled = true
+cast_to = Vector2( 40, -20 )
+collision_mask = 7
 
 [node name="Bars" type="Node2D" parent="."]
 z_index = 2

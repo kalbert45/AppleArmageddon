@@ -95,7 +95,7 @@ func _ready():
 	_timer.start()
 	
 func ready_bars():
-	var hp_bar = $Bars/HP_Bar
+
 	
 	hp_bar.max_value = max_hp
 	hp_bar.rect_size = Vector2(int(max_hp/10), 3)

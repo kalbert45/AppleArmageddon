@@ -13,7 +13,8 @@ const CAST_ANIM_NAME = "Cast"
 const ACCEL = 100
 const DEACCEL = 120
 # TO-DO
-#
+var _timer = null
+var retarget_loop = true
 #temp
 var active = false
 var first_target = false
@@ -38,8 +39,7 @@ var attack_speed = 1.0
 var defense = 0
 var movement_speed = 50
 
-var attacking_modes = ["Default", "Stand by", "Chase"]
-var attacking_mode = "Default"
+
 
 var mouse_hover = false
 var mouse_select = false
@@ -65,6 +65,8 @@ var label = "Pink"
 onready var attack_range = $Attack_Range
 onready var animation_manager = $AnimationPlayer
 onready var sfx = $SFX
+onready var raycasts_node = $Raycasts
+onready var hp_bar = $Bars/HP_Bar
 
 var attack_sfx = preload("res://Assets/Sounds/SFX/pink_attack_sfx.wav")
 var picture = preload("res://Assets/Sprites/red.png")
@@ -79,10 +81,20 @@ func _ready():
 	animation_manager.animation_speeds["Attack"] = attack_speed
 	animation_manager.set_animation(IDLE_ANIM_NAME)
 	global_position = initial_pos
-	# change size of bars based on max_hp max_mana
+	
+	for raycast in raycasts_node.get_children():
+		raycast.add_exception(self)
+		
+	_timer = Timer.new()
+	add_child(_timer)
+	
+	_timer.connect("timeout", self, "_on_Timer_timeout")
+	_timer.set_wait_time(1.0)
+	_timer.set_one_shot(true)
+	_timer.start()
 	
 func ready_bars():
-	var hp_bar = $Bars/HP_Bar
+
 	#var juice_bar = $Bars/Juice_Bar
 	hp_bar.max_value = max_hp
 	hp_bar.rect_size = Vector2(int(max_hp/10), 3)
@@ -93,7 +105,7 @@ func ready_bars():
 	#juice_bar.rect_position = Vector2(ceil(-juice_bar.rect_size.x/2)-1, -13)
 	
 func _process(delta):
-	process_stat_values(delta)
+	#process_stat_values(delta)
 	process_mouse(delta)
 	
 	#if Input.is_action_just_pressed("ui_select"):
@@ -106,14 +118,14 @@ func _physics_process(delta):
 
 #------------------------------------------------------------
 # process in-game stat values, i.e. hp, mana, armor, etc.
-func process_stat_values(_delta):
+#func process_stat_values(_delta):
 	#if current_mana >= max_mana:
 	#	if animation_manager.current_state == IDLE_ANIM_NAME:
 	#		current_mana = 0
 	#		animation_manager.set_animation(CAST_ANIM_NAME)
 			
 	#$Bars/Juice_Bar.value = current_mana
-	$Bars/HP_Bar.value = current_hp
+#	$Bars/HP_Bar.value = current_hp
 #-----------------------------------------------------------
 
 #-----------------------------------------------------------
@@ -147,17 +159,21 @@ func process_mouse(_delta):
 func process_movement(delta):
 	if not is_instance_valid(target):
 		target = null
-		
-	direction += calculate_local_avoidance()
+	if (first_target) and (target == null) and (retarget_loop):
+		target_closest(null)
+		retarget_loop = false
+		_timer.start()
+	
 	if animation_manager.current_state != CAST_ANIM_NAME:
 		# Movement towards target
 		if (target != null) and (!attacking):
 			movement_target = set_movement_target()
 			$Sprite.set_flip_h(global_position.x > target.global_position.x)
 			speed += ACCEL * delta
+			direction += calculate_local_avoidance()
 			direction += (15/global_position.distance_to(movement_target))*(movement_target - global_position)
 			attacking = attack_range.overlaps_body(target)
-			if animation_manager.current_state != MOVEMENT_ANIM_NAME:
+			if (animation_manager.current_state != MOVEMENT_ANIM_NAME) and (speed > 10):
 				animation_manager.set_animation(MOVEMENT_ANIM_NAME)
 			
 		# Attack target
@@ -205,6 +221,11 @@ func process_movement(delta):
 		knock_speed -= 100 * delta
 	knock_speed = clamp(knock_speed, 0, 100)
 	
+	var slide_count = get_slide_count()
+	if slide_count:
+		if first_target and !attacking:
+			target_closest(null)
+	
 # Pink has different movement target due to strange attack area
 func set_movement_target():
 	var target1 = Vector2(target.global_position.x - 64, target.global_position.y)
@@ -217,6 +238,29 @@ func set_movement_target():
 		return target1
 	else:
 		return target2
+		
+#----------------------------------------------------------
+# use raycasts for retargetting or stopping
+func process_raycasts(potential_target):
+	var retarget = true
+	var new_target = null
+	var raycasts = raycasts_node.get_children()
+	var potential_direction = potential_target.global_position-global_position
+	if potential_direction.length() > 0:
+		raycasts_node.rotation = potential_direction.angle()
+	for raycast in raycasts:
+		var body = raycast.get_collider()
+		if (body == potential_target) or (body == null):
+			retarget = false
+			break
+		if body.is_in_group("Enemies"):
+			new_target = body
+	if retarget:
+		return new_target
+	else:
+		return potential_target
+		#if target == null:
+		#	target_closest(null)
 #--------------------------------------------------------------
 # Local Avoidance algorithm
 func calculate_local_avoidance():
@@ -245,22 +289,7 @@ func _on_Aggro_Area_body_entered(body):
 func _on_Aggro_Area_body_exited(body):
 	if target == body:
 		target = null
-#		var min_dist = null
-#		var bodies = $Aggro_Area.get_overlapping_bodies()
-		
-#		for new_body in bodies:
-#			if new_body == body:
-#				continue
-#			if new_body.is_in_group("Enemies"):
-#				if target == null:
-#					target = new_body
-#					min_dist = global_position.distance_to(new_body.global_position)
-#				else:
-#					var dist = global_position.distance_to(new_body.global_position)
-#					if dist < min_dist:
-#						target = new_body
-						
-	target_closest(body)
+
 						
 # Target closest enemy when there is no target
 func target_closest(body):
@@ -268,8 +297,8 @@ func target_closest(body):
 		return
 	if not active:
 		return
-	if target != null:
-		return
+	#if target != null:
+	#	return
 	var enemies = get_tree().get_nodes_in_group("Enemies")
 	if enemies.empty():
 		return
@@ -287,7 +316,7 @@ func target_closest(body):
 			if dist < min_dist:
 				closest = enemy
 				min_dist = dist
-	target = closest
+	target = process_raycasts(closest)
 #----------------------------------------------------------------------------
 
 #------------------------------------------------------------------------
@@ -309,17 +338,7 @@ func cast_attack():
 		
 #------------------------------------------------------------------------
 
-#-------------------------------------------------------------------------
-#Check if colliding with anything (for select and drag)
-func is_colliding():
-	var bodies = $Body_Area.get_overlapping_bodies()
-	
-	if bodies.size() > 1:
-		return true
-	else:
-		return false
-		
-#--------------------------------------------------------------------------
+
 
 #-----------------------------------------------------------------------
 # Taking damage
@@ -331,6 +350,7 @@ func attack_hit(enemy_position, damage, knock, knock_power=50):
 	var dmg = damage - defense
 	dmg = clamp(dmg, 0, damage)
 	current_hp -= dmg
+	hp_bar.value = current_hp
 	if current_hp <= 0:
 		die(dmg)
 	
@@ -342,6 +362,7 @@ func attack_hit(enemy_position, damage, knock, knock_power=50):
 # Receive heal
 func heal(unit, amount):
 	current_hp += amount
+	hp_bar.value = current_hp
 	
 	var damage_number = damage_number_scene.instance()
 	damage_number.amount = amount
@@ -363,3 +384,6 @@ func die(damage):
 	
 	queue_free()
 
+# make retargetting loop slow
+func _on_Timer_timeout():
+	retarget_loop = true
