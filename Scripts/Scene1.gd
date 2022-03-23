@@ -40,9 +40,11 @@ func _ready():
 	shop.global_position = Vector2(480, 40)
 	shop.units_node_target = units_node
 	shop.connect("update_money", self, "_on_update_money")
+	shop.connect("new_unit", self, "_on_new_unit")
 	$TileMap.add_child(shop)
 func _on_enemy_death():
-	if get_tree().get_nodes_in_group("Enemies").size() <= 1:
+	enemies = get_tree().get_nodes_in_group("Enemies")
+	if enemies.size() <= 1:
 		yield(get_tree().create_timer(0.5), "timeout")
 		enemies = get_tree().get_nodes_in_group("Enemies")
 		if enemies.empty():
@@ -55,9 +57,14 @@ func _on_enemy_spawn():
 		enemy.connect("death", self, "_on_enemy_death")
 		
 func _on_unit_death():
-	if get_tree().get_nodes_in_group("Units").size() <= 1:
+	
+	units = get_tree().get_nodes_in_group("Units")
+	if units.size() <= 1:
 		yield(get_tree().create_timer(0.5), "timeout")
-		emit_signal("defeat")
+		units = get_tree().get_nodes_in_group("Units")
+		if units.empty():
+			
+			emit_signal("defeat")
 
 # saved_data is dictionary with keys: Money, Units, Enemies, Tilemap
 func load_data():
@@ -67,6 +74,10 @@ func load_data():
 		instance.current_hp = unit[2]
 		instance.current_mana = unit[3]
 		units_node.add_child(instance)
+		
+	units = get_tree().get_nodes_in_group("Units")
+	for unit in units:
+		unit.connect("death", self, "_on_unit_death")
 
 func save_data():
 	units = []
@@ -88,6 +99,9 @@ func save_data():
 
 func _on_update_money():
 	emit_signal("update_money")
+	
+func _on_new_unit(unit):
+	unit.connect("death", self, "_on_unit_death")
 	
 func disable_shop():
 	shop.disable()

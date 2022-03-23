@@ -24,15 +24,13 @@ var attacking = false
 var casting = false
 #----------------------------------------------------------
 # Unit stats
-var max_hp = 100
-var current_hp = 100
+var max_hp = 300
+var current_hp = 300
 
 var attack_damage = 10
 var attack_speed = 1.0
-var defense = 0
+var defense = 2
 
-var attacking_modes = ["Default", "Stand by", "Chase"]
-var attacking_mode = "Default"
 
 var mouse_hover = false
 var mouse_select = false
@@ -72,6 +70,8 @@ onready var bullet_position_right2 = $Bullet_Positions/Bullet_Position_Right2
 onready var bullet_position_down1 = $Bullet_Positions/Bullet_Position_Down1
 onready var bullet_position_down2 = $Bullet_Positions/Bullet_Position_Down2
 
+onready var hp_bar = $Bars/HP_Bar
+
 var attack_sfx = preload("res://Assets/Sounds/SFX/rifle_sfx2.wav")
 var picture = preload("res://Assets/Sprites/turret.png")
 
@@ -93,13 +93,13 @@ func _ready():
 	# change size of bars based on max_hp max_mana
 	
 func ready_bars():
-	var hp_bar = $Bars/HP_Bar
 	hp_bar.max_value = max_hp
+	hp_bar.value = current_hp
 	hp_bar.rect_size = Vector2(int(max_hp/10), 3)
 	hp_bar.rect_position = Vector2(ceil(-hp_bar.rect_size.x/2)-1, -21)
 	
 func _process(delta):
-	process_stat_values(delta)
+	#process_stat_values(delta)
 	process_mouse(delta)
 	
 	#if Input.is_action_just_pressed("ui_select"):
@@ -112,10 +112,10 @@ func _physics_process(delta):
 
 #------------------------------------------------------------
 # process in-game stat values, i.e. hp, mana, armor, etc.
-func process_stat_values(_delta):
+#func process_stat_values(_delta):
 	
 			
-	$Bars/HP_Bar.value = current_hp
+#	$Bars/HP_Bar.value = current_hp
 #-----------------------------------------------------------
 
 #-----------------------------------------------------------
@@ -200,9 +200,9 @@ func _on_Aggro_Area_body_exited(body):
 			if new_body.is_in_group("Units"):
 				if target == null:
 					target = new_body
-					min_dist = global_position.distance_to(new_body.global_position)
+					min_dist = global_position.distance_to(new_body.position)
 				else:
-					var dist = global_position.distance_to(new_body.global_position)
+					var dist = global_position.distance_to(new_body.position)
 					if dist < min_dist:
 						target = new_body
 						
@@ -272,15 +272,6 @@ func cast_attack():
 		
 #------------------------------------------------------------------------
 
-#-------------------------------------------------------------------------
-#Check if colliding with anything (for select and drag)
-func is_colliding():
-	var bodies = $Body_Area.get_overlapping_bodies()
-	if bodies.size() > 1:
-		return true
-	else:
-		return false
-#--------------------------------------------------------------------------
 
 #-----------------------------------------------------------------------
 # Taking damage
@@ -288,6 +279,7 @@ func attack_hit(_enemy, damage, _knock, _knock_power=50):
 	var dmg = damage - defense
 	dmg = clamp(dmg, 0, damage)
 	current_hp -= dmg
+	hp_bar.value = current_hp
 	if current_hp <= 0:
 		die(dmg)
 	
@@ -315,7 +307,7 @@ func die(damage):
 		rifleman.global_position = Vector2(global_position.x+i, global_position.y)
 		get_parent().call_deferred("add_child", rifleman)
 		
-	emit_signal("spawn_enemies")
+	get_parent().call_deferred("emit_signal", "spawn_enemies")
 	
 	queue_free()
 

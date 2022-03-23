@@ -289,9 +289,9 @@ func target_closest(body):
 			continue
 		if closest == null:
 			closest = enemy
-			min_dist = global_position.distance_to(closest.global_position)
+			min_dist = global_position.distance_to(closest.position)
 		else:
-			var dist = global_position.distance_to(enemy.global_position)
+			var dist = global_position.distance_to(enemy.position)
 			if dist < min_dist:
 				closest = enemy
 				min_dist = dist

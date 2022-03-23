@@ -48,6 +48,7 @@ func _on_Title_Screen_start_game():
 
 	
 	stage.connect("stage_cleared", self, "_on_stage_cleared")
+	stage.connect("defeat", self, "_on_stage_defeat")
 	stage.connect("update_money", self, "_on_update_money")
 	camera_UI.connect("next_stage", self, "_on_camera_control_next_stage")
 	camera_UI.connect("disable_shop", self, "_on_disable_shop")
@@ -89,12 +90,16 @@ func _on_map_begin_stage(difficulty, _type):
 	camera_UI.update_money()
 	
 	stage.connect("stage_cleared", self, "_on_stage_cleared")
+	stage.connect("defeat", self, "_on_stage_defeat")
 	stage.connect("update_money", self, "_on_update_money")
 	camera_UI.connect("next_stage", self, "_on_camera_control_next_stage")
 	camera_UI.connect("disable_shop", self, "_on_disable_shop")
 	
 func _on_stage_cleared():
 	camera_UI.activate_next_button()
+	
+func _on_stage_defeat():
+	print("defeat")
 	
 func _on_update_money():
 	camera_UI.update_money()

@@ -1,6 +1,7 @@
 extends Node2D
 
 signal update_money
+signal new_unit(unit)
 
 var disabled = false
 
@@ -109,6 +110,7 @@ func buy_unit(unit):
 	new_unit.initial_pos = unit.global_position
 	
 	units_node_target.add_child(new_unit)
+	emit_signal("new_unit", new_unit)
 	unit.queue_free()
 	return new_unit
 	
