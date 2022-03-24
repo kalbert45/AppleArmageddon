@@ -74,8 +74,43 @@ func _physics_process(_delta):
 				hovered = body
 				hovered.mouse_hover = true
 	#--------------------------------------------
-	
+	# number key inputs for buying from shop
+	if not holding:
+		if (Input.is_action_pressed("buy_1")) or (Input.is_action_pressed("buy_2")) or (Input.is_action_pressed("buy_3")):
+			var shop_index = 0
+			if Input.is_action_pressed("buy_1"):
+				shop_index = 0
+			elif Input.is_action_pressed("buy_2"):
+				shop_index = 1
+			elif Input.is_action_pressed("buy_3"):
+				shop_index = 2
+			#deselect
+			if selected != null:
+				selected.mouse_hover = false
+				selected.mouse_select = false
+			selected = shop.shop_spots[shop_index]
+			if not is_instance_valid(selected):
+				selected = null
+			hovered = selected
+			if selected != null:
+				selected.mouse_select = true
+				unit_starting_pos = selected.global_position
+				holding = true
+				sfx2.stream = pick_apple_sfx
+				sfx2.play()
+				var i = randi() % 3
+				match i:
+					0:
+						sfx3.stream = tree_shake_sfx1
+					1:
+						sfx3.stream = tree_shake_sfx2
+					2:
+						sfx3.stream = tree_shake_sfx3
+				sfx3.pitch_scale = ((randi() % 3) + 4)/5.0
+				sfx3.play()
+
 	#-------------------------------------------
+	# mouse inputs
 	# Selection
 	if selected != hovered:
 		if Input.is_action_just_pressed("left_click"):
@@ -132,7 +167,10 @@ func _physics_process(_delta):
 		else:
 			selected.position_invalid = false
 			
-	handle_left_release()
+	if Input.is_action_just_released("left_click"):
+		handle_release()
+	if (Input.is_action_just_released("buy_1")) or (Input.is_action_just_released("buy_2")) or (Input.is_action_just_released("buy_3")):
+		handle_release()
 				
 	#--------------------------------------------
 	
@@ -147,39 +185,38 @@ func _physics_process(_delta):
 		unit_UI.visible = false
 		enemy_UI.visible = false
 	
-func handle_left_release():
-	if Input.is_action_just_released("left_click"):
-		if not holding:
-			return
-		if selected == null:
-			holding = false
-			return
-		if selected.active:
-			holding = false
-			return
+func handle_release():
+	if not holding:
+		return
+	if selected == null:
+		holding = false
+		return
+	if selected.active:
+		holding = false
+		return
+	
+	
+	# if selection is colliding, check if it should be sold, else return to original position
+	if selected.position_invalid:
+		if selected.has_method("attack_hit"):
+			if shop != null:
+				shop.sell_unit(selected)
+		return_to_original_pos()
 		
-		
-		# if selection is colliding, check if it should be sold, else return to original position
-		if selected.position_invalid:
-			if selected.has_method("attack_hit"):
-				if shop != null:
-					shop.sell_unit(selected)
-			return_to_original_pos()
-			
-		# check if selection is a shop item to be bought, otherwise just drop
-		else:
-			# has_method(set_sprite_texture) checks if selection is a shop item
-			if selected.has_method("set_sprite_texture"):
-				var new_unit = shop.buy_unit(selected)
-				if new_unit == null:
-					return_to_original_pos()
-				else:
-					sfx.stream = drop_sfx
-					sfx.play()
+	# check if selection is a shop item to be bought, otherwise just drop
+	else:
+		# has_method(set_sprite_texture) checks if selection is a shop item
+		if selected.has_method("set_sprite_texture"):
+			var new_unit = shop.buy_unit(selected)
+			if new_unit == null:
+				return_to_original_pos()
 			else:
 				sfx.stream = drop_sfx
 				sfx.play()
-		holding = false
+		else:
+			sfx.stream = drop_sfx
+			sfx.play()
+	holding = false
 		
 func return_to_original_pos():
 	if not is_instance_valid(selected):

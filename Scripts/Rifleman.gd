@@ -34,10 +34,10 @@ var casting = false
 var max_hp = 100
 var current_hp = 100
 
-var attack_damage = 10
+var attack_damage = 20
 var attack_speed = 1.0
 var defense = 0
-var movement_speed = 50
+var movement_speed = 60
 
 
 
@@ -284,7 +284,7 @@ func target_closest(body):
 func basic_attack():
 	if target != null:
 		var bullet = bullet_scene.instance()
-		bullet.damage = 20
+		bullet.damage = attack_damage
 		bullet.global_position = $Bullet_Position.global_position
 		bullet.direction = (target.global_position - $Bullet_Position.global_position).normalized()
 		bullet.rotation = bullet.direction.angle()

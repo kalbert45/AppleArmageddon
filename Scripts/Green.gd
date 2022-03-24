@@ -97,10 +97,12 @@ func _ready():
 func ready_bars():
 
 	hp_bar.max_value = max_hp
+	hp_bar.value = current_hp
 	hp_bar.rect_size = Vector2(int(max_hp/10), 3)
 	hp_bar.rect_position = Vector2(ceil(-hp_bar.rect_size.x/2)+2, -16)
 	
 	juice_bar.max_value = max_mana
+	juice_bar.value = current_mana
 	juice_bar.rect_size = Vector2(int(max_hp/10), 1)
 	juice_bar.rect_position = Vector2(ceil(-hp_bar.rect_size.x/2)+2, -13)
 	
@@ -307,7 +309,7 @@ func target_closest(body):
 func basic_attack():
 	if target != null:
 		target.attack_hit(self.global_position, attack_damage, false)
-		current_mana += 20
+		current_mana += 25
 		juice_bar.value = current_mana
 		
 		sfx.stream = attack_sfx
@@ -328,7 +330,7 @@ func cast_attack():
 				
 	sfx.stream = cast_sfx
 	sfx.play()
-	heal_target.heal(self, 4*attack_damage)
+	heal_target.heal(self, 6*attack_damage)
 		
 #------------------------------------------------------------------------
 
@@ -356,6 +358,7 @@ func attack_hit(enemy_position, damage, knock, knock_power=50):
 # Receive heal
 func heal(unit, amount):
 	current_hp += amount
+	current_hp = clamp(current_hp, 0, max_hp)
 	hp_bar.value = current_hp
 	
 	var damage_number = damage_number_scene.instance()

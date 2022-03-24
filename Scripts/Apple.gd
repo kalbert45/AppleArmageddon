@@ -32,8 +32,8 @@ var attacking = false
 var casting = false
 #----------------------------------------------------------
 # Unit stats
-var max_hp = 100
-var current_hp = 100
+var max_hp = 120
+var current_hp = 120
 
 var attack_damage = 10
 var attack_speed = 1.0
@@ -98,6 +98,7 @@ func ready_bars():
 
 	
 	hp_bar.max_value = max_hp
+	hp_bar.value = current_hp
 	hp_bar.rect_size = Vector2(int(max_hp/10), 3)
 	hp_bar.rect_position = Vector2(ceil(-hp_bar.rect_size.x/2)-1, -16)
 	
@@ -341,6 +342,7 @@ func attack_hit(enemy_position, damage, knock, knock_power=50):
 # Receive heal
 func heal(unit, amount):
 	current_hp += amount
+	current_hp = clamp(current_hp, 0, max_hp)
 	hp_bar.value = current_hp
 	
 	var damage_number = damage_number_scene.instance()

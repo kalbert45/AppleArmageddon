@@ -63,3 +63,4 @@ func generate():
 			astar.set_point_disabled(id)
 			
 	return paths
+

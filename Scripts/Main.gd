@@ -23,12 +23,13 @@ var title
 var map
 
 func _ready():
+	
 	title = title_screen.instance()
 	title.connect("start_game", self, "_on_Title_Screen_start_game")
 	HUD.add_child(title)
 	
 	if Global.units.empty():
-		Global.units.append([load("res://Scenes/Apple.tscn"), Vector2(240,180), 100, 0])
+		Global.units.append([load("res://Scenes/Apple.tscn"), Vector2(240,180), 120, 0])
 		Global.money = 20
 
 func _on_Title_Screen_start_game():
@@ -53,6 +54,7 @@ func _on_Title_Screen_start_game():
 	camera_UI.connect("next_stage", self, "_on_camera_control_next_stage")
 	camera_UI.connect("disable_shop", self, "_on_disable_shop")
 	menu.connect("quit_to_title", self, "_on_game_menu_quit_to_title")
+	menu.connect("retry", self, "_on_retry")
 	
 func _on_game_menu_quit_to_title():
 	title = title_screen.instance()
@@ -95,11 +97,39 @@ func _on_map_begin_stage(difficulty, _type):
 	camera_UI.connect("next_stage", self, "_on_camera_control_next_stage")
 	camera_UI.connect("disable_shop", self, "_on_disable_shop")
 	
+func _on_retry():
+	Global.units = [[load("res://Scenes/Apple.tscn"), Vector2(240,180), 120, 0]]
+	Global.money = 20
+	
+	new_game = true
+	var new_stage = scene1.instance()
+	var new_camera_UI = camera_control.instance()
+	var new_menu = game_menu.instance()
+	
+	transition_handler.transition([stage, camera_UI, menu], [[world, new_stage], [HUD, new_camera_UI],[HUD, new_menu]])
+	stage = new_stage
+	camera_UI = new_camera_UI
+	menu = new_menu
+	
+	yield(stage, "ready")
+	stage.load_data()
+	unit_UI.shop = stage.shop
+	yield(camera_UI, "ready")
+	camera_UI.update_money()
+	
+	stage.connect("stage_cleared", self, "_on_stage_cleared")
+	stage.connect("defeat", self, "_on_stage_defeat")
+	stage.connect("update_money", self, "_on_update_money")
+	camera_UI.connect("next_stage", self, "_on_camera_control_next_stage")
+	camera_UI.connect("disable_shop", self, "_on_disable_shop")
+	menu.connect("quit_to_title", self, "_on_game_menu_quit_to_title")
+	menu.connect("retry", self, "_on_retry")
+	
 func _on_stage_cleared():
 	camera_UI.activate_next_button()
 	
 func _on_stage_defeat():
-	print("defeat")
+	menu.defeat()
 	
 func _on_update_money():
 	camera_UI.update_money()

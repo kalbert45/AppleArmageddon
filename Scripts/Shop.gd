@@ -9,6 +9,7 @@ var disabled = false
 var units_node_target = null
 var rng = RandomNumberGenerator.new()
 
+var reroll_enabled = true
 var eat_readied = false
 var eat = false
 var tier = 0
@@ -30,8 +31,8 @@ var shop_sprite
 var apple = [preload("res://Scenes/Apple.tscn"), preload("res://Assets/Sprites/apple.png"), 2]
 var crabapple = [preload("res://Scenes/Crabapple.tscn"), preload("res://Assets/Sprites/crabapple.png"), 1]
 var golden = [preload("res://Scenes/Golden.tscn"), preload("res://Assets/Sprites/golden.png"), 4]
-var green = [preload("res://Scenes/Green.tscn"), preload("res://Assets/Sprites/green2.png"), 4]
-var pink = [preload("res://Scenes/Pink.tscn"), preload("res://Assets/Sprites/red.png"), 4]
+var green = [preload("res://Scenes/Green.tscn"), preload("res://Assets/Sprites/green2.png"), 3]
+var pink = [preload("res://Scenes/Pink.tscn"), preload("res://Assets/Sprites/red.png"), 3]
 
 onready var reroll_button = $Reroll_Button
 onready var animation_player = $AnimationPlayer
@@ -64,11 +65,17 @@ func _ready():
 	reroll_button.set_global_position(Vector2(shop_sprite.initial_pos.x + 40 - reroll_button.get_rect().size.x/2 , 
 											shop_sprite.initial_pos.y - reroll_button.get_rect().size.y/2))
 	labels[3].set_position(Vector2(77, -30))
+	
+func _physics_process(_delta):
+	if Input.is_action_just_pressed("reroll"):
+		if reroll_enabled:
+			reroll_shop()
+	
 func reroll_shop():
 	if 1 > Global.money:
 		return
 		
-	#Global.money -= 1
+	Global.money -= 1
 	emit_signal("update_money")
 	
 	for i in range(shop_spots.size()):
@@ -103,7 +110,7 @@ func buy_unit(unit):
 	if unit.price > Global.money:
 		return
 
-	#Global.money -= unit.price
+	Global.money -= unit.price
 	emit_signal("update_money")
 	
 	var new_unit = unit.unit_scene.instance()
@@ -172,5 +179,10 @@ func disable():
 
 
 func _on_VisibilityNotifier2D_screen_exited():
+	reroll_enabled = false
 	if disabled:
 		queue_free()
+
+
+func _on_VisibilityNotifier2D_screen_entered():
+	reroll_enabled = true

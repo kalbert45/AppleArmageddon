@@ -23,10 +23,10 @@ func _init():
 				2:[BUNKER]
 				}
 				
-	enemy_templates = {0:[[[[Vector2(880,85),Vector2(880,105),Vector2(900,85),Vector2(900,105)],0],
-						[[Vector2(880,265),Vector2(880,285),Vector2(900,265),Vector2(900,285)],0]],
+	enemy_templates = {0:[[[[Vector2(880,85),Vector2(880,105),Vector2(900,85)],0],
+						[[Vector2(880,265),Vector2(880,285),Vector2(900,265)],0]],
 	
-						[[[Vector2(900,85),Vector2(900,105),Vector2(900,125),Vector2(900,145)],0],
+						[[[Vector2(900,125),Vector2(900,145)],0],
 						[[Vector2(900,165),Vector2(900,185),Vector2(900,205),Vector2(900,225)],0]]],
 	
 	1:[[[[Vector2(900,85),Vector2(900,105),Vector2(900,125),Vector2(900,145)],1],

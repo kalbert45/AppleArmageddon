@@ -34,7 +34,7 @@ var casting = false
 var max_hp = 100
 var current_hp = 100
 
-var attack_damage = 10
+var attack_damage = 8
 var attack_speed = 1.0
 var defense = 0
 var movement_speed = 50

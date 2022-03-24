@@ -1,6 +1,7 @@
 extends CanvasLayer
 
 signal quit_to_title
+signal retry
 
 onready var color_rect = $ColorRect
 onready var resume_button = $Resume_Button
@@ -10,6 +11,8 @@ onready var quit_game_button = $Quit_Game_Button
 onready var menu_button = $Menu_Button
 
 var active = false
+
+var defeat_screen_scene = preload("res://Scenes/Defeat_Screen.tscn")
 
 func _ready():
 	resume()
@@ -87,3 +90,12 @@ func _on_Quit_Game_Button_pressed():
 
 func _on_Menu_Button_pressed():
 	popup()
+
+func defeat():
+	resume()
+	var defeat_screen = defeat_screen_scene.instance()
+	defeat_screen.connect("retry", self, "_on_retry")
+	add_child(defeat_screen)
+	
+func _on_retry():
+	emit_signal("retry")

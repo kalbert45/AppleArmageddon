@@ -47,6 +47,7 @@ func generate():
 	buttons = {}
 	var map_generator = map_generator_scene.instance()
 	paths = map_generator.generate()
+	map_generator.queue_free()
 	# preprocess points
 	for i in range(paths.size()):
 		for j in range(paths[i].size()):

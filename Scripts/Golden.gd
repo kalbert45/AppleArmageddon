@@ -101,10 +101,12 @@ func _ready():
 func ready_bars():
 
 	hp_bar.max_value = max_hp
+	hp_bar.value = current_hp
 	hp_bar.rect_size = Vector2(int(max_hp/10), 3)
 	hp_bar.rect_position = Vector2(ceil(-hp_bar.rect_size.x/2)-1, -16)
 	
 	juice_bar.max_value = max_mana
+	juice_bar.value = current_mana
 	juice_bar.rect_size = Vector2(int(max_hp/10), 1)
 	juice_bar.rect_position = Vector2(ceil(-hp_bar.rect_size.x/2)-1, -13)
 	
@@ -356,6 +358,7 @@ func attack_hit(enemy_position, damage, knock, knock_power=50):
 # Receive heal
 func heal(unit, amount):
 	current_hp += amount
+	current_hp = clamp(current_hp, 0, max_hp)
 	hp_bar.value = current_hp
 	
 	var damage_number = damage_number_scene.instance()
