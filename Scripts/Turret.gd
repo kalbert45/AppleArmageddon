@@ -27,9 +27,10 @@ var casting = false
 var max_hp = 300
 var current_hp = 300
 
-var attack_damage = 10
+var attack_damage = 20
 var attack_speed = 1.0
-var defense = 2
+var defense = 5 
+var movement_speed = 0
 
 
 var mouse_hover = false
@@ -45,6 +46,7 @@ var mouse_select = false
 #--------------------------------------------------------
 # Turret exclusive variables
 var label = "Turret"
+var description = "Bunker: Basically four riflemen hanging out."
 
 const IDLE_ANIM_NAME = "Idle"
 const ATTACK_LEFT_ANIM_NAME = "Attack_Left"
@@ -237,7 +239,7 @@ func target_closest(body):
 func basic_attack1():
 	if target != null:
 		var bullet = bullet_scene.instance()
-		bullet.damage = 20
+		bullet.damage = attack_damage
 		bullet.global_position = bullet_position1
 		bullet.direction = (target.global_position - bullet_position1).normalized()
 		bullet.rotation = bullet.direction.angle()
@@ -253,7 +255,7 @@ func basic_attack1():
 func basic_attack2():
 	if target != null:
 		var bullet = bullet_scene.instance()
-		bullet.damage = 20
+		bullet.damage = attack_damage
 		bullet.global_position = bullet_position2
 		bullet.direction = (target.global_position - bullet_position2).normalized()
 		bullet.rotation = bullet.direction.angle()
@@ -276,6 +278,8 @@ func cast_attack():
 #-----------------------------------------------------------------------
 # Taking damage
 func attack_hit(_enemy, damage, _knock, _knock_power=50):
+	if current_hp <= 0:
+		return
 	var dmg = damage - defense
 	dmg = clamp(dmg, 0, damage)
 	current_hp -= dmg
@@ -307,7 +311,8 @@ func die(damage):
 		rifleman.global_position = Vector2(global_position.x+i, global_position.y)
 		get_parent().call_deferred("add_child", rifleman)
 		
-	get_parent().call_deferred("emit_signal", "spawn_enemies")
+	call_deferred("emit_signal", "spawn_enemies")
+	print("signal emitted")
 	
 	queue_free()
 

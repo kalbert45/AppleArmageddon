@@ -4,6 +4,7 @@ extends KinematicBody2D
 #------------------------------------------------------------------
 #--********************************************************-----
 signal death
+signal spawn_enemies
 
 const IDLE_ANIM_NAME = "Idle"
 const MOVEMENT_ANIM_NAME = "Move"
@@ -53,6 +54,7 @@ var mouse_select = false
 #--------------------------------------------------------
 # Grunt exclusive variable
 var label = "Gunman"
+var description = "Gunman: Shoots apples on sight."
 #------------------------------------------------------
 
 onready var attack_range = $Attack_Range

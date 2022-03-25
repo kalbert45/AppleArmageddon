@@ -60,6 +60,7 @@ var position_invalid = false
 # Pink exclusive variables
 var movement_target = Vector2.ZERO
 var label = "Pink"
+var description = "Pink Lady: Keeps distance and knocks back with each hit."
 #------------------------------------------------------
 
 onready var attack_range = $Attack_Range

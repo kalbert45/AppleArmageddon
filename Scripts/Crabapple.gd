@@ -59,6 +59,7 @@ var position_invalid = false
 #--------------------------------------------------------
 # Apple exclusive variable
 var label = "Crabapple"
+var description = "Crabapple: Runs until it collides with someone or reaches the end of the stage. Hits close."
 #------------------------------------------------------
 
 onready var attack_range = $Attack_Range

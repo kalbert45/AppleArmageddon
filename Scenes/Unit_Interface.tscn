@@ -190,6 +190,7 @@ __meta__ = {
 }
 
 [node name="Tooltip" type="NinePatchRect" parent="."]
+visible = false
 margin_top = -28.0
 margin_right = 234.0
 margin_bottom = 1.0
@@ -205,7 +206,7 @@ __meta__ = {
 [node name="Label" type="Label" parent="Tooltip"]
 margin_left = 3.0
 margin_top = -1.0
-margin_right = 228.0
+margin_right = 232.0
 margin_bottom = 28.0
 theme = ExtResource( 4 )
 text = "Power: affects damage dealt by all attacks"
@@ -214,7 +215,33 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Unit_Tooltip" type="NinePatchRect" parent="."]
+margin_top = -73.0
+margin_right = 234.0
+margin_bottom = 1.0
+texture = ExtResource( 1 )
+patch_margin_left = 4
+patch_margin_top = 4
+patch_margin_right = 4
+patch_margin_bottom = 4
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Unit_Tooltip"]
+margin_left = 3.0
+margin_top = 2.0
+margin_right = 232.0
+margin_bottom = 72.0
+theme = ExtResource( 4 )
+text = "Power: affects damage dealt by all attacks"
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [connection signal="mouse_exited" from="." to="." method="_on_Unit_Interface_mouse_exited"]
+[connection signal="mouse_entered" from="Unit_Pic" to="." method="_on_Unit_Pic_mouse_entered"]
 [connection signal="mouse_entered" from="Attack_Symbol" to="." method="_on_Attack_Symbol_mouse_entered"]
 [connection signal="mouse_entered" from="Defense_Symbol" to="." method="_on_Defense_Symbol_mouse_entered"]
 [connection signal="mouse_entered" from="AttSpeed_Symbol" to="." method="_on_AttSpeed_Symbol_mouse_entered"]

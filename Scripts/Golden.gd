@@ -60,6 +60,7 @@ var position_invalid = false
 #--------------------------------------------------------
 # Apple exclusive variable
 var label = "Golden"
+var description = "Golden Delicious: Spits juice.\nAbility: Spit more juice, hit more people."
 #------------------------------------------------------
 
 onready var attack_range = $Attack_Range

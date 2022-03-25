@@ -78,7 +78,7 @@ func _draw():
 			if not buttons.has(path[i]):
 				var map_button = map_button_scene.instance()
 				# set difficulty of map stage based on progress in path
-				map_button.difficulty = int(floor((i+1) * 2 / path.size()))
+				map_button.difficulty = int(ceil((i+1) * 3 / path.size()))
 				# randomly make some points mystery stages
 				if i % 2 == 1:
 					var rand = randi() % 2

@@ -59,6 +59,7 @@ var position_invalid = false
 #--------------------------------------------------------
 # Apple exclusive variable
 var label = "Green"
+var description = "Granny Smith: Looks at enemies intensely from mid-range.\nAbility: Heal the lowest health apple for 6*power"
 #------------------------------------------------------
 
 onready var attack_range = $Attack_Range

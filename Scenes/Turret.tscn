@@ -22,7 +22,7 @@ radius = 11.0
 radius = 227.0
 
 [sub_resource type="CircleShape2D" id=5]
-radius = 150.0
+radius = 155.0
 
 [sub_resource type="Animation" id=11]
 resource_name = "Attack_Down"

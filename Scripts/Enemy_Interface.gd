@@ -1,12 +1,17 @@
 extends NinePatchRect
 
 onready var tooltip = $Tooltip
+onready var unit_tooltip = $Unit_Tooltip
 onready var tooltip_label = $Tooltip/Label
+onready var unit_tooltip_label = $Unit_Tooltip/Label
 
 func _ready():
 	tooltip.visible = false
+	unit_tooltip.visible = false
 	
-func set_initial_values(unit_texture, attack, defense, attack_speed, move_speed, max_hp, current_hp):
+func set_initial_values(unit_text, unit_texture, attack, defense, attack_speed, move_speed, max_hp, current_hp):
+	unit_tooltip_label.text = unit_text
+	
 	if unit_texture != null:
 		$Unit_Pic.texture = unit_texture
 		
@@ -52,3 +57,8 @@ func _on_Movement_Symbol_mouse_entered():
 
 func _on_Unit_Interface_mouse_exited():
 	tooltip.visible = false
+	unit_tooltip.visible = false
+
+
+func _on_Unit_Pic_mouse_entered():
+	unit_tooltip.visible = true

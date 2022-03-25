@@ -13,7 +13,6 @@ const CAST_ANIM_NAME = "Cast"
 const ACCEL = 100
 const DEACCEL = 120
 
-
 var _timer = null
 var retarget_loop = true
 
@@ -61,6 +60,7 @@ var position_invalid = false
 #--------------------------------------------------------
 # Apple exclusive variable
 var label = "Apple"
+var description = "Red Delicious: Actually disgusting. Runs to nearest enemy and hits close range."
 #------------------------------------------------------
 
 onready var attack_range = $CollisionShape2D/Attack_Range

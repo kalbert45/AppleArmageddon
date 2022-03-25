@@ -42,5 +42,16 @@ func _init():
 		[[Vector2(880,265),Vector2(880,285),Vector2(900,265),Vector2(900,285)],1],
 		[[Vector2(850,85),Vector2(850,105),Vector2(850,125),Vector2(850,145)],0],
 		[[Vector2(850,165),Vector2(850,185),Vector2(850,205),Vector2(850,225)],0]
-		]]
+		]],
+		
+	3:[[[[Vector2(1000,250), Vector2(1000, 290)],2],
+		[[Vector2(1040,230),Vector2(1040,250),
+		Vector2(1040,270),Vector2(1040,290),
+		Vector2(1040,310)],1],
+		[[Vector2(1000,130), Vector2(1000, 90)],2],
+		[[Vector2(1040,70),Vector2(1040,90),
+		Vector2(1040,110),Vector2(1040,130),
+		Vector2(1040,150)],1]]
+		
+		]
 	}

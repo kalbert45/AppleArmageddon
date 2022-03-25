@@ -13,6 +13,7 @@ var camera_control = preload("res://Scenes/Camera_Control.tscn")
 var game_menu = preload("res://Scenes/Game_Menu.tscn")
 var title_screen = preload("res://Scenes/Title_Screen.tscn")
 var map_scene = preload("res://Scenes/Map.tscn")
+var tutorial_scene = preload("res://Scenes/Tutorial.tscn")
 
 
 var stage
@@ -21,6 +22,7 @@ var camera_UI
 var menu
 var title
 var map
+var tutorial
 
 func _ready():
 	
@@ -37,9 +39,10 @@ func _on_Title_Screen_start_game():
 	unit_UI = unit_selection.instance()
 	camera_UI = camera_control.instance()
 	menu = game_menu.instance()
+	tutorial = tutorial_scene.instance()
 	
 	transition_handler.transition([title], [[world, stage],
-	[HUD, unit_UI], [HUD, camera_UI], [self, menu]])
+	[HUD, unit_UI], [HUD, camera_UI], [self, menu], [world, tutorial]])
 	
 	yield(stage, "ready")
 	stage.load_data()

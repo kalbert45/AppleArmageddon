@@ -121,12 +121,12 @@ func _physics_process(_delta):
 				selected.mouse_select = true
 				unit_starting_pos = selected.global_position
 				if selected.is_in_group("Units"):
-					unit_UI.set_initial_values(selected.picture, selected.attack_damage, selected.defense, 
+					unit_UI.set_initial_values(selected.description, selected.picture, selected.attack_damage, selected.defense, 
 					selected.attack_speed, selected.movement_speed, selected.max_hp, selected.max_mana, selected.current_hp, selected.current_mana)
 					unit_UI.visible = true
 					enemy_UI.visible = false
 				elif selected.is_in_group("Enemies"):
-					enemy_UI.set_initial_values(selected.picture, selected.attack_damage, selected.defense, 
+					enemy_UI.set_initial_values(selected.description, selected.picture, selected.attack_damage, selected.defense, 
 					selected.attack_speed, selected.movement_speed, selected.max_hp, selected.current_hp)
 					enemy_UI.visible = true
 					unit_UI.visible = false

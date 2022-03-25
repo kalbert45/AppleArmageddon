@@ -31,8 +31,7 @@ func _ready():
 	
 	for enemy in enemies:
 		enemy.connect("death", self, "_on_enemy_death")
-		if "spawn_enemies" in enemy.get_signal_list():
-			enemy.connect("spawn_enemies", self, "_on_enemy_spawn")
+		enemy.connect("spawn_enemies", self, "_on_enemy_spawn")
 	for unit in units:
 		unit.connect("death", self, "_on_unit_death")
 		
@@ -42,6 +41,7 @@ func _ready():
 	shop.connect("update_money", self, "_on_update_money")
 	shop.connect("new_unit", self, "_on_new_unit")
 	$TileMap.add_child(shop)
+	
 func _on_enemy_death():
 	enemies = get_tree().get_nodes_in_group("Enemies")
 	if enemies.size() <= 1:
@@ -54,7 +54,8 @@ func _on_enemy_death():
 func _on_enemy_spawn():
 	enemies = get_tree().get_nodes_in_group("Enemies")
 	for enemy in enemies:
-		enemy.connect("death", self, "_on_enemy_death")
+		if not enemy.is_connected("death", self, "_on_enemy_death"):
+			enemy.connect("death", self, "_on_enemy_death")
 		
 func _on_unit_death():
 	
