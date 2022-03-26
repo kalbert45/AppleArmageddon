@@ -4,8 +4,8 @@
 [ext_resource path="res://Assets/Sounds/SFX/character_drop.wav" type="AudioStream" id=2]
 
 [node name="Unit_Selection" type="Control"]
-margin_right = 640.0
-margin_bottom = 360.0
+anchor_right = 1.0
+anchor_bottom = 1.0
 mouse_filter = 2
 script = ExtResource( 1 )
 __meta__ = {

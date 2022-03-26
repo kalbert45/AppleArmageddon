@@ -5,6 +5,10 @@ onready var unit_tooltip = $Unit_Tooltip
 onready var tooltip_label = $Tooltip/Label
 onready var unit_tooltip_label = $Unit_Tooltip/Label
 
+onready var hp_bar = $HP_Bar
+onready var hp_bar_label = $HP_Bar/Label2
+onready var juice_bar = $Juice_Bar
+
 func _ready():
 	tooltip.visible = false
 	unit_tooltip.visible = false
@@ -30,9 +34,9 @@ func set_initial_values(unit_text, unit_texture, attack, defense, attack_speed, 
 	$Juice_Bar.max_value = max_mana
 	
 func update_values(hp,max_hp, mana, max_mana):
-	$HP_Bar.value = hp
-	$HP_Bar/Label2.text = str(hp) + "/" + str(max_hp)
-	$Juice_Bar.value = mana
+	hp_bar.value = hp
+	hp_bar_label.text = str(hp) + "/" + str(max_hp)
+	juice_bar.value = mana
 
 
 func _on_Attack_Symbol_mouse_entered():

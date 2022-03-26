@@ -68,6 +68,7 @@ onready var animation_manager = $AnimationPlayer
 onready var sfx = $SFX
 onready var raycasts_node = $CollisionShape2D/Raycasts
 onready var hp_bar = $Bars/HP_Bar
+onready var sprite = $Sprite
 
 var attack_sfx = preload("res://Assets/Sounds/SFX/attack_sfx.wav")
 var picture = preload("res://Assets/Sprites/apple.png")
@@ -131,18 +132,18 @@ func _physics_process(delta):
 # process mouse_input
 func process_mouse(_delta):
 	if mouse_hover or mouse_select:
-		$Sprite.material.set_shader_param("width", 1.0)
-		$Sprite.z_index = 1
+		sprite.material.set_shader_param("width", 1.0)
+		sprite.z_index = 1
 	else:
-		$Sprite.material.set_shader_param("width", 0.0)
-		$Sprite.z_index = 0
+		sprite.material.set_shader_param("width", 0.0)
+		sprite.z_index = 0
 		
 	if position_invalid:
-		$Sprite.material.set_shader_param("outline_color", Color(1,0.2,0.2,1))
+		sprite.material.set_shader_param("outline_color", Color(1,0.2,0.2,1))
 	elif mouse_select:
-		$Sprite.material.set_shader_param("outline_color", Color(1,0.75,0.2,1))
+		sprite.material.set_shader_param("outline_color", Color(1,0.75,0.2,1))
 	else:
-		$Sprite.material.set_shader_param("outline_color", Color(0.99,1,0.25,1))
+		sprite.material.set_shader_param("outline_color", Color(0.99,1,0.25,1))
 		
 	# Keep character in window
 	if not active:
@@ -166,7 +167,7 @@ func process_movement(delta):
 	if animation_manager.current_state != CAST_ANIM_NAME:
 		# Movement towards target
 		if (target != null) and (!attacking):
-			$Sprite.set_flip_h(global_position.x > target.global_position.x)
+			sprite.set_flip_h(global_position.x > target.global_position.x)
 			speed += ACCEL * delta
 			direction += calculate_local_avoidance()
 			direction += (15/global_position.distance_to(target.global_position))*(target.global_position - global_position)
@@ -176,7 +177,7 @@ func process_movement(delta):
 			
 		# Attack target
 		elif (target != null) and attacking:
-			$Sprite.set_flip_h(global_position.x > target.global_position.x)
+			sprite.set_flip_h(global_position.x > target.global_position.x)
 			speed -= DEACCEL * delta
 
 			direction += (15/global_position.distance_to(target.global_position))*(target.global_position - global_position)

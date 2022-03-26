@@ -75,7 +75,7 @@ func reroll_shop():
 	if 1 > Global.money:
 		return
 		
-	Global.money -= 1
+	#Global.money -= 1
 	emit_signal("update_money")
 	
 	for i in range(shop_spots.size()):
@@ -110,7 +110,7 @@ func buy_unit(unit):
 	if unit.price > Global.money:
 		return
 
-	Global.money -= unit.price
+	#Global.money -= unit.price
 	emit_signal("update_money")
 	
 	var new_unit = unit.unit_scene.instance()
