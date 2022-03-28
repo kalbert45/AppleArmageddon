@@ -36,7 +36,7 @@ var current_hp = 120
 
 var attack_damage = 10
 var attack_speed = 1.0
-var defense = 10
+var defense = 5
 var movement_speed = 50
 
 #var attacking_modes = ["Default", "Stand by", "Chase"]

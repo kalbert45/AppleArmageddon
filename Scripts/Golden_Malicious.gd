@@ -59,9 +59,9 @@ var position_invalid = false
 #-****************************************************---
 #--------------------------------------------------------
 # Apple exclusive variable
-var label = "Golden"
-var description = "Golden Delicious: Spits juice.\nAbility: Spit more juice, hit more people."
-var upgradable = true
+var label = "Golden Malicious"
+var description = "Golden Malicious: Spits juice.\nAbility: Spit more juice, hit more people."
+var upgradable = false
 #------------------------------------------------------
 
 onready var attack_range = $Attack_Range
@@ -80,7 +80,6 @@ var apple_death_scene = preload("res://Scenes/Apple_Death.tscn")
 var projectile_scene = preload("res://Scenes/Golden_Projectile.tscn")
 var lob_scene = preload("res://Scenes/Golden_Lob.tscn")
 
-var upgrade_scene = preload("res://Scenes/Golden_Malicious.tscn")
 #-------------------------------------------------------------
 
 func _ready():
@@ -106,12 +105,12 @@ func ready_bars():
 	hp_bar.max_value = max_hp
 	hp_bar.value = current_hp
 	hp_bar.rect_size = Vector2(int(max_hp/10), 3)
-	hp_bar.rect_position = Vector2(ceil(-hp_bar.rect_size.x/2)-1, -16)
+	hp_bar.rect_position = Vector2(ceil(-hp_bar.rect_size.x/2)-1, -19)
 	
 	juice_bar.max_value = max_mana
 	juice_bar.value = current_mana
 	juice_bar.rect_size = Vector2(int(max_hp/10), 1)
-	juice_bar.rect_position = Vector2(ceil(-hp_bar.rect_size.x/2)-1, -13)
+	juice_bar.rect_position = Vector2(ceil(-hp_bar.rect_size.x/2)-1, -16)
 	
 func _process(delta):
 	
@@ -388,11 +387,3 @@ func die(damage):
 # make retargetting loop slow
 func _on_Timer_timeout():
 	retarget_loop = true
-
-#-----------------------------------------------------------------
-# upgrade unit by replacing with new unit
-func upgrade():
-	var new_apple = upgrade_scene.instance()
-	new_apple.initial_pos = global_position
-	get_parent().add_child(new_apple)
-	call_deferred("free")

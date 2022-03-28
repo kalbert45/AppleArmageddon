@@ -36,7 +36,7 @@ var current_hp = 120
 
 var attack_damage = 20
 var attack_speed = 1.0
-var defense = 10
+var defense = 5
 var movement_speed = 80
 
 #var attacking_modes = ["Default", "Stand by", "Chase"]
@@ -173,7 +173,7 @@ func process_movement(delta):
 		direction += calculate_local_avoidance()
 		direction += (15/global_position.distance_to(target.global_position))*(target.global_position - global_position)
 		attacking = attack_range.overlaps_body(target)
-		if (speed > 70):
+		if (speed > 75):
 			animation_manager.set_animation(CAST_ANIM_NAME)
 		elif (animation_manager.current_state != MOVEMENT_ANIM_NAME) and (speed > 10):
 			animation_manager.set_animation(MOVEMENT_ANIM_NAME)
@@ -195,7 +195,7 @@ func process_movement(delta):
 			speed += ACCEL * delta
 			if animation_manager.current_state == IDLE_ANIM_NAME:
 				animation_manager.set_animation(MOVEMENT_ANIM_NAME)
-			elif (animation_manager.current_state != CAST_ANIM_NAME) and (speed > 70):
+			elif (animation_manager.current_state != CAST_ANIM_NAME) and (speed > 75):
 				animation_manager.set_animation(CAST_ANIM_NAME)
 		else:
 			speed -= DEACCEL * delta
@@ -205,9 +205,9 @@ func process_movement(delta):
 		# deaccel while casting
 	#	speed -= DEACCEL * delta
 	if animation_manager.current_state == CAST_ANIM_NAME:
-		defense = 20
-	else:
 		defense = 10
+	else:
+		defense = 5
 
 	
 	direction = direction.clamped(1)
