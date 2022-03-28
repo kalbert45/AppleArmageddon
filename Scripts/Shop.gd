@@ -28,7 +28,7 @@ var shop_sprite_scene = preload("res://Scenes/Shop_Sprite.tscn")
 var shop_sprite
 
 # store scene, shop sprite, price in each variable
-var apple = [preload("res://Scenes/Apple.tscn"), preload("res://Assets/Sprites/apple.png"), 2]
+var apple = [preload("res://Scenes/Apple.tscn"), preload("res://Assets/Sprites/apple2.png"), 2]
 var crabapple = [preload("res://Scenes/Crabapple.tscn"), preload("res://Assets/Sprites/crabapple.png"), 1]
 var golden = [preload("res://Scenes/Golden.tscn"), preload("res://Assets/Sprites/golden.png"), 4]
 var green = [preload("res://Scenes/Green.tscn"), preload("res://Assets/Sprites/green2.png"), 3]
@@ -75,7 +75,7 @@ func reroll_shop():
 	if 1 > Global.money:
 		return
 		
-	#Global.money -= 1
+	Global.money -= 1
 	emit_signal("update_money")
 	
 	for i in range(shop_spots.size()):
@@ -110,7 +110,7 @@ func buy_unit(unit):
 	if unit.price > Global.money:
 		return
 
-	#Global.money -= unit.price
+	Global.money -= unit.price
 	emit_signal("update_money")
 	
 	var new_unit = unit.unit_scene.instance()

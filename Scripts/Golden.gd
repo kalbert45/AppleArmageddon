@@ -61,6 +61,7 @@ var position_invalid = false
 # Apple exclusive variable
 var label = "Golden"
 var description = "Golden Delicious: Spits juice.\nAbility: Spit more juice, hit more people."
+var upgradable = true
 #------------------------------------------------------
 
 onready var attack_range = $Attack_Range
@@ -380,7 +381,7 @@ func die(damage):
 	#	damage_number.type = "Unit"
 	#	apple_death.add_child(damage_number)
 	
-	queue_free()
+	call_deferred("free")
 
 #-----------------------------------------------------------
 # make retargetting loop slow

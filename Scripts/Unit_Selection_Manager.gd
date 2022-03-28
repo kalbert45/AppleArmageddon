@@ -39,6 +39,7 @@ var pick_apple_sfx = preload("res://Assets/Sounds/SFX/pick_apple_sfx.wav")
 onready var sfx = $SFX
 onready var sfx2 = $SFX2
 onready var sfx3 = $SFX3
+onready var upgrade_button = $Upgrade_Button
 
 func _ready():
 	space_state = get_world_2d().get_direct_space_state()
@@ -46,6 +47,7 @@ func _ready():
 	unit_UI.visible = false
 	enemy_UI = enemy_UI_scene.instance()
 	enemy_UI.visible = false
+	upgrade_button.disabled = true
 	add_child(unit_UI)
 	add_child(enemy_UI)
 	
@@ -123,6 +125,7 @@ func _physics_process(_delta):
 				hovered.attack_speed, hovered.movement_speed, hovered.max_hp, hovered.max_mana, hovered.current_hp, hovered.current_mana)
 				unit_UI.visible = true
 				enemy_UI.visible = false
+				
 			elif hovered.is_in_group("Enemies"):
 				enemy_UI.set_initial_values(hovered.description, hovered.picture, hovered.attack_damage, hovered.defense, 
 				hovered.attack_speed, hovered.movement_speed, hovered.max_hp, hovered.current_hp)
@@ -220,17 +223,45 @@ func _physics_process(_delta):
 		handle_release()
 				
 	#--------------------------------------------
+	# Upgrade button
+	if not selected.empty():
+		if selected[0].is_in_group("Units"):
+			if selected[0].upgradable:
+				var enable_button = true
+				var unit_label = selected[0].label
+				for unit in selected:
+					if unit.label != unit_label:
+						enable_button = false
+						break
+				if enable_button:
+					upgrade_button.disabled = false
+				else:
+					upgrade_button.disabled = true
+	else:
+		upgrade_button.disabled = true
+	
 	
 	#---------------------------------------------
 	# Unit UI
 	if selected.size() == 1:
 		if selected[0].is_in_group("Units"):
 			unit_UI.update_values(selected[0].current_hp, selected[0].max_hp, selected[0].current_mana, selected[0].max_mana)
+			#if selected[0].upgradable:
+			#	upgrade_button.disabled = false
 		elif selected[0].is_in_group("Enemies"):
 			enemy_UI.update_values(selected[0].current_hp, selected[0].max_hp)
 	else:
 		unit_UI.visible = false
+		#upgrade_button.disabled = true
 		enemy_UI.visible = false
+		
+	# ----------------------------------------------
+	# unit upgrades
+	if not upgrade_button.disabled:
+		if Input.is_action_just_pressed("upgrade"):
+			selected[0].upgrade()
+			selected.remove(0)
+			
 	
 func handle_release():
 	if not (holding or dragging):
@@ -283,7 +314,6 @@ func handle_release():
 			if unit.is_in_group("Units"):
 				selected.append(unit)
 				unit.mouse_select = true
-				print(selected)
 		
 func return_to_original_pos():
 	for unit in selected:
@@ -305,3 +335,8 @@ func mouse_in_viewport():
 func _draw():
 	if dragging:
 		draw_rect(Rect2(draw_drag_start, viewport_mouse_pos - draw_drag_start), Color(.25,.65,.96,0.5), true)
+
+
+func _on_Upgrade_Button_pressed():
+	selected[0].upgrade()
+	selected.remove(0)

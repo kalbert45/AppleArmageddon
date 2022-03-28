@@ -277,10 +277,14 @@ func cast_attack():
 
 #-----------------------------------------------------------------------
 # Taking damage
-func attack_hit(_enemy, damage, _knock, _knock_power=50):
+func attack_hit(enemy_position, damage, _knock, _knock_power=50):
 	if current_hp <= 0:
 		return
-	var dmg = damage - defense
+	var dist = global_position.distance_to(enemy_position)
+	dist = clamp(dist, 0, 120)
+	var mitigation = defense * (dist / 120)
+	
+	var dmg = damage - mitigation
 	dmg = clamp(dmg, 0, damage)
 	current_hp -= dmg
 	hp_bar.value = current_hp
@@ -314,5 +318,5 @@ func die(damage):
 	call_deferred("emit_signal", "spawn_enemies")
 	print("signal emitted")
 	
-	queue_free()
+	call_deferred("free")
 

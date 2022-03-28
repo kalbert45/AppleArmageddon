@@ -296,7 +296,11 @@ func attack_hit(enemy_position, damage, knock, knock_power=50):
 		knock_direction = (global_position - enemy_position).normalized()
 		knock_speed = knock_power
 	
-	var dmg = damage - defense
+	var dist = global_position.distance_to(enemy_position)
+	dist = clamp(dist, 0, 120)
+	var mitigation = defense * (dist / 120)
+	
+	var dmg = damage - mitigation
 	dmg = clamp(dmg, 0, damage)
 	current_hp -= dmg
 	hp_bar.value = current_hp
@@ -321,7 +325,7 @@ func die(damage):
 	#damage_number.type = "Enemy"
 	#apple_death.add_child(damage_number)
 	
-	queue_free()
+	call_deferred("free")
 #--------------------------------------------------------------------------
 
 # make retargetting loop slow

@@ -34,8 +34,8 @@ var casting = false
 var max_hp = 50
 var current_hp = 50
 
-var attack_damage = 5
-var attack_speed = 1.0
+var attack_damage = 10
+var attack_speed = 1.5
 var defense = 0
 var movement_speed = 100
 
@@ -60,6 +60,7 @@ var position_invalid = false
 # Apple exclusive variable
 var label = "Crabapple"
 var description = "Crabapple: Runs until it collides with someone or reaches the end of the stage. Hits close."
+var upgradable = true
 #------------------------------------------------------
 
 onready var attack_range = $Attack_Range
@@ -322,7 +323,11 @@ func attack_hit(enemy_position, damage, knock, knock_power=50):
 		knock_direction = (global_position - enemy_position).normalized()
 		knock_speed = knock_power
 	
-	var dmg = damage - defense
+	var dist = global_position.distance_to(enemy_position)
+	dist = clamp(dist, 0, 120)
+	var mitigation = defense * (dist / 120)
+	
+	var dmg = damage - mitigation
 	dmg = clamp(dmg, 0, damage)
 	current_hp -= dmg
 	hp_bar.value = current_hp

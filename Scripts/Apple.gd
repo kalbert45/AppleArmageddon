@@ -36,7 +36,7 @@ var current_hp = 120
 
 var attack_damage = 10
 var attack_speed = 1.0
-var defense = 2
+var defense = 10
 var movement_speed = 50
 
 #var attacking_modes = ["Default", "Stand by", "Chase"]
@@ -61,6 +61,7 @@ var position_invalid = false
 # Apple exclusive variable
 var label = "Apple"
 var description = "Red Delicious: Actually disgusting. Runs to nearest enemy and hits close range."
+var upgradable = true
 #------------------------------------------------------
 
 onready var attack_range = $CollisionShape2D/Attack_Range
@@ -76,6 +77,7 @@ var picture = preload("res://Assets/Sprites/apple.png")
 var damage_number_scene = preload("res://Scenes/Damage_Number.tscn")
 var apple_death_scene = preload("res://Scenes/Apple_Death.tscn")
 
+var upgrade_scene = preload("res://Scenes/Charge_Apple.tscn")
 #-------------------------------------------------------------
 
 func _ready():
@@ -328,7 +330,11 @@ func attack_hit(enemy_position, damage, knock, knock_power=50):
 		knock_direction = (global_position - enemy_position).normalized()
 		knock_speed = knock_power
 	
-	var dmg = damage - defense
+	var dist = global_position.distance_to(enemy_position)
+	dist = clamp(dist, 0, 120)
+	var mitigation = defense * (dist / 120)
+	
+	var dmg = damage - mitigation
 	dmg = clamp(dmg, 0, damage)
 	current_hp -= dmg
 	hp_bar.value = current_hp
@@ -364,10 +370,18 @@ func die(damage):
 	#	damage_number.type = "Unit"
 	#	apple_death.add_child(damage_number)
 	
-	queue_free()
+	call_deferred("free")
 
 #--------------------------------------------------------------------------
 
 # make retargetting loop slow
 func _on_Timer_timeout():
 	retarget_loop = true
+	
+#-----------------------------------------------------------------
+# upgrade unit by replacing with new unit
+func upgrade():
+	var new_apple = upgrade_scene.instance()
+	new_apple.initial_pos = global_position
+	get_parent().add_child(new_apple)
+	call_deferred("free")

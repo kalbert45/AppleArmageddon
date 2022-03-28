@@ -28,14 +28,14 @@ func set_initial_values(unit_text, unit_texture, attack, defense, attack_speed, 
 	$Defense_Symbol/Label.text = str(defense)
 	$AttSpeed_Symbol/Label.text = str(attack_speed)
 	$Movement_Symbol/Label.text = str(move_speed)
-	$HP_Bar.value = current_hp
+	$HP_Bar.value = int(current_hp)
 	$HP_Bar.max_value = max_hp
-	$HP_Bar/Label2.text = str(current_hp) + "/" + str(max_hp)
+	$HP_Bar/Label2.text = str(int(current_hp)) + "/" + str(max_hp)
 	$Juice_Bar.max_value = max_mana
 	
 func update_values(hp,max_hp, mana, max_mana):
-	hp_bar.value = hp
-	hp_bar_label.text = str(hp) + "/" + str(max_hp)
+	hp_bar.value = int(hp)
+	hp_bar_label.text = str(int(hp)) + "/" + str(max_hp)
 	juice_bar.value = mana
 
 
@@ -46,7 +46,7 @@ func _on_Attack_Symbol_mouse_entered():
 
 func _on_Defense_Symbol_mouse_entered():
 	tooltip.visible = true
-	tooltip_label.text = "Defense: mitigates all damage by flat amount"
+	tooltip_label.text = "Defense: mitigates all damage by flat amount. Is more effective with distance."
 
 
 func _on_AttSpeed_Symbol_mouse_entered():
@@ -66,3 +66,5 @@ func _on_Unit_Interface_mouse_exited():
 
 func _on_Unit_Pic_mouse_entered():
 	unit_tooltip.visible = true
+
+
