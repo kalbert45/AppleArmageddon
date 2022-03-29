@@ -334,7 +334,7 @@ func mouse_in_viewport():
 # draw drag select rectangle
 func _draw():
 	if dragging:
-		draw_rect(Rect2(draw_drag_start, viewport_mouse_pos - draw_drag_start), Color(.25,.65,.96,0.5), true)
+		draw_rect(Rect2(draw_drag_start, viewport_mouse_pos - draw_drag_start), Color(.25,.65,.96,0.5), false)
 
 
 func _on_Upgrade_Button_pressed():

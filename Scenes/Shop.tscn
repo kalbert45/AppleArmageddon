@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://Scripts/Shop.gd" type="Script" id=1]
 [ext_resource path="res://Assets/Sprites/GUI/reroll_button_pressed.png" type="Texture" id=2]
@@ -6,9 +6,10 @@
 [ext_resource path="res://Assets/Sprites/GUI/reroll_button.png" type="Texture" id=4]
 [ext_resource path="res://Assets/Sprites/tree_spritesheet.png" type="Texture" id=5]
 [ext_resource path="res://Assets/Themes/GUI_Label_Theme.tres" type="Theme" id=6]
+[ext_resource path="res://Assets/Sprites/tree_shadow.png" type="Texture" id=7]
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 48, 43.75 )
+extents = Vector2( 69, 52.875 )
 
 [sub_resource type="Animation" id=6]
 resource_name = "Eat"
@@ -98,13 +99,18 @@ texture = ExtResource( 5 )
 hframes = 10
 vframes = 4
 
+[node name="Shadow" type="Sprite" parent="Sprite"]
+show_behind_parent = true
+position = Vector2( 0, 50 )
+texture = ExtResource( 7 )
+
 [node name="StaticBody" type="StaticBody2D" parent="."]
 z_index = -1
 collision_layer = 4
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody"]
-position = Vector2( -4, 9.25 )
+position = Vector2( 0, 3.875 )
 shape = SubResource( 1 )
 
 [node name="Reroll_Button" type="TextureButton" parent="."]
@@ -138,6 +144,7 @@ volume_db = -3.0
 bus = "SFX"
 
 [node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="."]
+visible = false
 position = Vector2( -2, -2 )
 scale = Vector2( 7.6, 5.8 )
 

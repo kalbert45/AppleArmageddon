@@ -31,10 +31,10 @@ var attacking = false
 var casting = false
 #----------------------------------------------------------
 # Unit stats
-var max_hp = 80
-var current_hp = 80
+var max_hp = 100
+var current_hp = 100
 
-var attack_damage = 10
+var attack_damage = 20
 var attack_speed = 1.0
 var defense = 0
 var movement_speed = 40
@@ -77,8 +77,8 @@ var picture = preload("res://Assets/Sprites/golden.png")
 
 var damage_number_scene = preload("res://Scenes/Damage_Number.tscn")
 var apple_death_scene = preload("res://Scenes/Apple_Death.tscn")
-var projectile_scene = preload("res://Scenes/Golden_Projectile.tscn")
-var lob_scene = preload("res://Scenes/Golden_Lob.tscn")
+var projectile_scene = preload("res://Scenes/Golden_Malicious_Projectile.tscn")
+var lob_scene = preload("res://Scenes/Golden_Malicious_Lob.tscn")
 
 #-------------------------------------------------------------
 
@@ -105,12 +105,12 @@ func ready_bars():
 	hp_bar.max_value = max_hp
 	hp_bar.value = current_hp
 	hp_bar.rect_size = Vector2(int(max_hp/10), 3)
-	hp_bar.rect_position = Vector2(ceil(-hp_bar.rect_size.x/2)-1, -19)
+	hp_bar.rect_position = Vector2(ceil(-hp_bar.rect_size.x/2)-1, -21)
 	
 	juice_bar.max_value = max_mana
 	juice_bar.value = current_mana
 	juice_bar.rect_size = Vector2(int(max_hp/10), 1)
-	juice_bar.rect_position = Vector2(ceil(-hp_bar.rect_size.x/2)-1, -16)
+	juice_bar.rect_position = Vector2(ceil(-hp_bar.rect_size.x/2)-1, -18)
 	
 func _process(delta):
 	
@@ -315,6 +315,7 @@ func basic_attack():
 		projectile.global_position = global_position
 		projectile.direction = (target.global_position - global_position).normalized()
 		projectile.rotation = projectile.direction.angle()
+		projectile.lifetime = 1.5
 		get_node("/root/Main/World").add_child(projectile)
 		current_mana += 20
 		juice_bar.value = current_mana

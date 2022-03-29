@@ -146,11 +146,9 @@ volume_db = -6.992
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
-anchor_bottom = 1.0
 margin_left = -320.0
 margin_top = -360.0
 margin_right = 320.0
-margin_bottom = 0.0
 
 [node name="Camera_Control" type="Node2D" parent="HUD"]
 script = ExtResource( 6 )
