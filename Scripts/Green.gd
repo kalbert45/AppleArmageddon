@@ -77,6 +77,7 @@ var picture = preload("res://Assets/Sprites/green2.png")
 var damage_number_scene = preload("res://Scenes/Damage_Number.tscn")
 var apple_death_scene = preload("res://Scenes/Apple_Death.tscn")
 
+var upgrade_scene = preload("res://Scenes/Units/Big_Green.tscn")
 #-------------------------------------------------------------
 
 func _ready():
@@ -391,3 +392,11 @@ func die(damage):
 # make retargetting loop slow
 func _on_Timer_timeout():
 	retarget_loop = true
+	
+#-----------------------------------------------------------------
+# upgrade unit by replacing with new unit
+func upgrade():
+	var new_apple = upgrade_scene.instance()
+	new_apple.initial_pos = global_position
+	get_parent().add_child(new_apple)
+	call_deferred("free")

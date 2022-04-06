@@ -80,7 +80,7 @@ var apple_death_scene = preload("res://Scenes/Apple_Death.tscn")
 var projectile_scene = preload("res://Scenes/Golden_Projectile.tscn")
 var lob_scene = preload("res://Scenes/Golden_Lob.tscn")
 
-var upgrade_scene = preload("res://Scenes/Golden_Malicious.tscn")
+var upgrade_scene = preload("res://Scenes/Units/Golden_Malicious.tscn")
 #-------------------------------------------------------------
 
 func _ready():
@@ -330,7 +330,7 @@ func cast_attack():
 		lob.damage = 2*attack_damage
 		lob.source = global_position
 		lob.target = target.global_position
-		get_node("/root/Main/World").add_child(lob)
+		get_parent().add_child(lob)
 		
 		sfx.pitch_scale = 0.6
 		sfx.stream = attack_sfx

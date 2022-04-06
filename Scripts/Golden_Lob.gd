@@ -52,6 +52,8 @@ func explode():
 	lob.visible = false
 	splatter.visible = true
 	
+	z_index = -1
+	
 	var bodies = aoe.get_overlapping_bodies()
 	for body in bodies:
 		if body.is_in_group("Enemies"):

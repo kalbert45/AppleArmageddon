@@ -75,7 +75,7 @@ var picture = preload("res://Assets/Sprites/crabapple.png")
 var damage_number_scene = preload("res://Scenes/Damage_Number.tscn")
 var apple_death_scene = preload("res://Scenes/Apple_Death.tscn")
 
-var upgrade_scene = preload("res://Scenes/Dogapple.tscn")
+var upgrade_scene = preload("res://Scenes/Units/Dogapple.tscn")
 #-------------------------------------------------------------
 
 func _ready():

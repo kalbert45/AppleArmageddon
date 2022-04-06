@@ -277,7 +277,7 @@ func target_closest(body):
 #Attacks
 func basic_attack():
 	if target != null:
-		target.attack_hit(self.global_position, attack_damage, false)
+		target.attack_hit(self.global_position, attack_damage, true, 40)
 		
 		sfx.stream = attack_sfx
 		sfx.play()

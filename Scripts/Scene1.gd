@@ -13,18 +13,23 @@ var enemy_generator_scene = preload("res://Scenes/Enemy_Generator.tscn")
 var shop_scene = preload("res://Scenes/Shop.tscn")
 var shop
 
-var apple_scene = preload("res://Scenes/Apple.tscn")
-var crabapple_scene = preload("res://Scenes/Crabapple.tscn")
-var golden_scene = preload("res://Scenes/Golden.tscn")
-var green_scene = preload("res://Scenes/Green.tscn")
-var pink_scene = preload("res://Scenes/Pink.tscn")
+var apple_scene = preload("res://Scenes/Units/Apple.tscn")
+var crabapple_scene = preload("res://Scenes/Units/Crabapple.tscn")
+var golden_scene = preload("res://Scenes/Units/Golden.tscn")
+var green_scene = preload("res://Scenes/Units/Green.tscn")
+var pink_scene = preload("res://Scenes/Units/Pink.tscn")
+
+var big_apple_scene = preload("res://Scenes/Units/Charge_Apple.tscn")
+var big_crabapple_scene = preload("res://Scenes/Units/Dogapple.tscn")
+var big_golden_scene = preload("res://Scenes/Units/Golden_Malicious.tscn")
+var big_green_scene = preload("res://Scenes/Units/Big_Green.tscn")
 
 onready var units_node = $TileMap/YSort
 
 func _ready():
-	var enemy_generator = enemy_generator_scene.instance()
-	enemy_generator.generate_enemies(difficulty, units_node)
-	enemy_generator.queue_free()
+	#var enemy_generator = enemy_generator_scene.instance()
+	#enemy_generator.generate_enemies(difficulty, units_node)
+	#enemy_generator.queue_free()
 	
 	enemies = get_tree().get_nodes_in_group("Enemies")
 	units = get_tree().get_nodes_in_group("Units")
@@ -43,12 +48,13 @@ func _ready():
 	$TileMap.add_child(shop)
 	
 func _on_enemy_death():
+	emit_signal("update_money")
 	enemies = get_tree().get_nodes_in_group("Enemies")
 	if enemies.size() <= 1:
 		yield(get_tree().create_timer(0.5), "timeout")
 		enemies = get_tree().get_nodes_in_group("Enemies")
 		if enemies.empty():
-			Global.money += 20 * (difficulty + 1)
+			#Global.money += 20 * (difficulty + 1)
 			emit_signal("stage_cleared")
 
 func _on_enemy_spawn():
@@ -72,8 +78,8 @@ func load_data():
 	for unit in Global.units:
 		var instance = unit[0].instance()
 		instance.initial_pos = unit[1]
-		instance.current_hp = unit[2]
-		instance.current_mana = unit[3]
+		#instance.current_hp = unit[2]
+		#instance.current_mana = unit[3]
 		units_node.add_child(instance)
 		
 	units = get_tree().get_nodes_in_group("Units")
@@ -85,15 +91,24 @@ func save_data():
 	for unit in get_tree().get_nodes_in_group("Units"):
 		match unit.label:
 			"Apple":
-				units.append([apple_scene, unit.initial_pos, unit.current_hp, unit.current_mana])
+				units.append([apple_scene, unit.initial_pos])
 			"Crabapple":
-				units.append([crabapple_scene, unit.initial_pos, unit.current_hp, unit.current_mana])
+				units.append([crabapple_scene, unit.initial_pos])
 			"Golden":
-				units.append([golden_scene, unit.initial_pos, unit.current_hp, unit.current_mana])
+				units.append([golden_scene, unit.initial_pos])
 			"Green":
-				units.append([green_scene, unit.initial_pos, unit.current_hp, unit.current_mana])
+				units.append([green_scene, unit.initial_pos])
 			"Pink":
-				units.append([pink_scene, unit.initial_pos, unit.current_hp, unit.current_mana])
+				units.append([pink_scene, unit.initial_pos])
+				
+			"Brappler":
+				units.append([big_apple_scene, unit.initial_pos])
+			"Golden Malicious":
+				units.append([big_golden_scene, unit.initial_pos])
+			"Dogapple":
+				units.append([big_crabapple_scene, unit.initial_pos])
+			"Big Green":
+				units.append([big_green_scene, unit.initial_pos])
 				
 		
 	Global.units = units

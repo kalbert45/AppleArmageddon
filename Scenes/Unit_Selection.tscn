@@ -24,6 +24,7 @@ volume_db = -7.0
 volume_db = -7.0
 
 [node name="Upgrade_Button" type="Button" parent="."]
+visible = false
 margin_left = 123.0
 margin_top = 334.0
 margin_right = 186.0

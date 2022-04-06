@@ -28,11 +28,11 @@ var shop_sprite_scene = preload("res://Scenes/Shop_Sprite.tscn")
 var shop_sprite
 
 # store scene, shop sprite, price in each variable
-var apple = [preload("res://Scenes/Apple.tscn"), preload("res://Assets/Sprites/apple2.png"), 2]
-var crabapple = [preload("res://Scenes/Crabapple.tscn"), preload("res://Assets/Sprites/crabapple.png"), 1]
-var golden = [preload("res://Scenes/Golden.tscn"), preload("res://Assets/Sprites/golden.png"), 4]
-var green = [preload("res://Scenes/Green.tscn"), preload("res://Assets/Sprites/green2.png"), 3]
-var pink = [preload("res://Scenes/Pink.tscn"), preload("res://Assets/Sprites/red.png"), 3]
+var apple = [preload("res://Scenes/Units/Apple.tscn"), preload("res://Assets/Sprites/apple2.png"), 2]
+var crabapple = [preload("res://Scenes/Units/Crabapple.tscn"), preload("res://Assets/Sprites/crabapple.png"), 1]
+var golden = [preload("res://Scenes/Units/Golden.tscn"), preload("res://Assets/Sprites/golden.png"), 4]
+var green = [preload("res://Scenes/Units/Green.tscn"), preload("res://Assets/Sprites/green2.png"), 3]
+var pink = [preload("res://Scenes/Units/Pink.tscn"), preload("res://Assets/Sprites/red.png"), 3]
 
 onready var reroll_button = $Reroll_Button
 onready var animation_player = $AnimationPlayer
@@ -72,10 +72,12 @@ func _physics_process(_delta):
 			reroll_shop()
 	
 func reroll_shop():
+	if disabled:
+		return
 	if 1 > Global.money:
 		return
 		
-	Global.money -= 1
+	#Global.money -= 1
 	emit_signal("update_money")
 	
 	for i in range(shop_spots.size()):
@@ -107,10 +109,12 @@ func reroll_shop():
 	
 # properly adds unit to the stage. remove from shop
 func buy_unit(unit):
+	if disabled:
+		return
 	if unit.price > Global.money:
 		return
 
-	Global.money -= unit.price
+	#Global.money -= unit.price
 	emit_signal("update_money")
 	
 	var new_unit = unit.unit_scene.instance()
@@ -175,6 +179,7 @@ func _on_Face_body_exited(body):
 	
 #handle disable
 func disable():
+	$StaticBody/CollisionShape2D.disabled = true
 	disabled = true
 
 

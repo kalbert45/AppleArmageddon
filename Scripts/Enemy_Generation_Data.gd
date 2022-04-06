@@ -1,10 +1,13 @@
 extends Resource
 
 # all enemy scenes
-const GRUNT = preload("res://Scenes/Enemy_Dummy.tscn")
-const GUNMAN = preload("res://Scenes/Gunman.tscn")
-const RIFLEMAN = preload("res://Scenes/Rifleman.tscn")
-const BUNKER = preload("res://Scenes/Turret.tscn")
+const GRUNT = preload("res://Scenes/Enemies/Enemy_Dummy.tscn")
+const AXEMAN = preload("res://Scenes/Enemies/Axeman.tscn")
+const GUNMAN = preload("res://Scenes/Enemies/Gunman.tscn")
+const RIFLEMAN = preload("res://Scenes/Enemies/Rifleman.tscn")
+const BUNKER = preload("res://Scenes/Enemies/Turret.tscn")
+const MOLOTOVMAN = preload("res://Scenes/Enemies/Molotovman.tscn")
+const TRACTOR = preload("res://Scenes/Enemies/Tractor.tscn")
 
 # dictionary that sorts units by difficulty
 var units_dict
@@ -18,8 +21,8 @@ var enemy_templates
 
 
 func _init():
-	units_dict = {0: [GRUNT, GUNMAN],
-				1:[RIFLEMAN],
+	units_dict = {0: [GRUNT, AXEMAN, GUNMAN, MOLOTOVMAN, TRACTOR],
+				1:[RIFLEMAN, TRACTOR],
 				2:[BUNKER]
 				}
 				

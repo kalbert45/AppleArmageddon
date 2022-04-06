@@ -31,7 +31,7 @@ func _ready():
 	HUD.add_child(title)
 	
 	if Global.units.empty():
-		Global.units.append([load("res://Scenes/Apple.tscn"), Vector2(240,180), 120, 0])
+		Global.units.append([load("res://Scenes/Units/Apple.tscn"), Vector2(240,180)])
 		Global.money = 20
 
 func _on_Title_Screen_start_game():
@@ -75,7 +75,7 @@ func _on_camera_control_next_stage():
 		map.new = true
 		new_game = false
 	
-	stage.save_data()
+	#stage.save_data()
 	
 	transition_handler.transition([stage, camera_UI], [[world, map]])
 	
@@ -139,4 +139,5 @@ func _on_update_money():
 	
 func _on_disable_shop():
 	stage.disable_shop()
+	stage.save_data()
 	
