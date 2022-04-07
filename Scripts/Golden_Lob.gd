@@ -4,7 +4,7 @@ var damage = 10
 var lifetime = 1
 var full_rotation = 0
 
-var source = Vector2.ZERO
+var source = null
 var target = Vector2.ZERO
 var curve_point = Vector2.ZERO
 
@@ -16,6 +16,8 @@ var t = 0
 var splat_sfx = preload("res://Assets/Sounds/SFX/golden_lob_splat_sfx2.wav")
 var sfx_scene = preload("res://Scenes/SFX.tscn")
 
+var Golden1 = false
+
 onready var aoe = $AOE
 onready var lob = $Lob
 onready var splatter = $Splatter
@@ -26,16 +28,19 @@ func _ready():
 	splatter.visible = false
 	
 	rng.randomize()
-	curve_point = Vector2((source.x + target.x)/2, min(source.y, target.y) - 40)
+	curve_point = Vector2((source.position.x + target.x)/2, min(source.position.y, target.y) - 40)
 	full_rotation = rng.randi_range(-720,720) 
 	var scale_factor = rng.randf_range(1, 1.2)
 	scale = Vector2(scale_factor, scale_factor)
 
+	if Golden1:
+		scale *= 1.6
+		$AOE/CollisionShape2D.shape.radius += 15
 	
 func _process(delta):
 	if not burst:
 		rotation_degrees = lerp(0, full_rotation, t)
-		global_position = _quadratic_bezier(source, curve_point, target, t)
+		global_position = _quadratic_bezier(source.position, curve_point, target, t)
 		t += delta/lifetime
 		t = clamp(t, 0, 1)
 		

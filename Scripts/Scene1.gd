@@ -27,9 +27,9 @@ var big_green_scene = preload("res://Scenes/Units/Big_Green.tscn")
 onready var units_node = $TileMap/YSort
 
 func _ready():
-	#var enemy_generator = enemy_generator_scene.instance()
-	#enemy_generator.generate_enemies(difficulty, units_node)
-	#enemy_generator.queue_free()
+	var enemy_generator = enemy_generator_scene.instance()
+	enemy_generator.generate_enemies(difficulty, units_node)
+	enemy_generator.queue_free()
 	
 	enemies = get_tree().get_nodes_in_group("Enemies")
 	units = get_tree().get_nodes_in_group("Units")
@@ -75,12 +75,25 @@ func _on_unit_death():
 
 # saved_data is dictionary with keys: Money, Units, Enemies, Tilemap
 func load_data():
+	#test
+	#Global.augments["General3"] = true
+	
 	for unit in Global.units:
 		var instance = unit[0].instance()
 		instance.initial_pos = unit[1]
-		#instance.current_hp = unit[2]
-		#instance.current_mana = unit[3]
+		
+		#Augments
+		if Global.augments["General0"]:
+			instance.movement_speed += 10
+		if Global.augments["General1"]:
+			instance.General1 = true
+		if Global.augments["General2"]:
+			instance.attack_damage += 2
+		if Global.augments["General3"]:
+			instance.General3 = true
+		
 		units_node.add_child(instance)
+		
 		
 	units = get_tree().get_nodes_in_group("Units")
 	for unit in units:

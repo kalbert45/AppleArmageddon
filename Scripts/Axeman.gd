@@ -279,26 +279,29 @@ func target_closest(body):
 #Attacks
 func basic_attack():
 	if target != null:
-		target.attack_hit(self.global_position, attack_damage, false)
+		target.attack_hit(self, attack_damage, false)
 		
 		sfx.stream = attack_sfx
 		sfx.play()
 		
-func cast_attack():
-	if target != null:
-		target.attack_hit(self, 2*attack_damage)
+#func cast_attack():
+#	if target != null:
+#		target.attack_hit(self, 2*attack_damage)
 		
 #------------------------------------------------------------------------
 
 
 #-----------------------------------------------------------------------
 # Taking damage
-func attack_hit(enemy_position, damage, knock, knock_power=50):
+func attack_hit(enemy, damage, knock, knock_power=50):
+	if current_hp <= 0:
+		return
+	
 	if knock:
-		knock_direction = (global_position - enemy_position).normalized()
+		knock_direction = (position - enemy.position).normalized()
 		knock_speed = knock_power
 	
-	var dist = global_position.distance_to(enemy_position)
+	var dist = position.distance_to(enemy.position)
 	dist = clamp(dist, 0, 120)
 	var mitigation = defense * (dist / 120)
 	
@@ -307,6 +310,9 @@ func attack_hit(enemy_position, damage, knock, knock_power=50):
 	current_hp -= dmg
 	hp_bar.value = current_hp
 	if current_hp <= 0:
+		if enemy.General1:
+			if is_instance_valid(enemy):
+				enemy.heal(self, enemy.max_hp / 10)
 		die(dmg)
 	
 	#var damage_number = damage_number_scene.instance()

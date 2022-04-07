@@ -2,7 +2,7 @@ extends Node2D
 
 signal begin_stage(difficulty, type)
 
-var new = false
+
 var buttons = {}
 
 var paths = []
@@ -15,13 +15,9 @@ var map_button_scene = preload("res://Scenes/Map_Button.tscn")
 var map_generator_scene = preload("res://Scenes/Map_Generator.tscn")
 
 func _ready():
-	if new:
-		Global.paths = []
-		Global.current_point = null
-		Global.current_path = []
-		Global.map_stages = {}
+	if Global.current_point == null:
+		
 		generate()
-		new = false
 	else:
 		paths = Global.paths
 		current_point = Global.current_point

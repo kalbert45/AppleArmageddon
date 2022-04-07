@@ -63,6 +63,12 @@ var label = "Golden"
 var description = "Golden Delicious: Spits juice.\nAbility: Spit more juice, hit more people."
 var upgradable = true
 #------------------------------------------------------
+# Augment related variables
+var General1 = false
+var General3 = false
+var Golden0 = false
+var Golden1 = false
+#------------------------------------------------------
 
 onready var attack_range = $Attack_Range
 onready var animation_manager = $AnimationPlayer
@@ -84,6 +90,12 @@ var upgrade_scene = preload("res://Scenes/Units/Golden_Malicious.tscn")
 #-------------------------------------------------------------
 
 func _ready():
+	Golden0 = Global.augments["Golden0"]
+	Golden1 = Global.augments["Golden1"]
+	
+	if Golden0:
+		$Attack_Range/CollisionShape2D.shape.radius += 40
+	
 	ready_bars()
 	animation_manager.animation_speeds["Attack"] = attack_speed
 	animation_manager.set_animation(IDLE_ANIM_NAME)
@@ -125,6 +137,12 @@ func _physics_process(delta):
 	if active:
 		process_stat_values(delta)
 		process_movement(delta)
+
+		if General3:
+			var extra_att_speed = (1.25)*((max_hp-current_hp) / max_hp)
+			extra_att_speed = clamp(extra_att_speed, 0, 1)
+			extra_att_speed *= 0.5
+			animation_manager.animation_speeds["Attack"] = attack_speed + extra_att_speed
 
 #------------------------------------------------------------
 # process in-game stat values, i.e. hp, mana, armor, etc.
@@ -316,6 +334,7 @@ func basic_attack():
 		projectile.global_position = global_position
 		projectile.direction = (target.global_position - global_position).normalized()
 		projectile.rotation = projectile.direction.angle()
+		projectile.source = self
 		get_node("/root/Main/World").add_child(projectile)
 		current_mana += 20
 		juice_bar.value = current_mana
@@ -328,8 +347,9 @@ func cast_attack():
 	if target != null:
 		var lob = lob_scene.instance()
 		lob.damage = 2*attack_damage
-		lob.source = global_position
+		lob.source = self
 		lob.target = target.global_position
+		lob.Golden1 = Golden1
 		get_parent().add_child(lob)
 		
 		sfx.pitch_scale = 0.6
@@ -341,9 +361,12 @@ func cast_attack():
 
 #-----------------------------------------------------------------------
 # Taking damage
-func attack_hit(enemy_position, damage, knock, knock_power=50):
+func attack_hit(enemy, damage, knock, knock_power=50):
+	if current_hp <= 0:
+		return
+	
 	if knock:
-		knock_direction = (global_position - enemy_position).normalized()
+		knock_direction = (position - enemy.position).normalized()
 		knock_speed = knock_power
 	
 	var dmg = damage - defense

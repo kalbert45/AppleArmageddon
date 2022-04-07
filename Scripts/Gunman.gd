@@ -55,6 +55,8 @@ var mouse_select = false
 # Grunt exclusive variable
 var label = "Gunman"
 var description = "Gunman: Shoots apples on sight."
+
+const BLOOD = 5
 #------------------------------------------------------
 
 onready var attack_range = $Attack_Range
@@ -66,7 +68,7 @@ onready var hp_bar = $Bars/HP_Bar
 var attack_sfx = preload("res://Assets/Sounds/SFX/pistol_sfx3.wav")
 var picture = preload("res://Assets/Sprites/gunman.png")
 
-#var damage_number_scene = preload("res://Scenes/Damage_Number.tscn")
+var damage_number_scene = preload("res://Scenes/Damage_Number.tscn")
 var apple_death_scene = preload("res://Scenes/Person_Death.tscn")
 
 #-------------------------------------------------------------
@@ -276,7 +278,7 @@ func target_closest(body):
 #Attacks
 func basic_attack():
 	if target != null:
-		target.attack_hit(self.global_position, attack_damage, false)
+		target.attack_hit(self, attack_damage, false)
 		
 		sfx.stream = attack_sfx
 		sfx.play()
@@ -290,12 +292,15 @@ func cast_attack():
 
 #-----------------------------------------------------------------------
 # Taking damage
-func attack_hit(enemy_position, damage, knock, knock_power=50):
+func attack_hit(enemy, damage, knock, knock_power=50):
+	if current_hp <= 0:
+		return
+	
 	if knock:
-		knock_direction = (global_position - enemy_position).normalized()
+		knock_direction = (position - enemy.position).normalized()
 		knock_speed = knock_power
 	
-	var dist = global_position.distance_to(enemy_position)
+	var dist = position.distance_to(enemy.position)
 	dist = clamp(dist, 0, 120)
 	var mitigation = defense * (dist / 120)
 	
@@ -304,6 +309,9 @@ func attack_hit(enemy_position, damage, knock, knock_power=50):
 	current_hp -= dmg
 	hp_bar.value = current_hp
 	if current_hp <= 0:
+		if enemy.General1:
+			if is_instance_valid(enemy):
+				enemy.heal(self, enemy.max_hp / 10)
 		die(dmg)
 	
 	#var damage_number = damage_number_scene.instance()
@@ -313,16 +321,17 @@ func attack_hit(enemy_position, damage, knock, knock_power=50):
 	
 		
 func die(damage):
+	Global.money += BLOOD
 	emit_signal("death")
 	
 	var apple_death = apple_death_scene.instance()
 	apple_death.global_position = global_position
 	get_node("/root/Main/World").add_child(apple_death)
 	
-	#var damage_number = damage_number_scene.instance()
-	#damage_number.amount = damage
-	#damage_number.type = "Enemy"
-	#apple_death.add_child(damage_number)
+	var damage_number = damage_number_scene.instance()
+	damage_number.amount = BLOOD
+	damage_number.type = "Enemy"
+	apple_death.add_child(damage_number)
 	
 	call_deferred("free")
 #--------------------------------------------------------------------------

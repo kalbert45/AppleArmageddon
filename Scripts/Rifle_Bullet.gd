@@ -1,6 +1,6 @@
 extends Node2D
 
-var source = Vector2.ZERO
+var source = null
 
 const BULLET_SPEED = 400
 var damage = 10
@@ -12,7 +12,7 @@ var lifetime = 1
 func _ready():
 	$Timer.wait_time = 1
 	velocity = direction * BULLET_SPEED
-	source = global_position
+	#source = global_position
 	
 func _process(delta):
 	global_position += velocity * delta

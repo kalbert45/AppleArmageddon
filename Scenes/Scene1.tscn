@@ -1,10 +1,9 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Assets/Sounds/Music/park_ambience.ogg" type="AudioStream" id=1]
 [ext_resource path="res://Assets/Tilesets/forest-palette03-day.png" type="Texture" id=2]
 [ext_resource path="res://Assets/Tilesets/ground.png" type="Texture" id=3]
 [ext_resource path="res://Scripts/Scene1.gd" type="Script" id=4]
-[ext_resource path="res://Scenes/Enemies/Axeman.tscn" type="PackedScene" id=7]
 
 [sub_resource type="ConvexPolygonShape2D" id=4]
 points = PoolVector2Array( 32, 32, 0, 32, 0, 0, 32, 0 )
@@ -153,9 +152,6 @@ tile_data = PoolIntArray( 655360, 6, 0, 655361, 6, 0, 655362, 6, 0, 655363, 6, 0
 [node name="YSort" type="YSort" parent="TileMap"]
 z_index = 1
 z_as_relative = false
-
-[node name="Axeman" parent="TileMap/YSort" instance=ExtResource( 7 )]
-position = Vector2( 1017, 205 )
 
 [node name="Music_Player" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 1 )

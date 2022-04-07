@@ -4,10 +4,11 @@ onready var transition_handler = $Transition_Handler
 onready var HUD = $HUD
 onready var world = $World
 
-var new_game = true
+#var new_game = true
 
 # UI and stage scenes
 var scene1 = preload("res://Scenes/Scene1.tscn")
+var augment_stage = preload("res://Scenes/Augment_Stage.tscn")
 var unit_selection = preload("res://Scenes/Unit_Selection.tscn")
 var camera_control = preload("res://Scenes/Camera_Control.tscn")
 var game_menu = preload("res://Scenes/Game_Menu.tscn")
@@ -24,6 +25,18 @@ var title
 var map
 var tutorial
 
+func reset():
+	Global.units = [[load("res://Scenes/Units/Apple.tscn"), Vector2(240,180)]]
+	Global.money = 20
+	
+	Global.paths = []
+	Global.current_point = null
+	Global.current_path = []
+	Global.map_stages = {}
+
+	for augment in Global.augments.keys():
+		Global.augments[augment] = false
+
 func _ready():
 	
 	title = title_screen.instance()
@@ -31,8 +44,7 @@ func _ready():
 	HUD.add_child(title)
 	
 	if Global.units.empty():
-		Global.units.append([load("res://Scenes/Units/Apple.tscn"), Vector2(240,180)])
-		Global.money = 20
+		reset()
 
 func _on_Title_Screen_start_game():
 	stage = scene1.instance()
@@ -71,9 +83,7 @@ func _on_game_menu_quit_to_title():
 	
 func _on_camera_control_next_stage():
 	map = map_scene.instance()
-	if new_game:
-		map.new = true
-		new_game = false
+
 	
 	#stage.save_data()
 	
@@ -81,30 +91,37 @@ func _on_camera_control_next_stage():
 	
 	map.connect("begin_stage", self, "_on_map_begin_stage")
 	
-func _on_map_begin_stage(difficulty, _type):
-	stage = scene1.instance()
-	stage.difficulty = difficulty
-	camera_UI = camera_control.instance()
+func _on_map_begin_stage(difficulty, type):
+	match type:
+		"Normal":
+			stage = scene1.instance()
+			stage.difficulty = difficulty
+			camera_UI = camera_control.instance()
 
-	transition_handler.transition([map], [[world, stage], [HUD, camera_UI]])
-	
-	yield(stage, "ready")
-	stage.load_data()
-	unit_UI.shop = stage.shop
-	yield(camera_UI, "ready")
-	camera_UI.update_money()
-	
-	stage.connect("stage_cleared", self, "_on_stage_cleared")
-	stage.connect("defeat", self, "_on_stage_defeat")
-	stage.connect("update_money", self, "_on_update_money")
-	camera_UI.connect("next_stage", self, "_on_camera_control_next_stage")
-	camera_UI.connect("disable_shop", self, "_on_disable_shop")
+			transition_handler.transition([map], [[world, stage], [HUD, camera_UI]])
+			
+			yield(stage, "ready")
+			stage.load_data()
+			unit_UI.shop = stage.shop
+			yield(camera_UI, "ready")
+			camera_UI.update_money()
+			
+			stage.connect("stage_cleared", self, "_on_stage_cleared")
+			stage.connect("defeat", self, "_on_stage_defeat")
+			stage.connect("update_money", self, "_on_update_money")
+			camera_UI.connect("next_stage", self, "_on_camera_control_next_stage")
+			camera_UI.connect("disable_shop", self, "_on_disable_shop")
+		
+		"Question":
+			stage = augment_stage.instance()
+			
+			transition_handler.transition([map], [[world, stage]])
+			
+			stage.connect("next_stage", self, "_on_camera_control_next_stage")
 	
 func _on_retry():
-	Global.units = [[load("res://Scenes/Apple.tscn"), Vector2(240,180), 120, 0]]
-	Global.money = 20
-	
-	new_game = true
+	reset()
+
 	var new_stage = scene1.instance()
 	var new_camera_UI = camera_control.instance()
 	var new_menu = game_menu.instance()

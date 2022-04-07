@@ -62,6 +62,12 @@ var label = "Big Green"
 var description = "Big Green: Looks at enemies intensely from mid-range.\nAbility: Heal the lowest health apple for 6*power"
 var upgradable = true
 #------------------------------------------------------
+# Augment related variables
+var General1 = false
+var General3 = false
+var Green0 = false
+var Green1 = false
+#------------------------------------------------------
 
 onready var attack_range = $Attack_Range
 onready var animation_manager = $AnimationPlayer
@@ -80,6 +86,14 @@ var apple_death_scene = preload("res://Scenes/Apple_Death.tscn")
 #-------------------------------------------------------------
 
 func _ready():
+	Green0 = Global.augments["Green0"]
+	Green1 = Global.augments["Green1"]
+	
+	if Green0:
+		max_mana /= 2
+	if Green1:
+		defense += 10
+	
 	ready_bars()
 	animation_manager.animation_speeds["Attack"] = attack_speed
 	animation_manager.set_animation(IDLE_ANIM_NAME)
@@ -120,6 +134,13 @@ func _physics_process(delta):
 	if active:
 		process_stat_values(delta)
 		process_movement(delta)
+		
+		if General3:
+			var extra_att_speed = (1.25)*((max_hp-current_hp) / max_hp)
+			extra_att_speed = clamp(extra_att_speed, 0, 1)
+			extra_att_speed *= 0.5
+			animation_manager.animation_speeds["Attack"] = attack_speed + extra_att_speed
+
 
 #------------------------------------------------------------
 # process in-game stat values, i.e. hp, mana, armor, etc.
@@ -310,7 +331,7 @@ func target_closest(body):
 #Attacks
 func basic_attack():
 	if target != null:
-		target.attack_hit(self.global_position, attack_damage, false)
+		target.attack_hit(self, attack_damage, false)
 		current_mana += 25
 		juice_bar.value = current_mana
 		
@@ -340,12 +361,15 @@ func cast_attack():
 
 #-----------------------------------------------------------------------
 # Taking damage
-func attack_hit(enemy_position, damage, knock, knock_power=50):
+func attack_hit(enemy, damage, knock, knock_power=50):
+	if current_hp <= 0:
+		return
+	
 	if knock:
-		knock_direction = (global_position - enemy_position).normalized()
+		knock_direction = (position - enemy.position).normalized()
 		knock_speed = knock_power
 	
-	var dist = global_position.distance_to(enemy_position)
+	var dist = position.distance_to(enemy.position)
 	dist = clamp(dist, 0, 120)
 	var mitigation = defense * (dist / 120)
 	
