@@ -61,6 +61,7 @@ var position_invalid = false
 var label = "Crabapple"
 var description = "Crabapple: Runs until it collides with someone or reaches the end of the stage. Hits close."
 var upgradable = true
+var upgrade_cost = 3
 #------------------------------------------------------
 # Augment related variables
 var General1 = false

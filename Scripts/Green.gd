@@ -61,6 +61,7 @@ var position_invalid = false
 var label = "Green"
 var description = "Granny Smith: Looks at enemies intensely from mid-range.\nAbility: Heal the lowest health apple for 6*power"
 var upgradable = true
+var upgrade_cost = 4
 #------------------------------------------------------
 # Augment related variables
 var General1 = false

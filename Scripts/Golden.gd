@@ -62,6 +62,7 @@ var position_invalid = false
 var label = "Golden"
 var description = "Golden Delicious: Spits juice.\nAbility: Spit more juice, hit more people."
 var upgradable = true
+var upgrade_cost = 2
 #------------------------------------------------------
 # Augment related variables
 var General1 = false

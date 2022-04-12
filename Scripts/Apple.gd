@@ -62,6 +62,7 @@ var position_invalid = false
 var label = "Apple"
 var description = "Red Delicious: Actually disgusting. Runs to nearest enemy and hits close range."
 var upgradable = true
+var upgrade_cost = 3
 #------------------------------------------------------
 # Augment related variables
 var General1 = false

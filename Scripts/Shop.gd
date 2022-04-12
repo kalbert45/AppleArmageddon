@@ -46,10 +46,11 @@ func _ready():
 	dialog_box.character_wait = 0.1
 	
 	if disabled:
-		animation_player.current_animation = "Intro"
+		$Sprite.frame = 31
 	else:
-		animation_player.current_animation = "Open"
-	animation_player.stop()
+		$Sprite.frame = 0
+	#animation_player.seek(0)
+	#animation_player.stop(false)
 	
 	reroll_button.modulate.a = 1
 	for label in labels:

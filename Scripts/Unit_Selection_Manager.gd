@@ -39,7 +39,7 @@ var pick_apple_sfx = preload("res://Assets/Sounds/SFX/pick_apple_sfx.wav")
 onready var sfx = $SFX
 onready var sfx2 = $SFX2
 onready var sfx3 = $SFX3
-onready var upgrade_button = $Upgrade_Button
+#onready var upgrade_button = $Upgrade_Button
 
 func _ready():
 	space_state = get_world_2d().get_direct_space_state()
@@ -47,9 +47,11 @@ func _ready():
 	unit_UI.visible = false
 	enemy_UI = enemy_UI_scene.instance()
 	enemy_UI.visible = false
-	upgrade_button.disabled = true
+	
 	add_child(unit_UI)
 	add_child(enemy_UI)
+	
+	unit_UI.connect("upgrade_button_pressed", self, "_on_Upgrade_Button_pressed")
 	
 	
 func _physics_process(_delta):
@@ -113,6 +115,10 @@ func _physics_process(_delta):
 					if unit.label == label:
 						selected.append(unit)
 						unit.mouse_select = true
+				unit_UI.set_initial_values(hovered.description, hovered.picture, hovered.attack_damage, hovered.defense, 
+				hovered.attack_speed, hovered.movement_speed, hovered.max_hp, hovered.max_mana, hovered.current_hp, hovered.current_mana)
+				unit_UI.visible = true
+				enemy_UI.visible = false
 		# otherwise normal select and show UI
 		else:
 			# select and show UI
@@ -236,16 +242,17 @@ func _physics_process(_delta):
 						enable_button = false
 						break
 				if enable_button:
-					upgrade_button.disabled = false
+					unit_UI.upgrade_disabled = false
 				else:
-					upgrade_button.disabled = true
+					unit_UI.upgrade_disabled = true
+				unit_UI.update_upgrade()
 	else:
-		upgrade_button.disabled = true
-	
+		unit_UI.upgrade_disabled = true
+		unit_UI.update_upgrade()
 	
 	#---------------------------------------------
 	# Unit UI
-	if selected.size() == 1:
+	if selected.size() >= 1:
 		if selected[0].is_in_group("Units"):
 			unit_UI.update_values(selected[0].current_hp, selected[0].max_hp, selected[0].current_mana, selected[0].max_mana)
 			#if selected[0].upgradable:
@@ -259,7 +266,7 @@ func _physics_process(_delta):
 		
 	# ----------------------------------------------
 	# unit upgrades
-	if not upgrade_button.disabled:
+	if not unit_UI.upgrade_disabled:
 		if Input.is_action_just_pressed("upgrade"):
 			selected[0].upgrade()
 			selected.remove(0)

@@ -62,6 +62,7 @@ var movement_target = Vector2.ZERO
 var label = "Pink"
 var description = "Pink Lady: Keeps distance and knocks back with each hit."
 var upgradable = true
+var upgrade_cost = 5
 #------------------------------------------------------
 # Augment related variables
 var General1 = false
