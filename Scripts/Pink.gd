@@ -82,9 +82,18 @@ var picture = preload("res://Assets/Sprites/red.png")
 var damage_number_scene = preload("res://Scenes/Damage_Number.tscn")
 var apple_death_scene = preload("res://Scenes/Apple_Death.tscn")
 
+var upgrade_scene = preload("res://Scenes/Units/Big_Pink.tscn")
 #-------------------------------------------------------------
 
 func _ready():
+	if Global.augments["Pink0"]:
+		Pink0 = true
+	if Global.augments["Pink1"]:
+		Pink1 = true
+		
+	if Pink0:
+		attack_damage += 10
+	
 	ready_bars()
 	animation_manager.animation_speeds["Attack"] = attack_speed
 	animation_manager.set_animation(IDLE_ANIM_NAME)
@@ -338,7 +347,10 @@ func target_closest(body):
 #Attacks
 func basic_attack():
 	if target != null:
-		target.attack_hit(self, attack_damage, true, 50)
+		if Pink1:
+			target.attack_hit(self, attack_damage, true, 80)
+		else:
+			target.attack_hit(self, attack_damage, true, 50)
 		#current_mana += 20
 		
 		#sfx.stream = attack_sfx
@@ -362,8 +374,9 @@ func attack_hit(enemy, damage, knock, knock_power=50):
 		return
 	
 	if knock:
-		knock_direction = (position - enemy.position).normalized()
-		knock_speed = knock_power
+		if is_instance_valid(enemy):
+			knock_direction = (position - enemy.position).normalized()
+			knock_speed = knock_power
 	
 	var dist = position.distance_to(enemy.position)
 	dist = clamp(dist, 0, 120)
@@ -410,3 +423,11 @@ func die(damage):
 # make retargetting loop slow
 func _on_Timer_timeout():
 	retarget_loop = true
+
+#-----------------------------------------------------------------
+# upgrade unit by replacing with new unit
+func upgrade():
+	var new_apple = upgrade_scene.instance()
+	new_apple.initial_pos = global_position
+	get_parent().add_child(new_apple)
+	call_deferred("free")

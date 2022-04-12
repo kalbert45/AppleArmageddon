@@ -1,0 +1,23 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://temp/Enemy_Scene.tscn" type="PackedScene" id=1]
+[ext_resource path="res://temp/Axeman_Intro.tscn" type="PackedScene" id=2]
+[ext_resource path="res://temp/Dialog_Handler.tscn" type="PackedScene" id=3]
+[ext_resource path="res://temp/Enemy_Intro.gd" type="Script" id=4]
+[ext_resource path="res://temp/Gunman_Intro.tscn" type="PackedScene" id=5]
+
+[node name="Enemy_Scene" instance=ExtResource( 1 )]
+script = ExtResource( 4 )
+
+[node name="Background" parent="." index="0"]
+visible = false
+
+[node name="Dialog_Handler" parent="." index="1" instance=ExtResource( 3 )]
+
+[node name="Axeman_Intro" parent="." index="2" instance=ExtResource( 2 )]
+position = Vector2( 442, 82 )
+flip_h = true
+dialog_label = 1
+
+[node name="Gunman_Intro" parent="." index="3" instance=ExtResource( 5 )]
+position = Vector2( 506, 98 )

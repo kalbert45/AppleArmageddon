@@ -36,13 +36,13 @@ var augments = {"Red0": false, "Red1":false,
 				}
 
 const AUGMENT_TEXT = {"Red0":"All red apples are invulnerable to knockback", 
-					"Red1":"Red apples explode upon death dealing a percentage of their maximum hp",
+					"Red1":"Red apples explode upon death dealing 10% of their maximum hp",
 					"Green0":"Green apples only require half the juice to cast",
 					"Green1":"Green apples gain 10 defense",
 					"Golden0":"Golden apples have increased range",
 					"Golden1":"Golden apples' cast has a larger area of effect",
-					"Pink0":"Pink apples can hit one extra enemy per attack",
-					"Pink1":"dunno yet",
+					"Pink0":"Pink apples gain 10 power",
+					"Pink1":"Pink apples gain more knockback power",
 					"Crab0":"Crabapples gain 30% avoidability",
 					"Crab1":"Crabapples gain 30% attack speed",
 					"General0":"All apples gain 10 movement speed",
@@ -51,3 +51,19 @@ const AUGMENT_TEXT = {"Red0":"All red apples are invulnerable to knockback",
 					"General3":"All apples gain up to 50% attack speed as hp decreases (maximum at 20% hp)",
 					"Add_blood":"Gain 40 blood",
 					}
+
+# timelines. boolean for animation or not
+const TIMELINES = {"intro_timeline":[[0, "[center]Umm... you sure this is a good idea?[/center]", false],
+									[1, "[center]Son, I've been doin' this for years now.[/center]", false],
+									[1, "[center]Trees need their protein.[/center]", false],
+									[1, "[center]Now watch.[/center]", false],
+									[1, "Pour blood", true],
+									[1, "[center]See? No harm done.[/center]", false],
+									[0, "[center]......[/center]", false],
+									[0, "[center]I dunno... I've got this bad feeling...[/center]", false],
+									[1, "[center]Boy, stop bein' a wuss.[/center]", false],
+									[1, "[center]Let's head back.[/center]", false],
+									[0, "[center]Okay..[/center]", false],
+									[0, "Run", true],
+									[1, "Run", true]
+									]}

@@ -31,12 +31,12 @@ var attacking = false
 var casting = false
 #----------------------------------------------------------
 # Unit stats
-var max_hp = 80
-var current_hp = 80
+var max_hp = 100
+var current_hp = 100
 
-var attack_damage = 5
-var attack_speed = 1.0
-var defense = 1
+var attack_damage = 10
+var attack_speed = 0
+var defense = 5
 var movement_speed = 40
 
 
@@ -60,7 +60,7 @@ var position_invalid = false
 # Apple exclusive variable
 var label = "Big Green"
 var description = "Big Green: Looks at enemies intensely from mid-range.\nAbility: Heal the lowest health apple for 6*power"
-var upgradable = true
+var upgradable = false
 #------------------------------------------------------
 # Augment related variables
 var General1 = false
@@ -95,7 +95,7 @@ func _ready():
 		defense += 10
 	
 	ready_bars()
-	animation_manager.animation_speeds["Attack"] = attack_speed
+	#animation_manager.animation_speeds["Attack"] = attack_speed
 	animation_manager.set_animation(IDLE_ANIM_NAME)
 	global_position = initial_pos
 	
@@ -135,21 +135,25 @@ func _physics_process(delta):
 		process_stat_values(delta)
 		process_movement(delta)
 		
-		if General3:
-			var extra_att_speed = (1.25)*((max_hp-current_hp) / max_hp)
-			extra_att_speed = clamp(extra_att_speed, 0, 1)
-			extra_att_speed *= 0.5
-			animation_manager.animation_speeds["Attack"] = attack_speed + extra_att_speed
+		#if General3:
+		#	var extra_att_speed = (1.25)*((max_hp-current_hp) / max_hp)
+		#	extra_att_speed = clamp(extra_att_speed, 0, 1)
+		#	extra_att_speed *= 0.5
+		#	animation_manager.animation_speeds["Attack"] = attack_speed + extra_att_speed
 
 
 #------------------------------------------------------------
 # process in-game stat values, i.e. hp, mana, armor, etc.
 func process_stat_values(_delta):
 	if current_mana >= max_mana:
-		if animation_manager.current_state == IDLE_ANIM_NAME:
-			current_mana = 0
-			juice_bar.value = current_mana
-			animation_manager.set_animation(CAST_ANIM_NAME)
+		current_mana = 0
+		juice_bar.value = current_mana
+		cast_attack()
+	#	animation_manager.set_animation(CAST_ANIM_NAME)
+	#	if animation_manager.current_state == IDLE_ANIM_NAME:
+	#		current_mana = 0
+	#		juice_bar.value = current_mana
+	#		animation_manager.set_animation(CAST_ANIM_NAME)
 			
 #-----------------------------------------------------------
 
@@ -184,46 +188,48 @@ func process_mouse(_delta):
 func process_movement(delta):
 	if not is_instance_valid(target):
 		target = null
-	if (first_target) and (target == null) and (retarget_loop):
+	if (first_target) and (retarget_loop):
 		target_closest(null)
+		current_mana += 10
+		juice_bar.value = current_mana
 		retarget_loop = false
 		_timer.start()
 	
-	if animation_manager.current_state != CAST_ANIM_NAME:
-		# Movement towards target
-		if (target != null) and (!attacking):
-			$Sprite.set_flip_h(global_position.x > target.global_position.x)
-			speed += ACCEL * delta
-			direction += calculate_local_avoidance()
-			direction += (15/global_position.distance_to(target.global_position))*(target.global_position - global_position)
-			attacking = attack_range.overlaps_body(target)
-			if (animation_manager.current_state != MOVEMENT_ANIM_NAME) and (speed > 10):
-				animation_manager.set_animation(MOVEMENT_ANIM_NAME)
-			
-		# Attack target
-		elif (target != null) and attacking:
-			$Sprite.set_flip_h(global_position.x > target.global_position.x)
-			speed -= DEACCEL * delta
-
-			direction += (15/global_position.distance_to(target.global_position))*(target.global_position - global_position)
-			attacking = attack_range.overlaps_body(target)
-			if animation_manager.current_state != ATTACK_ANIM_NAME:
-				animation_manager.set_animation(ATTACK_ANIM_NAME)
-			
-		# Run until first target, else return to idle
-		else:
-			if not first_target:
-				direction = Vector2(1,0)
-				speed += ACCEL * delta
-				if animation_manager.current_state == IDLE_ANIM_NAME:
-					animation_manager.set_animation(MOVEMENT_ANIM_NAME)
-			else:
-				speed -= DEACCEL * delta
-				if animation_manager.current_state == MOVEMENT_ANIM_NAME:
-					animation_manager.set_animation(IDLE_ANIM_NAME)
-	else:
-		# deaccel while casting
+	#if animation_manager.current_state != CAST_ANIM_NAME:
+	# Movement towards target
+	if (target != null) and (!attacking):
+		$Sprite.set_flip_h(global_position.x > target.global_position.x)
+		speed += ACCEL * delta
+		direction += calculate_local_avoidance()
+		direction += (15/global_position.distance_to(target.global_position))*(target.global_position - global_position)
+		attacking = attack_range.overlaps_body(target)
+#		if (animation_manager.current_state != MOVEMENT_ANIM_NAME) and (speed > 10):
+#			animation_manager.set_animation(MOVEMENT_ANIM_NAME)
+		
+	# Attack target
+	elif (target != null) and attacking:
+		$Sprite.set_flip_h(global_position.x > target.global_position.x)
 		speed -= DEACCEL * delta
+
+		direction += (15/global_position.distance_to(target.global_position))*(target.global_position - global_position)
+		attacking = attack_range.overlaps_body(target)
+#		if animation_manager.current_state != ATTACK_ANIM_NAME:
+#			animation_manager.set_animation(ATTACK_ANIM_NAME)
+		
+	# Run until first target, else return to idle
+	else:
+		if not first_target:
+			direction = Vector2(1,0)
+			speed += ACCEL * delta
+#			if animation_manager.current_state == IDLE_ANIM_NAME:
+#				animation_manager.set_animation(MOVEMENT_ANIM_NAME)
+		else:
+			speed -= DEACCEL * delta
+#			if animation_manager.current_state == MOVEMENT_ANIM_NAME:
+#				animation_manager.set_animation(IDLE_ANIM_NAME)
+	#else:
+		# deaccel while casting
+	#	speed -= DEACCEL * delta
 
 
 	
@@ -329,31 +335,32 @@ func target_closest(body):
 
 #------------------------------------------------------------------------
 #Attacks
-func basic_attack():
-	if target != null:
-		target.attack_hit(self, attack_damage, false)
-		current_mana += 25
-		juice_bar.value = current_mana
-		
-		sfx.stream = attack_sfx
-		sfx.play()
+#func basic_attack():
+#	if target != null:
+#		target.attack_hit(self, attack_damage, false)
+#		current_mana += 25
+#		juice_bar.value = current_mana
+#		
+#		sfx.stream = attack_sfx
+#		sfx.play()
 		
 func cast_attack():
-	var heal_target = self
-	var min_hp = -1
+	#var heal_target = self
+	#var min_hp = -1
 	var bodies = attack_range.get_overlapping_bodies()
 	for body in bodies:
 		if body.is_in_group("Units"):
-			if min_hp < 0:
-				heal_target = body
-				min_hp = body.current_hp
-			elif body.current_hp < min_hp:
-				heal_target = body
-				min_hp = body.current_hp
+			body.heal(self, attack_damage)
+	#		if min_hp < 0:
+	#			heal_target = body
+	#			min_hp = body.current_hp
+	#		elif body.current_hp < min_hp:
+	#			heal_target = body
+	#			min_hp = body.current_hp
 				
 	sfx.stream = cast_sfx
 	sfx.play()
-	heal_target.heal(self, 6*attack_damage)
+	#heal_target.heal(self, 6*attack_damage)
 		
 #------------------------------------------------------------------------
 
@@ -366,8 +373,9 @@ func attack_hit(enemy, damage, knock, knock_power=50):
 		return
 	
 	if knock:
-		knock_direction = (position - enemy.position).normalized()
-		knock_speed = knock_power
+		if is_instance_valid(enemy):
+			knock_direction = (position - enemy.position).normalized()
+			knock_speed = knock_power
 	
 	var dist = position.distance_to(enemy.position)
 	dist = clamp(dist, 0, 120)

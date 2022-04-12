@@ -26,8 +26,8 @@ var map
 var tutorial
 
 func reset():
-	Global.units = [[load("res://Scenes/Units/Apple.tscn"), Vector2(240,180)]]
-	Global.money = 20
+	Global.units = []
+	Global.money = 21
 	
 	Global.paths = []
 	Global.current_point = null
@@ -51,10 +51,15 @@ func _on_Title_Screen_start_game():
 	unit_UI = unit_selection.instance()
 	camera_UI = camera_control.instance()
 	menu = game_menu.instance()
-	tutorial = tutorial_scene.instance()
+	#tutorial = tutorial_scene.instance()
+	
+	# intro set up
+	stage.intro = true
+	stage.enemy_scene = load("res://temp/Enemy_Intro.tscn")
+	camera_UI.disabled = true
 	
 	transition_handler.transition([title], [[world, stage],
-	[HUD, unit_UI], [HUD, camera_UI], [self, menu], [world, tutorial]])
+	[HUD, unit_UI], [HUD, camera_UI], [self, menu]])
 	
 	yield(stage, "ready")
 	stage.load_data()
@@ -62,7 +67,7 @@ func _on_Title_Screen_start_game():
 	yield(camera_UI, "ready")
 	camera_UI.update_money()
 
-	
+	stage.connect("enable_all", self, "_on_stage_enable_all")
 	stage.connect("stage_cleared", self, "_on_stage_cleared")
 	stage.connect("defeat", self, "_on_stage_defeat")
 	stage.connect("update_money", self, "_on_update_money")
@@ -70,6 +75,9 @@ func _on_Title_Screen_start_game():
 	camera_UI.connect("disable_shop", self, "_on_disable_shop")
 	menu.connect("quit_to_title", self, "_on_game_menu_quit_to_title")
 	menu.connect("retry", self, "_on_retry")
+	
+func _on_stage_enable_all():
+	camera_UI.enable()
 	
 func _on_game_menu_quit_to_title():
 	title = title_screen.instance()

@@ -3,7 +3,6 @@ extends Node2D
 signal next_stage
 
 
-
 var pool = ["Add blood"]
 var choices = [null, null, null]
 
@@ -23,9 +22,9 @@ func _ready():
 	button_setup()
 
 func button_setup():
-	$Augment_Button1.text = Global.AUGMENT_TEXT[choices[0]]
-	$Augment_Button2.text = Global.AUGMENT_TEXT[choices[1]]
-	$Augment_Button3.text = Global.AUGMENT_TEXT[choices[2]]
+	$Augment_Button1/Label.text = Global.AUGMENT_TEXT[choices[0]]
+	$Augment_Button2/Label.text = Global.AUGMENT_TEXT[choices[1]]
+	$Augment_Button3/Label.text = Global.AUGMENT_TEXT[choices[2]]
 	$Continue_Button.disabled = true
 
 func _on_Augment_Button1_pressed():

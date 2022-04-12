@@ -57,9 +57,12 @@ var label = "Axeman"
 var description = "Chump: Punches apples on sight."
 
 const BLOOD = 5
+export var dialog_label = 0
+export var flip_h = false
 #------------------------------------------------------
 
 onready var attack_range = $Attack_Range
+onready var sprite = $Sprite
 onready var animation_manager = $AnimationPlayer
 onready var sfx = $SFX
 onready var raycasts_node = $Raycasts
@@ -74,6 +77,8 @@ var apple_death_scene = preload("res://Scenes/Person_Death.tscn")
 #-------------------------------------------------------------
 
 func _ready():
+	sprite.flip_h = flip_h
+	
 	ready_bars()
 	animation_manager.animation_speeds["Attack"] = attack_speed
 	animation_manager.set_animation(IDLE_ANIM_NAME)
@@ -118,16 +123,16 @@ func _physics_process(delta):
 # process mouse_input
 func process_mouse(_delta):
 	if mouse_hover or mouse_select:
-		$Sprite.material.set_shader_param("width", 1.0)
-		$Sprite.z_index = 1
+		sprite.material.set_shader_param("width", 1.0)
+		sprite.z_index = 1
 	else:
-		$Sprite.material.set_shader_param("width", 0.0)
-		$Sprite.z_index = 0
+		sprite.material.set_shader_param("width", 0.0)
+		sprite.z_index = 0
 		
 	if mouse_select:
-		$Sprite.material.set_shader_param("outline_color", Color(1,0.2,0.2,1))
+		sprite.material.set_shader_param("outline_color", Color(1,0.2,0.2,1))
 	else:
-		$Sprite.material.set_shader_param("outline_color", Color(1,0.2,0.2,1))
+		sprite.material.set_shader_param("outline_color", Color(1,0.2,0.2,1))
 		
 	# Keep character in window
 
@@ -150,7 +155,7 @@ func process_movement(delta):
 	if animation_manager.current_state != CAST_ANIM_NAME:
 		# Movement towards target
 		if (target != null) and (!attacking):
-			$Sprite.set_flip_h(global_position.x < target.global_position.x)
+			sprite.set_flip_h(global_position.x < target.global_position.x)
 			speed += ACCEL * delta
 			direction += calculate_local_avoidance()
 			direction += (15/global_position.distance_to(target.global_position))*(target.global_position - global_position)
@@ -160,7 +165,7 @@ func process_movement(delta):
 			
 		# Attack target
 		elif (target != null) and attacking:
-			$Sprite.set_flip_h(global_position.x < target.global_position.x)
+			sprite.set_flip_h(global_position.x < target.global_position.x)
 			speed -= DEACCEL * delta
 
 			direction += (15/global_position.distance_to(target.global_position))*(target.global_position - global_position)

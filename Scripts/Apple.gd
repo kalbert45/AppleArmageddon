@@ -382,6 +382,17 @@ func die(damage):
 	apple_death.global_position = global_position
 	get_node("/root/Main/World").add_child(apple_death)
 	
+	if Red1:
+		var splatter = Sprite.new()
+		splatter.texture = load("res://Assets/Sprites/golden_splatter.png")
+		splatter.z_index = -1
+		apple_death.add_child(splatter)
+		
+		var targets = attack_range.get_overlapping_bodies()
+		for thing in targets:
+			if thing.is_in_group("Enemies"):
+				thing.attack_hit(self, max_hp/10, true, 50)
+	
 	#if damage >= 0:
 	#	var damage_number = damage_number_scene.instance()
 	#	damage_number.amount = damage

@@ -12,10 +12,10 @@ const CAST_ANIM_NAME = "Cast"
 
 const ACCEL = 100
 const DEACCEL = 120
-
+# TO-DO
 var _timer = null
 var retarget_loop = true
-
+#temp
 var active = false
 var first_target = false
 
@@ -31,16 +31,15 @@ var attacking = false
 var casting = false
 #----------------------------------------------------------
 # Unit stats
-var max_hp = 80
-var current_hp = 80
+var max_hp = 150
+var current_hp = 150
 
-var attack_damage = 15
-var attack_speed = 1.5
-var defense = 0
-var movement_speed = 100
+var attack_damage = 20
+var attack_speed = 1.0
+var defense = 5
+var movement_speed = 50
 
-#var attacking_modes = ["Default", "Stand by", "Chase"]
-#var attacking_mode = "Default"
+
 
 var mouse_hover = false
 var mouse_select = false
@@ -52,46 +51,50 @@ var initial_pos = Vector2.ZERO
 #----------------------------------------------------------
 #-----*******************************************-------
 #Unit-type exclusive variables
-var max_mana = 1
-var current_mana = 0
+var max_mana = 100
+var current_mana = 20
 
 var position_invalid = false
 #-****************************************************---
 #--------------------------------------------------------
-# Apple exclusive variable
-var label = "Dogapple"
-var description = "Dogapple: Actually disgusting. Runs to nearest enemy and hits close range."
+# Pink exclusive variables
+var movement_target = Vector2.ZERO
+var label = "Big Pink"
+var description = "Big Pink: Keeps distance and knocks back with each hit."
 var upgradable = false
 #------------------------------------------------------
 # Augment related variables
 var General1 = false
 var General3 = false
-var Crab0 = false
-var Crab1 = false
+var Pink0 = false
+var Pink1 = false
 #------------------------------------------------------
 
-onready var attack_range = $CollisionShape2D/Attack_Range
+onready var attack_range = $Attack_Range
+onready var attack_area = $Attack_Area
+onready var sprite = $Sprite
 onready var animation_manager = $AnimationPlayer
 onready var sfx = $SFX
-onready var raycasts_node = $CollisionShape2D/Raycasts
+onready var raycasts_node = $Raycasts
 onready var hp_bar = $Bars/HP_Bar
-onready var sprite = $Sprite
+onready var juice_bar = $Bars/Juice_Bar
 
-var attack_sfx = preload("res://Assets/Sounds/SFX/attack_sfx.wav")
-var picture = preload("res://Assets/Sprites/apple.png")
+var attack_sfx = preload("res://Assets/Sounds/SFX/pink_attack_sfx.wav")
+var picture = preload("res://Assets/Sprites/red.png")
 
 var damage_number_scene = preload("res://Scenes/Damage_Number.tscn")
 var apple_death_scene = preload("res://Scenes/Apple_Death.tscn")
 
-#var upgrade_scene = preload("res://Scenes/Charge_Apple.tscn")
 #-------------------------------------------------------------
 
 func _ready():
-	Crab0 = Global.augments["Crab0"]
-	Crab1 = Global.augments["Crab1"]
-	
-	if Crab1:
-		attack_speed += 0.3
+	if Global.augments["Pink0"]:
+		Pink0 = true
+	if Global.augments["Pink1"]:
+		Pink1 = true
+		
+	if Pink0:
+		attack_damage += 10
 	
 	ready_bars()
 	animation_manager.animation_speeds["Attack"] = attack_speed
@@ -111,15 +114,17 @@ func _ready():
 	
 func ready_bars():
 
-	
 	hp_bar.max_value = max_hp
 	hp_bar.value = current_hp
 	hp_bar.rect_size = Vector2(int(max_hp/10), 3)
 	hp_bar.rect_position = Vector2(ceil(-hp_bar.rect_size.x/2)-1, -16)
 	
+	juice_bar.max_value = max_mana
+	juice_bar.rect_size = Vector2(int(max_mana/10), 1)
+	juice_bar.rect_position = Vector2(ceil(-juice_bar.rect_size.x/2)-1, -13)
 	
 func _process(delta):
-
+	process_stat_values(delta)
 	process_mouse(delta)
 	
 	#if Input.is_action_just_pressed("ui_select"):
@@ -138,11 +143,12 @@ func _physics_process(delta):
 
 #------------------------------------------------------------
 # process in-game stat values, i.e. hp, mana, armor, etc.
-#func process_stat_values(_delta):
-	#if current_mana >= max_mana:
-	#	if animation_manager.current_state == IDLE_ANIM_NAME:
-	#		current_mana = 0
-	#		animation_manager.set_animation(CAST_ANIM_NAME)
+func process_stat_values(_delta):
+	if current_mana >= max_mana:
+		if animation_manager.current_state == IDLE_ANIM_NAME:
+			current_mana = 0
+			juice_bar.value = current_mana
+			animation_manager.set_animation(CAST_ANIM_NAME)
 			
 	#$Bars/Juice_Bar.value = current_mana
 #	$Bars/HP_Bar.value = current_hp
@@ -187,22 +193,26 @@ func process_movement(delta):
 	if animation_manager.current_state != CAST_ANIM_NAME:
 		# Movement towards target
 		if (target != null) and (!attacking):
+			movement_target = set_movement_target()
 			sprite.set_flip_h(global_position.x > target.global_position.x)
 			speed += ACCEL * delta
 			direction += calculate_local_avoidance()
-			direction += (15/global_position.distance_to(target.global_position))*(target.global_position - global_position)
+			direction += (15/global_position.distance_to(movement_target))*(movement_target - global_position)
 			attacking = attack_range.overlaps_body(target)
 			if (animation_manager.current_state != MOVEMENT_ANIM_NAME) and (speed > 10):
 				animation_manager.set_animation(MOVEMENT_ANIM_NAME)
 			
 		# Attack target
 		elif (target != null) and attacking:
+			movement_target = set_movement_target()
 			sprite.set_flip_h(global_position.x > target.global_position.x)
 			speed -= DEACCEL * delta
-
-			direction += (15/global_position.distance_to(target.global_position))*(target.global_position - global_position)
+	
+			direction += (15/global_position.distance_to(movement_target))*(movement_target - global_position)
 			attacking = attack_range.overlaps_body(target)
 			if animation_manager.current_state != ATTACK_ANIM_NAME:
+				sfx.stream = attack_sfx
+				sfx.play()
 				animation_manager.set_animation(ATTACK_ANIM_NAME)
 			
 		# Run until first target, else return to idle
@@ -219,15 +229,20 @@ func process_movement(delta):
 	else:
 		# deaccel while casting
 		speed -= DEACCEL * delta
-		
-
 	
-	direction = direction.clamped(1)
+	
+	
 	speed = clamp(speed, 0, movement_speed)
+	direction = direction.clamped(1)
 	velocity = direction * speed
 	velocity += knock_direction * knock_speed
 	velocity = move_and_slide(velocity)
 	
+	#if $Sprite.flip_h:
+	#	$Sprite.offset = Vector2(-32, 0)
+	#else:
+	#	$Sprite.offset = Vector2(32, 0)
+		
 	if knock_speed > 0:
 		knock_speed -= 100 * delta
 	knock_speed = clamp(knock_speed, 0, 100)
@@ -237,6 +252,19 @@ func process_movement(delta):
 		if first_target and !attacking:
 			target_closest(null)
 	
+# Pink has different movement target due to strange attack area
+func set_movement_target():
+	var target1 = Vector2(target.global_position.x - 48, target.global_position.y)
+	var target2 = Vector2(target.global_position.x + 48, target.global_position.y)
+	target1.x = clamp(target1.x, get_viewport().size.x, 2*get_viewport().size.x)
+	target1.y = clamp(target1.y, 0, get_viewport().size.y)
+	target2.x = clamp(target2.x, get_viewport().size.x, 2*get_viewport().size.x)
+	target2.y = clamp(target2.y, 0, get_viewport().size.y)
+	if global_position.distance_to(target1) < global_position.distance_to(target2):
+		return target1
+	else:
+		return target2
+		
 #----------------------------------------------------------
 # use raycasts for retargetting or stopping
 func process_raycasts(potential_target):
@@ -259,7 +287,6 @@ func process_raycasts(potential_target):
 		return potential_target
 		#if target == null:
 		#	target_closest(null)
-		
 #--------------------------------------------------------------
 # Local Avoidance algorithm
 func calculate_local_avoidance():
@@ -290,8 +317,6 @@ func _on_Aggro_Area_body_exited(body):
 		target = null
 
 						
-	#target_closest(body)
-						
 # Target closest enemy when there is no target
 func target_closest(body):
 	if not first_target:
@@ -311,34 +336,51 @@ func target_closest(body):
 			continue
 		if closest == null:
 			closest = enemy
-			min_dist = global_position.distance_to(closest.position)
+			min_dist = global_position.distance_to(closest.global_position)
 		else:
-			var dist = global_position.distance_to(enemy.position)
+			var dist = global_position.distance_to(enemy.global_position)
 			if dist < min_dist:
 				closest = enemy
 				min_dist = dist
 	target = process_raycasts(closest)
-
-
 #----------------------------------------------------------------------------
 
 #------------------------------------------------------------------------
 #Attacks
 func basic_attack():
 	if target != null:
-		target.attack_hit(self, attack_damage, false)
-		current_mana += 20
+		if Pink1:
+			target.attack_hit(self, attack_damage, true, 80)
+		else:
+			target.attack_hit(self, attack_damage, true, 50)
+		current_mana += 25
+		juice_bar.value = current_mana
 		
 		sfx.stream = attack_sfx
 		sfx.play()
 		
+		target = null
+		target_closest(null)
+		
 func cast_attack():
 	if target != null:
-		target.attack_hit(self, 2*attack_damage)
+		if sprite.flip_h:
+			attack_area.position = Vector2(-48, 0)
+		else:
+			attack_area.position = Vector2(48, 0)
+		var targets = attack_area.get_overlapping_bodies()
+		for thing in targets:
+			if thing.is_in_group("Enemies"):
+				if Pink1:
+					thing.attack_hit(self, 2*attack_damage, true, 100)
+				else:
+					thing.attack_hit(self, 2*attack_damage, true, 70)
 		
+		#target.attack_hit(self, 2*attack_damage, false)
+		sfx.stream = attack_sfx
+		sfx.play()
 #------------------------------------------------------------------------
 
-#-------------------------------------------------------------------------
 
 
 #-----------------------------------------------------------------------
@@ -346,10 +388,6 @@ func cast_attack():
 func attack_hit(enemy, damage, knock, knock_power=50):
 	if current_hp <= 0:
 		return
-	
-	if Crab0:
-		if randi() % 10 < 3:
-			return
 	
 	if knock:
 		if is_instance_valid(enemy):
@@ -398,16 +436,7 @@ func die(damage):
 	
 	call_deferred("free")
 
-#--------------------------------------------------------------------------
-
 # make retargetting loop slow
 func _on_Timer_timeout():
 	retarget_loop = true
-	
-#-----------------------------------------------------------------
-# upgrade unit by replacing with new unit
-#func upgrade():
-#	var new_apple = upgrade_scene.instance()
-#	new_apple.initial_pos = global_position
-#	get_parent().add_child(new_apple)
-#	call_deferred("free")
+

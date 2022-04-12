@@ -37,10 +37,24 @@ var pink = [preload("res://Scenes/Units/Pink.tscn"), preload("res://Assets/Sprit
 onready var reroll_button = $Reroll_Button
 onready var animation_player = $AnimationPlayer
 onready var sfx = $SFX
+onready var dialog_box = $Dialog_Box
 
 onready var labels = [$Label1, $Label2, $Label3, $Label4]
 
 func _ready():
+	dialog_box.pitch = 0.25
+	dialog_box.character_wait = 0.1
+	
+	if disabled:
+		animation_player.current_animation = "Intro"
+	else:
+		animation_player.current_animation = "Open"
+	animation_player.stop()
+	
+	reroll_button.modulate.a = 1
+	for label in labels:
+		label.modulate.a = 1
+
 	randomize()
 	rng.randomize()
 	#animation_player.connect("animation_finished", self, "animation_ended")
@@ -51,20 +65,28 @@ func _ready():
 			
 	# initialize shop
 	for i in range(shop_spots.size()):
-		var roll = roll()
-		shop_sprite = shop_sprite_scene.instance()
-		shop_sprite.unit_scene = roll[0]
-		shop_sprite.set_sprite_texture(roll[1])
-		shop_sprite.price = roll[2]
-		shop_spots[i] = shop_sprite
-		shop_sprite.initial_pos = Vector2(global_position.x-40 + 40*i, global_position.y)
-		add_child(shop_sprite)
+		if !disabled:
+			var roll = roll()
+			shop_sprite = shop_sprite_scene.instance()
+			shop_sprite.unit_scene = roll[0]
+			shop_sprite.set_sprite_texture(roll[1])
+			shop_sprite.price = roll[2]
+			shop_spots[i] = shop_sprite
+			shop_sprite.initial_pos = Vector2(global_position.x-40 + 40*i, global_position.y)
+			add_child(shop_sprite)
+			labels[i].text = str(shop_sprite.price)
 		labels[i].set_position(Vector2(-40+40*i-3, -30))
-		labels[i].text = str(shop_sprite.price)
+		
 
-	reroll_button.set_global_position(Vector2(shop_sprite.initial_pos.x + 40 - reroll_button.get_rect().size.x/2 , 
-											shop_sprite.initial_pos.y - reroll_button.get_rect().size.y/2))
+	reroll_button.set_global_position(Vector2(global_position.x + 80 - reroll_button.get_rect().size.x/2 , 
+											global_position.y - reroll_button.get_rect().size.y/2))
 	labels[3].set_position(Vector2(77, -30))
+	
+	# if disabled, hide some parts of shop
+	if disabled:
+		reroll_button.modulate.a = 0
+		for label in labels:
+			label.modulate.a = 0
 	
 func _physics_process(_delta):
 	if Input.is_action_just_pressed("reroll"):
@@ -181,7 +203,14 @@ func _on_Face_body_exited(body):
 func disable():
 	$StaticBody/CollisionShape2D.disabled = true
 	disabled = true
+	
+func enable():
+	animation_player.play("Intro")
+	disabled = false
+	reroll_shop()
 
+func speak():
+	dialog_box.new_line("[color=black][shake level=6]More...[/shake][/color]")
 
 func _on_VisibilityNotifier2D_screen_exited():
 	reroll_enabled = false

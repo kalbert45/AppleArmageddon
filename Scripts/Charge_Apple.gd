@@ -351,8 +351,9 @@ func attack_hit(enemy, damage, knock, knock_power=50):
 		return
 	
 	if knock and (!Red0):
-		knock_direction = (position - enemy.position).normalized()
-		knock_speed = knock_power
+		if is_instance_valid(enemy):
+			knock_direction = (position - enemy.position).normalized()
+			knock_speed = knock_power
 	
 	var dist = position.distance_to(enemy.position)
 	dist = clamp(dist, 0, 120)
@@ -387,6 +388,17 @@ func die(damage):
 	var apple_death = apple_death_scene.instance()
 	apple_death.global_position = global_position
 	get_node("/root/Main/World").add_child(apple_death)
+	
+	if Red1:
+		var splatter = Sprite.new()
+		splatter.texture = load("res://Assets/Sprites/golden_splatter.png")
+		splatter.z_index = -1
+		apple_death.add_child(splatter)
+		
+		var targets = attack_range.get_overlapping_bodies()
+		for thing in targets:
+			if thing.is_in_group("Enemies"):
+				thing.attack_hit(self, max_hp/10, true, 40)
 	
 	#if damage >= 0:
 	#	var damage_number = damage_number_scene.instance()

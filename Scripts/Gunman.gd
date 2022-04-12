@@ -57,6 +57,7 @@ var label = "Gunman"
 var description = "Gunman: Shoots apples on sight."
 
 const BLOOD = 5
+var dialog_label = -1
 #------------------------------------------------------
 
 onready var attack_range = $Attack_Range

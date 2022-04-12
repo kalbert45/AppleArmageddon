@@ -3,6 +3,8 @@ extends Node2D
 signal next_stage
 signal disable_shop
 
+var disabled = false
+
 onready var camera = $Camera2D
 onready var tween = $Tween
 onready var scout_button = $Scout_Button
@@ -21,6 +23,25 @@ func _ready():
 	next_button.disabled = true
 	next_button.visible = false
 	next_button.modulate.a = 0
+	
+	if disabled:
+		scout_button.modulate.a = 0
+		back_button.modulate.a = 0
+		play_button.modulate.a = 0
+		$Money.modulate.a = 0
+		
+		scout_button.disabled = true
+		back_button.disabled = true
+		play_button.disabled = true
+	
+func enable():
+	scout_button.disabled = false
+	play_button.disabled = false
+	
+	tween.interpolate_property(scout_button, "modulate", scout_button.modulate, Color(1,1,1,1), 1, Tween.TRANS_LINEAR, Tween.EASE_OUT)
+	tween.interpolate_property($Money, "modulate", $Money.modulate, Color(1,1,1,1), 1, Tween.TRANS_LINEAR, Tween.EASE_OUT)
+	tween.interpolate_property(play_button, "modulate", play_button.modulate, Color(1,1,1,1), 1, Tween.TRANS_LINEAR, Tween.EASE_OUT)
+	tween.start()
 
 func _on_Scout_Button_pressed():
 	sfx.play()
@@ -47,7 +68,7 @@ func _on_Play_Button_pressed():
 	scout_button.disabled = true
 	back_button.disabled = true
 	play_button.disabled = true
-	tween.interpolate_property(camera, "position", camera.position, Vector2(960, 180), 0.6, Tween.EASE_OUT, Tween.EASE_OUT, 1)
+	tween.interpolate_property(camera, "position", camera.position, Vector2(960, 180), 1, Tween.EASE_OUT, Tween.EASE_OUT, 1)
 	tween.interpolate_property(scout_button, "modulate", scout_button.modulate, Color(1,1,1,0), 0.4, Tween.TRANS_LINEAR, Tween.EASE_OUT)
 	tween.interpolate_property(back_button, "modulate", back_button.modulate, Color(1,1,1,0), 0.4, Tween.TRANS_LINEAR, Tween.EASE_OUT)
 	tween.interpolate_property(play_button, "modulate", play_button.modulate, Color(1,1,1,0), 0.4, Tween.TRANS_LINEAR, Tween.EASE_OUT)

@@ -14,8 +14,8 @@ func _ready():
 	label.text = str(amount)
 	match type:
 		"Enemy":
-			label.set("custom_colors/font_color", Color("ef7d57"))
-			#side_movement += 10
+			label.set("custom_colors/font_color", Color("b13e53"))
+			label.text = "+" + label.text
 		"Unit":
 			label.set("custom_colors/font_color", Color("5d275d"))
 			#side_movement += -10

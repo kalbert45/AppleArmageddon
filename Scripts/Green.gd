@@ -366,8 +366,9 @@ func attack_hit(enemy, damage, knock, knock_power=50):
 		return
 	
 	if knock:
-		knock_direction = (position - enemy.position).normalized()
-		knock_speed = knock_power
+		if is_instance_valid(enemy):
+			knock_direction = (position - enemy.position).normalized()
+			knock_speed = knock_power
 	
 	var dist = position.distance_to(enemy.position)
 	dist = clamp(dist, 0, 120)

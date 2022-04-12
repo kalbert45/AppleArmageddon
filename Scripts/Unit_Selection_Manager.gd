@@ -135,41 +135,43 @@ func _physics_process(_delta):
 		#--------------------------------------------
 	# number key inputs for buying from shop
 	if not holding:
-		if (Input.is_action_pressed("buy_1")) or (Input.is_action_pressed("buy_2")) or (Input.is_action_pressed("buy_3")):
-			var shop_index = 0
-			if Input.is_action_pressed("buy_1"):
-				shop_index = 0
-			elif Input.is_action_pressed("buy_2"):
-				shop_index = 1
-			elif Input.is_action_pressed("buy_3"):
-				shop_index = 2
-			#deselect
-			if not selected.empty():
-				for unit in selected:
-					unit.mouse_select = false
-			selected.clear()
-			#hovered = null
-			
-			selected.append(shop.shop_spots[shop_index])
-			if not is_instance_valid(selected[0]):
-				selected.clear()
-			if not selected.empty():
-				clicked = selected[0]
-				selected[0].mouse_select = true
-	#			unit_starting_pos = selected.global_position
-				holding = true
-				sfx2.stream = pick_apple_sfx
-				sfx2.play()
-				var i = randi() % 3
-				match i:
-					0:
-						sfx3.stream = tree_shake_sfx1
-					1:
-						sfx3.stream = tree_shake_sfx2
-					2:
-						sfx3.stream = tree_shake_sfx3
-				sfx3.pitch_scale = ((randi() % 3) + 4)/5.0
-				sfx3.play()
+		if is_instance_valid(shop):
+			if !shop.disabled:
+				if (Input.is_action_pressed("buy_1")) or (Input.is_action_pressed("buy_2")) or (Input.is_action_pressed("buy_3")):
+					var shop_index = 0
+					if Input.is_action_pressed("buy_1"):
+						shop_index = 0
+					elif Input.is_action_pressed("buy_2"):
+						shop_index = 1
+					elif Input.is_action_pressed("buy_3"):
+						shop_index = 2
+					#deselect
+					if not selected.empty():
+						for unit in selected:
+							unit.mouse_select = false
+					selected.clear()
+					#hovered = null
+					
+					selected.append(shop.shop_spots[shop_index])
+					if not is_instance_valid(selected[0]):
+						selected.clear()
+					if not selected.empty():
+						clicked = selected[0]
+						selected[0].mouse_select = true
+				#			unit_starting_pos = selected.global_position
+						holding = true
+						sfx2.stream = pick_apple_sfx
+						sfx2.play()
+						var i = randi() % 3
+						match i:
+							0:
+								sfx3.stream = tree_shake_sfx1
+							1:
+								sfx3.stream = tree_shake_sfx2
+							2:
+								sfx3.stream = tree_shake_sfx3
+						sfx3.pitch_scale = ((randi() % 3) + 4)/5.0
+						sfx3.play()
 	#-------------------------------------------
 	# Hold + move
 	if not selected.has(hovered):
