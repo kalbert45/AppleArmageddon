@@ -52,7 +52,7 @@ func _on_Augment_Button3_pressed():
 
 
 func _on_Continue_Button_pressed():
-	print(Global.augments)
+	#print(Global.augments)
 	emit_signal("next_stage")
 
 func disable_buttons():

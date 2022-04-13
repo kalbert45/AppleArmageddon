@@ -211,8 +211,7 @@ func process_movement(delta):
 			direction += (15/global_position.distance_to(movement_target))*(movement_target - global_position)
 			attacking = attack_range.overlaps_body(target)
 			if animation_manager.current_state != ATTACK_ANIM_NAME:
-				sfx.stream = attack_sfx
-				sfx.play()
+
 				animation_manager.set_animation(ATTACK_ANIM_NAME)
 			
 		# Run until first target, else return to idle
@@ -355,8 +354,8 @@ func basic_attack():
 			target.attack_hit(self, attack_damage, true, 50)
 		#current_mana += 20
 		
-		#sfx.stream = attack_sfx
-		#sfx.play()
+		sfx.stream = attack_sfx
+		sfx.play()
 		
 		target = null
 		target_closest(null)

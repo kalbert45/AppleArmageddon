@@ -54,9 +54,9 @@ func _on_Title_Screen_start_game():
 	#tutorial = tutorial_scene.instance()
 	
 	# intro set up
-	stage.intro = true
-	stage.enemy_scene = load("res://temp/Enemy_Intro.tscn")
-	camera_UI.disabled = true
+	#stage.intro = true
+	#stage.enemy_scene = load("res://Scenes/Enemy_Scenes/Enemy_Intro.tscn")
+	#camera_UI.disabled = true
 	
 	transition_handler.transition([title], [[world, stage],
 	[HUD, unit_UI], [HUD, camera_UI], [self, menu]])

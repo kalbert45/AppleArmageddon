@@ -172,7 +172,7 @@ anims/Idle = SubResource( 5 )
 anims/RESET = SubResource( 7 )
 script = ExtResource( 6 )
 
-[node name="SFX" type="AudioStreamPlayer" parent="."]
+[node name="SFX" type="AudioStreamPlayer2D" parent="."]
 volume_db = -10.0
 pitch_scale = 0.8
 

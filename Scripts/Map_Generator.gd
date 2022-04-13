@@ -1,6 +1,6 @@
 extends Node
 
-const PLANE_LENGTH = 16
+const PLANE_LENGTH = 24
 const NODE_COUNT = PLANE_LENGTH * PLANE_LENGTH/12
 const PATH_COUNT = 6
 
@@ -17,9 +17,9 @@ func generate():
 		while true:
 			var point = Vector2(randi()%PLANE_LENGTH, randi()%PLANE_LENGTH)
 			
-			var dist_from_center = point.distance_squared_to(center)
+			var dist_from_center = pow((point.x - center.x)/4, 2) + pow(point.y - center.y, 2)
 			# only accept points inside circle
-			var in_circle = dist_from_center <= PLANE_LENGTH * PLANE_LENGTH / 4
+			var in_circle = dist_from_center <= PLANE_LENGTH * PLANE_LENGTH / 64
 			if not points.has(point) and in_circle:
 				points.append(point)
 				break

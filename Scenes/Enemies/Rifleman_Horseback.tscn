@@ -222,7 +222,7 @@ anims/Move = SubResource( 9 )
 anims/RESET = SubResource( 10 )
 script = ExtResource( 5 )
 
-[node name="SFX" type="AudioStreamPlayer" parent="."]
+[node name="SFX" type="AudioStreamPlayer2D" parent="."]
 volume_db = -10.0
 bus = "SFX"
 

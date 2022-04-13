@@ -20,6 +20,10 @@ func _ready():
 			button.texture_hover = load("res://Assets/Sprites/GUI/map_question_button_hovered.png")
 			button.texture_pressed = load("res://Assets/Sprites/GUI/map_question_button_pressed.png")
 			button.texture_disabled = load("res://Assets/Sprites/GUI/map_question_button_disabled.png")
+		"Augment":
+			pass
+		"Boss":
+			pass
 	
 func undisable():
 	disabled = false

@@ -14,6 +14,8 @@ var map_stages = {}
 var map_button_scene = preload("res://Scenes/Map_Button.tscn")
 var map_generator_scene = preload("res://Scenes/Map_Generator.tscn")
 
+onready var camera = $Camera2D
+
 func _ready():
 	if Global.current_point == null:
 		
@@ -25,6 +27,13 @@ func _ready():
 		map_stages = Global.map_stages
 		update()
 		
+	camera.position.x = current_point.x
+	
+func _process(delta):
+	if Input.is_action_pressed("ui_right"):
+		camera.position.x += 50*delta
+	elif Input.is_action_pressed("ui_left"):
+		camera.position.x -= 50*delta
 
 func _on_Next_Stage_Button_pressed(point, difficulty, type):
 	current_point = point
@@ -47,8 +56,8 @@ func generate():
 	# preprocess points
 	for i in range(paths.size()):
 		for j in range(paths[i].size()):
-			paths[i][j] *= 20
-			paths[i][j] += Vector2(180, 0) 
+			paths[i][j] *= 40
+			paths[i][j] += Vector2(180, -300) 
 	
 	current_point= paths[0][0]
 	current_path.append(current_point)
@@ -75,13 +84,18 @@ func _draw():
 				var map_button = map_button_scene.instance()
 				# set difficulty of map stage based on progress in path
 				map_button.difficulty = int(ceil((i+1) * 3 / path.size()))
-				# randomly make some points mystery stages
+				# randomly make some points mystery stages and augment stages
 				if i % 2 == 1:
 					var rand = randi() % 2
 					if rand == 0:
 						map_button.type = "Question"
+				if i % 5 == 4:
+					var rand = randi() % 2
+					if rand == 0:
+						map_button.type = "Augment"
 				# make last point boss stage
-				#--
+				if i == path.size() - 1:
+					map_button.type = "Boss"
 				map_button.set_position(path[i] - Vector2(12,12))
 				map_button.disabled = true
 				map_button.connect("pressed", self, "_on_Next_Stage_Button_pressed")
@@ -90,7 +104,7 @@ func _draw():
 				buttons[path[i]] = map_button
 				map_stages[path[i]] = [map_button.difficulty, map_button.type]
 			if i != 0:
-				draw_line(path[i-1], path[i], Color(0.5,0.5,0.5,1))
+				draw_line(path[i-1], path[i], Color(0.5,0.5,0.5,1), 2)
 				
 	# draw available paths in white, enable appropriate buttons
 	for path in paths:
@@ -101,11 +115,11 @@ func _draw():
 					index = i
 					break
 			#available paths
-			draw_line(path[index], path[index+1], Color(1,1,1,1))
+			draw_line(path[index], path[index+1], Color(1,1,1,1), 2)
 			#enable buttons
 			var button = buttons[path[index+1]]
 			button.undisable()
 
 	# draw path thus far
 	for i in range(current_path.size()-1):
-		draw_line(current_path[i], current_path[i+1], Color(1,1,1,1), 2)
+		draw_line(current_path[i], current_path[i+1], Color("38b764"), 2)
