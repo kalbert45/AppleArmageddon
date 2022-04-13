@@ -53,6 +53,76 @@ func _ready():
 	
 	unit_UI.connect("upgrade_button_pressed", self, "_on_Upgrade_Button_pressed")
 	
+func _unhandled_input(event):
+	if event.is_action_pressed("left_click"):
+		if not selected.has(hovered):
+			if not selected.empty():
+				for unit in selected:
+					unit.mouse_select = false
+			selected.clear()
+		
+		clicked = hovered
+		# box select if nothing hovered
+		if hovered == null:
+			drag_start = mouse_pos
+			draw_drag_start = viewport_mouse_pos
+			dragging = true
+		# shift select
+		elif (Input.is_action_pressed("shift") or ((event is InputEventMouseButton) and (event.is_doubleclick()))):
+			if clicked.is_in_group("Units"):
+				var label = hovered.label
+				for unit in get_tree().get_nodes_in_group("Units"):
+					if unit.label == label:
+						selected.append(unit)
+						unit.mouse_select = true
+				unit_UI.set_initial_values(hovered)
+				unit_UI.visible = true
+				enemy_UI.visible = false
+		# otherwise normal select and show UI
+		else:
+			# select and show UI
+			if not selected.has(hovered):
+				selected.append(hovered)
+			hovered.mouse_select = true
+			#unit_starting_pos = hovered.global_position
+			if hovered.is_in_group("Units"):
+				unit_UI.set_initial_values(hovered)
+				unit_UI.visible = true
+				enemy_UI.visible = false
+				
+			elif hovered.is_in_group("Enemies"):
+				enemy_UI.set_initial_values(hovered)
+				enemy_UI.visible = true
+				unit_UI.visible = false
+				
+				
+	if not selected.has(hovered):
+		if not selected.empty():
+			if is_instance_valid(selected[0]):
+				if not selected[0].active:
+					if not holding:
+						if Input.is_action_pressed("left_click"):
+							if selected[0].is_in_group("Units"):
+								holding = true
+								
+							if (selected[0].has_method("set_sprite_texture")) and (selected.size() == 1):
+								holding = true
+								sfx2.stream = pick_apple_sfx
+								sfx2.play()
+								var i = randi() % 3
+								match i:
+									0:
+										sfx3.stream = tree_shake_sfx1
+									1:
+										sfx3.stream = tree_shake_sfx2
+									2:
+										sfx3.stream = tree_shake_sfx3
+								sfx3.pitch_scale = ((randi() % 3) + 4)/5.0
+								sfx3.play()
+				
+				
+	if event.is_action_released("left_click"):
+		handle_release()
 	
 func _physics_process(_delta):
 	# guard against queue free
@@ -94,49 +164,49 @@ func _physics_process(_delta):
 	# mouse inputs
 	# Selection
 
-	if Input.is_action_just_pressed("left_click"):
-		if not selected.has(hovered):
-			if not selected.empty():
-				for unit in selected:
-					unit.mouse_select = false
-			selected.clear()
+	#if Input.is_action_just_pressed("left_click"):
+	#	if not selected.has(hovered):
+	#		if not selected.empty():
+	#			for unit in selected:
+	#				unit.mouse_select = false
+	#		selected.clear()
 		
-		clicked = hovered
+	#	clicked = hovered
 		# box select if nothing hovered
-		if hovered == null:
-			drag_start = mouse_pos
-			draw_drag_start = viewport_mouse_pos
-			dragging = true
-		# shift select
-		elif Input.is_action_pressed("shift"):
-			if clicked.is_in_group("Units"):
-				var label = hovered.label
-				for unit in get_tree().get_nodes_in_group("Units"):
-					if unit.label == label:
-						selected.append(unit)
-						unit.mouse_select = true
-				unit_UI.set_initial_values(hovered.description, hovered.picture, hovered.attack_damage, hovered.defense, 
-				hovered.attack_speed, hovered.movement_speed, hovered.max_hp, hovered.max_mana, hovered.current_hp, hovered.current_mana)
-				unit_UI.visible = true
-				enemy_UI.visible = false
+	#	if hovered == null:
+	#		drag_start = mouse_pos
+	#		draw_drag_start = viewport_mouse_pos
+	#		dragging = true
+	#	# shift select
+	#	elif Input.is_action_pressed("shift"):
+	#		if clicked.is_in_group("Units"):
+	#			var label = hovered.label
+	#			for unit in get_tree().get_nodes_in_group("Units"):
+	#				if unit.label == label:
+	#					selected.append(unit)
+	#					unit.mouse_select = true
+	#			unit_UI.set_initial_values(hovered.description, hovered.picture, hovered.attack_damage, hovered.defense, 
+	#			hovered.attack_speed, hovered.movement_speed, hovered.max_hp, hovered.max_mana, hovered.current_hp, hovered.current_mana)
+	#			unit_UI.visible = true
+	#			enemy_UI.visible = false
 		# otherwise normal select and show UI
-		else:
+	#	else:
 			# select and show UI
-			if not selected.has(hovered):
-				selected.append(hovered)
-			hovered.mouse_select = true
+	#		if not selected.has(hovered):
+	#			selected.append(hovered)
+	#		hovered.mouse_select = true
 			#unit_starting_pos = hovered.global_position
-			if hovered.is_in_group("Units"):
-				unit_UI.set_initial_values(hovered.description, hovered.picture, hovered.attack_damage, hovered.defense, 
-				hovered.attack_speed, hovered.movement_speed, hovered.max_hp, hovered.max_mana, hovered.current_hp, hovered.current_mana)
-				unit_UI.visible = true
-				enemy_UI.visible = false
-				
-			elif hovered.is_in_group("Enemies"):
-				enemy_UI.set_initial_values(hovered.description, hovered.picture, hovered.attack_damage, hovered.defense, 
-				hovered.attack_speed, hovered.movement_speed, hovered.max_hp, hovered.current_hp)
-				enemy_UI.visible = true
-				unit_UI.visible = false
+	#		if hovered.is_in_group("Units"):
+	#			unit_UI.set_initial_values(hovered.description, hovered.picture, hovered.attack_damage, hovered.defense, 
+	#			hovered.attack_speed, hovered.movement_speed, hovered.max_hp, hovered.max_mana, hovered.current_hp, hovered.current_mana)
+	#			unit_UI.visible = true
+	#			enemy_UI.visible = false
+	#			
+	#		elif hovered.is_in_group("Enemies"):
+	#			enemy_UI.set_initial_values(hovered.description, hovered.picture, hovered.attack_damage, hovered.defense, 
+	#			hovered.attack_speed, hovered.movement_speed, hovered.max_hp, hovered.current_hp)
+	#			enemy_UI.visible = true
+	#			unit_UI.visible = false
 		
 		#--------------------------------------------
 	# number key inputs for buying from shop
@@ -180,29 +250,29 @@ func _physics_process(_delta):
 						sfx3.play()
 	#-------------------------------------------
 	# Hold + move
-	if not selected.has(hovered):
-		if not selected.empty():
-			if is_instance_valid(selected[0]):
-				if not selected[0].active:
-					if not holding:
-						if Input.is_action_pressed("left_click"):
-							if selected[0].is_in_group("Units"):
-								holding = true
-								
-							if (selected[0].has_method("set_sprite_texture")) and (selected.size() == 1):
-								holding = true
-								sfx2.stream = pick_apple_sfx
-								sfx2.play()
-								var i = randi() % 3
-								match i:
-									0:
-										sfx3.stream = tree_shake_sfx1
-									1:
-										sfx3.stream = tree_shake_sfx2
-									2:
-										sfx3.stream = tree_shake_sfx3
-								sfx3.pitch_scale = ((randi() % 3) + 4)/5.0
-								sfx3.play()
+#	if not selected.has(hovered):
+#		if not selected.empty():
+#			if is_instance_valid(selected[0]):
+#				if not selected[0].active:
+#					if not holding:
+#						if Input.is_action_pressed("left_click"):
+#							if selected[0].is_in_group("Units"):
+#								holding = true
+#								
+#							if (selected[0].has_method("set_sprite_texture")) and (selected.size() == 1):
+#								holding = true
+#								sfx2.stream = pick_apple_sfx
+#								sfx2.play()
+#								var i = randi() % 3
+#								match i:
+#									0:
+#										sfx3.stream = tree_shake_sfx1
+#									1:
+#										sfx3.stream = tree_shake_sfx2
+#									2:
+#										sfx3.stream = tree_shake_sfx3
+#								sfx3.pitch_scale = ((randi() % 3) + 4)/5.0
+#								sfx3.play()
 				
 	
 	# handle mouse hold and drag, check if position invalid
@@ -225,8 +295,8 @@ func _physics_process(_delta):
 			update()
 			
 	# button release
-	if Input.is_action_just_released("left_click"):
-		handle_release()
+	#if Input.is_action_just_released("left_click"):
+	#	handle_release()
 	if (Input.is_action_just_released("buy_1")) or (Input.is_action_just_released("buy_2")) or (Input.is_action_just_released("buy_3")):
 		handle_release()
 				
@@ -254,11 +324,11 @@ func _physics_process(_delta):
 	# Unit UI
 	if selected.size() >= 1:
 		if selected[0].is_in_group("Units"):
-			unit_UI.update_values(selected[0].current_hp, selected[0].max_hp, selected[0].current_mana, selected[0].max_mana)
+			unit_UI.update_values()
 			#if selected[0].upgradable:
 			#	upgrade_button.disabled = false
 		elif selected[0].is_in_group("Enemies"):
-			enemy_UI.update_values(selected[0].current_hp, selected[0].max_hp)
+			enemy_UI.update_values()
 	else:
 		unit_UI.visible = false
 		#upgrade_button.disabled = true
