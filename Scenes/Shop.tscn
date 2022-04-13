@@ -255,6 +255,7 @@ material = SubResource( 8 )
 texture = ExtResource( 5 )
 hframes = 10
 vframes = 4
+frame = 31
 
 [node name="Shadow" type="Sprite" parent="Sprite"]
 show_behind_parent = true
@@ -271,7 +272,6 @@ position = Vector2( 0, 3.875 )
 shape = SubResource( 1 )
 
 [node name="Reroll_Button" type="TextureButton" parent="."]
-modulate = Color( 1, 1, 1, 0 )
 margin_left = -12.0
 margin_top = -12.0
 margin_right = 12.0
@@ -320,7 +320,6 @@ __meta__ = {
 }
 
 [node name="Label2" type="Label" parent="."]
-modulate = Color( 1, 1, 1, 0 )
 margin_left = -11.0
 margin_top = -26.0
 margin_right = 29.0
@@ -345,7 +344,6 @@ __meta__ = {
 }
 
 [node name="Label4" type="Label" parent="."]
-modulate = Color( 1, 1, 1, 0 )
 margin_left = 92.0
 margin_top = -29.0
 margin_right = 132.0

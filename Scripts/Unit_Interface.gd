@@ -9,8 +9,12 @@ onready var tooltip = $Tooltip
 onready var unit_tooltip = $Unit_Tooltip
 onready var tooltip_label = $Tooltip/Label
 onready var unit_tooltip_label = $Unit_Tooltip/Label
+onready var upgrade_cost_tooltip = $Upgrade_Tooltip
+onready var upgrade_cost_label = $Upgrade_Tooltip/Label
 
-onready var upgrade_button = $Upgrade_Button
+onready var upgrade_box = $Upgrade_Rect
+onready var upgrade_button = $Upgrade_Rect/Upgrade_Button
+
 
 onready var hp_bar = $HP_Bar
 onready var hp_bar_label = $HP_Bar/Label2
@@ -20,12 +24,13 @@ func _ready():
 	upgrade_button.disabled = true
 	tooltip.visible = false
 	unit_tooltip.visible = false
+	upgrade_cost_tooltip.visible = false
 	
 
 	
 func set_initial_values(unit):
 	shown_unit = unit
-	
+	upgrade_cost_tooltip.visible = false
 	unit_tooltip_label.text = unit.description
 	
 	if unit.picture != null:
@@ -47,12 +52,19 @@ func set_initial_values(unit):
 	
 func update_values():
 	if is_instance_valid(shown_unit):
+		if shown_unit.upgradable:
+			if (Global.money < shown_unit.upgrade_cost) or shown_unit.active:
+				upgrade_disabled = true
+				upgrade_button.disabled = true
 		hp_bar.value = int(shown_unit.current_hp)
 		hp_bar_label.text = str(int(shown_unit.current_hp)) + "/" + str(shown_unit.max_hp)
 		juice_bar.value = shown_unit.current_mana
 
 func update_upgrade():
 	upgrade_button.disabled = upgrade_disabled
+	if is_instance_valid(shown_unit):
+		if shown_unit.upgradable:
+			upgrade_cost_label.text = str(shown_unit.upgrade_cost)
 
 func _on_Attack_Symbol_mouse_entered():
 	tooltip.visible = true
@@ -77,6 +89,7 @@ func _on_Movement_Symbol_mouse_entered():
 func _on_Unit_Interface_mouse_exited():
 	unit_tooltip.visible = false
 	tooltip.visible = false
+	
 
 
 func _on_Unit_Pic_mouse_entered():
@@ -86,3 +99,19 @@ func _on_Unit_Pic_mouse_entered():
 
 func _on_Upgrade_Button_pressed():
 	emit_signal("upgrade_button_pressed")
+
+
+
+
+#func _on_Upgrade_Rect_mouse_entered():
+#	upgrade_cost_tooltip.visible = true
+
+
+func _on_Upgrade_Button_mouse_entered():
+	if is_instance_valid(shown_unit):
+		if shown_unit.upgradable:
+			upgrade_cost_tooltip.visible = true
+
+
+func _on_Upgrade_Button_mouse_exited():
+	upgrade_cost_tooltip.visible = false

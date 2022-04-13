@@ -50,6 +50,7 @@ func _ready():
 		enemy.connect("spawn_enemies", self, "_on_enemy_spawn")
 	for unit in units:
 		unit.connect("death", self, "_on_unit_death")
+		unit.connect("new_unit", self, "_on_new_unit")
 		
 	shop = shop_scene.instance()
 	shop.global_position = Vector2(480, 40)
@@ -144,7 +145,10 @@ func _on_update_money():
 	emit_signal("update_money")
 	
 func _on_new_unit(unit):
+	emit_signal("update_money")
 	unit.connect("death", self, "_on_unit_death")
+	if unit.has_signal("new_unit"):
+		unit.connect("new_unit", self, "_on_new_unit")
 	
 func disable_shop():
 	shop.disable()

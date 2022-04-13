@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://Assets/Sprites/GUI/GUI_EnemyPanel.png" type="Texture" id=1]
 [ext_resource path="res://Assets/Sprites/GUI/GUI_Movement.png" type="Texture" id=2]
@@ -12,6 +12,11 @@
 [ext_resource path="res://Assets/Sprites/GUI/GUI_Shield.png" type="Texture" id=10]
 [ext_resource path="res://Assets/Sprites/GUI/GUI_Fist.png" type="Texture" id=11]
 [ext_resource path="res://Scripts/Unit_Interface.gd" type="Script" id=12]
+[ext_resource path="res://Assets/Sprites/GUI/upgrade_button.png" type="Texture" id=13]
+[ext_resource path="res://Assets/Sprites/GUI/upgrade_button_pressed.png" type="Texture" id=14]
+[ext_resource path="res://Assets/Sprites/GUI/upgrade_button_hovered.png" type="Texture" id=15]
+[ext_resource path="res://Assets/Sprites/GUI/upgrade_button_disabled.png" type="Texture" id=16]
+[ext_resource path="res://Assets/Sprites/GUI/GUI_Blood_Mini.png" type="Texture" id=17]
 
 [node name="Unit_Interface" type="NinePatchRect"]
 anchor_left = 0.5
@@ -239,15 +244,55 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Upgrade_Button" type="Button" parent="."]
-margin_left = -71.0
-margin_top = 1.0
-margin_right = -8.0
-margin_bottom = 21.0
-focus_mode = 0
-shortcut_in_tooltip = false
-enabled_focus_mode = 0
-text = "upgrade"
+[node name="Upgrade_Rect" type="NinePatchRect" parent="."]
+margin_left = -30.0
+margin_right = -1.0
+margin_bottom = 29.0
+texture = ExtResource( 1 )
+patch_margin_left = 4
+patch_margin_top = 4
+patch_margin_right = 4
+patch_margin_bottom = 4
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Upgrade_Button" type="TextureButton" parent="Upgrade_Rect"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture_normal = ExtResource( 13 )
+texture_pressed = ExtResource( 14 )
+texture_hover = ExtResource( 15 )
+texture_disabled = ExtResource( 16 )
+
+[node name="Upgrade_Tooltip" type="NinePatchRect" parent="."]
+margin_left = -30.0
+margin_top = -20.0
+margin_right = -1.0
+margin_bottom = 1.0
+texture = ExtResource( 1 )
+patch_margin_left = 4
+patch_margin_top = 4
+patch_margin_right = 4
+patch_margin_bottom = 4
+
+[node name="Label" type="Label" parent="Upgrade_Tooltip"]
+margin_left = 1.0
+margin_top = 4.0
+margin_right = 17.0
+margin_bottom = 17.0
+theme = ExtResource( 4 )
+text = "4"
+align = 1
+
+[node name="TextureRect" type="TextureRect" parent="Upgrade_Tooltip"]
+margin_left = 14.0
+margin_top = 5.0
+margin_right = 26.0
+margin_bottom = 17.0
+texture = ExtResource( 17 )
+expand = true
+stretch_mode = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -258,4 +303,6 @@ __meta__ = {
 [connection signal="mouse_entered" from="Defense_Symbol" to="." method="_on_Defense_Symbol_mouse_entered"]
 [connection signal="mouse_entered" from="AttSpeed_Symbol" to="." method="_on_AttSpeed_Symbol_mouse_entered"]
 [connection signal="mouse_entered" from="Movement_Symbol" to="." method="_on_Movement_Symbol_mouse_entered"]
-[connection signal="pressed" from="Upgrade_Button" to="." method="_on_Upgrade_Button_pressed"]
+[connection signal="mouse_entered" from="Upgrade_Rect/Upgrade_Button" to="." method="_on_Upgrade_Button_mouse_entered"]
+[connection signal="mouse_exited" from="Upgrade_Rect/Upgrade_Button" to="." method="_on_Upgrade_Button_mouse_exited"]
+[connection signal="pressed" from="Upgrade_Rect/Upgrade_Button" to="." method="_on_Upgrade_Button_pressed"]

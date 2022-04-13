@@ -4,6 +4,7 @@ extends KinematicBody2D
 #------------------------------------------------------------------
 #--********************************************************-----
 signal death
+signal new_unit(unit)
 
 const IDLE_ANIM_NAME = "Idle"
 const MOVEMENT_ANIM_NAME = "Move"
@@ -402,7 +403,12 @@ func _on_Timer_timeout():
 #-----------------------------------------------------------------
 # upgrade unit by replacing with new unit
 func upgrade():
+	if Global.money < upgrade_cost:
+		return
+	Global.money -= upgrade_cost
+	
 	var new_apple = upgrade_scene.instance()
 	new_apple.initial_pos = global_position
 	get_parent().add_child(new_apple)
+	emit_signal("new_unit", new_apple)
 	call_deferred("free")

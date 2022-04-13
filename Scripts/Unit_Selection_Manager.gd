@@ -338,8 +338,9 @@ func _physics_process(_delta):
 	# unit upgrades
 	if not unit_UI.upgrade_disabled:
 		if Input.is_action_just_pressed("upgrade"):
-			selected[0].upgrade()
-			selected.remove(0)
+			if not selected[0].active:
+				selected[0].upgrade()
+				selected.remove(0)
 			
 	
 func handle_release():
