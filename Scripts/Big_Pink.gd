@@ -17,6 +17,7 @@ var _timer = null
 var retarget_loop = true
 #temp
 var active = false
+var bound = true
 var first_target = false
 
 var speed = 0
@@ -82,8 +83,8 @@ onready var juice_bar = $Bars/Juice_Bar
 var attack_sfx = preload("res://Assets/Sounds/SFX/pink_attack_sfx.wav")
 var picture = preload("res://Assets/Sprites/red.png")
 
-var damage_number_scene = preload("res://Scenes/Damage_Number.tscn")
-var apple_death_scene = preload("res://Scenes/Apple_Death.tscn")
+var damage_number_scene = preload("res://Scenes/Other/Damage_Number.tscn")
+var apple_death_scene = preload("res://Scenes/Other/Apple_Death.tscn")
 
 #-------------------------------------------------------------
 
@@ -145,7 +146,7 @@ func _physics_process(delta):
 # process in-game stat values, i.e. hp, mana, armor, etc.
 func process_stat_values(_delta):
 	if current_mana >= max_mana:
-		if animation_manager.current_state == IDLE_ANIM_NAME:
+		if (animation_manager.current_state == ATTACK_ANIM_NAME):
 			current_mana = 0
 			juice_bar.value = current_mana
 			animation_manager.set_animation(CAST_ANIM_NAME)
@@ -172,7 +173,7 @@ func process_mouse(_delta):
 		sprite.material.set_shader_param("outline_color", Color(0.99,1,0.25,1))
 		
 	# Keep character in window
-	if not active:
+	if bound:
 		global_position.x = clamp(global_position.x, 0, get_viewport().size.x)
 		global_position.y = clamp(global_position.y, 0, get_viewport().size.y)
 	else:
@@ -394,7 +395,11 @@ func attack_hit(enemy, damage, knock, knock_power=50):
 			knock_direction = (position - enemy.position).normalized()
 			knock_speed = knock_power
 	
-	var dist = position.distance_to(enemy.position)
+	var dist
+	if is_instance_valid(enemy):
+		dist = position.distance_to(enemy.position)
+	else:
+		dist = 120
 	dist = clamp(dist, 0, 120)
 	var mitigation = defense * (dist / 120)
 	

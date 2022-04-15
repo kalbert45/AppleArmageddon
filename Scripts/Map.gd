@@ -11,10 +11,13 @@ var current_path = []
 var current_point = null
 var map_stages = {}
 
-var map_button_scene = preload("res://Scenes/Map_Button.tscn")
-var map_generator_scene = preload("res://Scenes/Map_Generator.tscn")
+var map_button_scene = preload("res://Scenes/Other/Map_Button.tscn")
+var map_generator_scene = preload("res://Scenes/Other/Map_Generator.tscn")
 
 onready var camera = $Camera2D
+onready var apple = $Apple
+onready var tween = $Tween
+onready var sfx = $SFX
 
 func _ready():
 	if Global.current_point == null:
@@ -29,16 +32,33 @@ func _ready():
 		
 	camera.position.x = current_point.x
 	
+	apple.position = current_point - Vector2(0, 10)
+	apple.play("Idle")
+	
 func _process(delta):
 	if Input.is_action_pressed("ui_right"):
-		camera.position.x += 50*delta
+		camera.position.x += 200*delta
 	elif Input.is_action_pressed("ui_left"):
-		camera.position.x -= 50*delta
+		camera.position.x -= 200*delta
+	camera.position.x = clamp(camera.position.x, 320, 960)
 
 func _on_Next_Stage_Button_pressed(point, difficulty, type):
+	if apple.animation == "Walk":
+		return
+		
+	sfx.play()
+		
+	apple.play("Walk")
+	tween.interpolate_property(apple, 'position', apple.position, point- Vector2(0, 10), 1, Tween.TRANS_LINEAR,Tween.EASE_IN)
+	tween.start()
+	
 	current_point = point
 	current_path.append(current_point)
 	save_data()
+
+	yield(tween, "tween_all_completed")
+	yield(get_tree().create_timer(0.5), "timeout")
+
 	emit_signal("begin_stage", difficulty, type)
 	
 func save_data():
@@ -61,6 +81,7 @@ func generate():
 	
 	current_point= paths[0][0]
 	current_path.append(current_point)
+
 	update()
 				
 func _draw():
@@ -83,7 +104,7 @@ func _draw():
 			if not buttons.has(path[i]):
 				var map_button = map_button_scene.instance()
 				# set difficulty of map stage based on progress in path
-				map_button.difficulty = int(ceil((i+1) * 3 / path.size()))
+				map_button.difficulty = int(floor(i * (Global.MAX_DIFFICULTY + 1) / path.size()))
 				# randomly make some points mystery stages and augment stages
 				if i % 2 == 1:
 					var rand = randi() % 2
@@ -104,7 +125,7 @@ func _draw():
 				buttons[path[i]] = map_button
 				map_stages[path[i]] = [map_button.difficulty, map_button.type]
 			if i != 0:
-				draw_line(path[i-1], path[i], Color(0.5,0.5,0.5,1), 2)
+				draw_line(path[i-1], path[i], Color(0.5,0.5,0.5,1), 2, true)
 				
 	# draw available paths in white, enable appropriate buttons
 	for path in paths:
@@ -113,13 +134,18 @@ func _draw():
 			for i in range(path.size()):
 				if path[i] == current_point:
 					index = i
-					break
+				buttons[path[i]].possible()
 			#available paths
-			draw_line(path[index], path[index+1], Color(1,1,1,1), 2)
+			draw_line(path[index], path[index+1], Color("859e72"), 2, true)
 			#enable buttons
 			var button = buttons[path[index+1]]
 			button.undisable()
 
 	# draw path thus far
-	for i in range(current_path.size()-1):
-		draw_line(current_path[i], current_path[i+1], Color("38b764"), 2)
+	for i in range(current_path.size()):
+		buttons[current_path[i]].clear()
+		if i > 0:
+			draw_line(current_path[i-1], current_path[i], Color("b06a76"), 2, true)
+
+
+

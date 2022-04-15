@@ -1,0 +1,99 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://Assets/Fonts/PressStart2P.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Scripts/Defeat_Screen.gd" type="Script" id=2]
+[ext_resource path="res://Assets/Themes/menu_button_theme.tres" type="Theme" id=3]
+
+[sub_resource type="Animation" id=1]
+resource_name = "Appear"
+length = 1.5
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+tracks/1/type = "method"
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 1.4 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "_enable_button"
+} ]
+}
+
+[sub_resource type="Animation" id=2]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ) ]
+}
+
+[sub_resource type="DynamicFont" id=3]
+size = 24
+font_data = ExtResource( 1 )
+
+[node name="Defeat_Screen" type="Control"]
+modulate = Color( 1, 1, 1, 0 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="."]
+self_modulate = Color( 1, 1, 1, 0.584314 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.160784, 0.211765, 0.435294, 1 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "Appear"
+anims/Appear = SubResource( 1 )
+anims/RESET = SubResource( 2 )
+
+[node name="Label" type="Label" parent="."]
+margin_left = 240.0
+margin_top = 149.0
+margin_right = 384.0
+margin_bottom = 173.0
+custom_fonts/font = SubResource( 3 )
+text = "Defeat"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Retry_Button" type="Button" parent="."]
+margin_left = 279.0
+margin_top = 212.0
+margin_right = 291.0
+margin_bottom = 232.0
+theme = ExtResource( 3 )
+disabled = true
+text = "Retry"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="pressed" from="Retry_Button" to="." method="_on_Retry_Button_pressed"]

@@ -12,7 +12,7 @@ onready var back_button = $Back_Button
 onready var play_button = $Play_Button
 onready var next_button = $Next_Stage_Button
 onready var sfx = $SFX
-onready var money_label = $Money/Label
+
 
 func _ready():
 	back_button.modulate.a = 0
@@ -28,10 +28,10 @@ func _ready():
 		scout_button.modulate.a = 0
 		back_button.modulate.a = 0
 		play_button.modulate.a = 0
-		$Money.modulate.a = 0
 		
 		scout_button.disabled = true
 		back_button.disabled = true
+		back_button.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		play_button.disabled = true
 	
 func enable():
@@ -39,7 +39,7 @@ func enable():
 	play_button.disabled = false
 	
 	tween.interpolate_property(scout_button, "modulate", scout_button.modulate, Color(1,1,1,1), 1, Tween.TRANS_LINEAR, Tween.EASE_OUT)
-	tween.interpolate_property($Money, "modulate", $Money.modulate, Color(1,1,1,1), 1, Tween.TRANS_LINEAR, Tween.EASE_OUT)
+	#tween.interpolate_property($Money, "modulate", $Money.modulate, Color(1,1,1,1), 1, Tween.TRANS_LINEAR, Tween.EASE_OUT)
 	tween.interpolate_property(play_button, "modulate", play_button.modulate, Color(1,1,1,1), 1, Tween.TRANS_LINEAR, Tween.EASE_OUT)
 	tween.start()
 
@@ -47,6 +47,7 @@ func _on_Scout_Button_pressed():
 	sfx.play()
 	scout_button.disabled = true
 	back_button.disabled = false
+	back_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	tween.interpolate_property(camera, "position", camera.position, Vector2(960, 180), 0.6, Tween.EASE_OUT, Tween.EASE_OUT)
 	tween.interpolate_property(scout_button, "modulate", scout_button.modulate, Color(1,1,1,0), 0.4, Tween.TRANS_LINEAR, Tween.EASE_OUT)
 	tween.interpolate_property(back_button, "modulate", back_button.modulate, Color(1,1,1,1), 0.4, Tween.TRANS_LINEAR, Tween.EASE_OUT)
@@ -57,6 +58,7 @@ func _on_Back_Button_pressed():
 	sfx.play()
 	scout_button.disabled = false
 	back_button.disabled = true
+	back_button.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	tween.interpolate_property(camera, "position", camera.position, Vector2(320, 180), 0.6, Tween.EASE_OUT, Tween.EASE_OUT)
 	tween.interpolate_property(scout_button, "modulate", scout_button.modulate, Color(1,1,1,1), 0.4, Tween.TRANS_LINEAR, Tween.EASE_OUT)
 	tween.interpolate_property(back_button, "modulate", back_button.modulate, Color(1,1,1,0), 0.4, Tween.TRANS_LINEAR, Tween.EASE_OUT)
@@ -76,6 +78,7 @@ func _on_Play_Button_pressed():
 	
 	for unit in get_tree().get_nodes_in_group("Units"):
 		unit.active = true
+		unit.bound = false
 	for enemy in get_tree().get_nodes_in_group("Enemies"):
 		enemy.active = true
 		
@@ -91,6 +94,6 @@ func activate_next_button():
 	tween.interpolate_property(next_button, "modulate", next_button.modulate, Color(1,1,1,1), 0.4, Tween.TRANS_LINEAR, Tween.EASE_OUT)
 	tween.start()
 	
-func update_money():
-	money_label.text = str(Global.money)
+#func update_money():
+#	money_label.text = str(Global.money)
 	

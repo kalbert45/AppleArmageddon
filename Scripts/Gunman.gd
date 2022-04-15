@@ -56,7 +56,7 @@ var mouse_select = false
 var label = "Gunman"
 var description = "Gunman: Shoots apples on sight."
 
-const BLOOD = 5
+const BLOOD = 3
 var dialog_label = -1
 #------------------------------------------------------
 
@@ -69,8 +69,8 @@ onready var hp_bar = $Bars/HP_Bar
 var attack_sfx = preload("res://Assets/Sounds/SFX/pistol_sfx3.wav")
 var picture = preload("res://Assets/Sprites/gunman.png")
 
-var damage_number_scene = preload("res://Scenes/Damage_Number.tscn")
-var apple_death_scene = preload("res://Scenes/Person_Death.tscn")
+var damage_number_scene = preload("res://Scenes/Other/Damage_Number.tscn")
+var apple_death_scene = preload("res://Scenes/Other/Person_Death.tscn")
 
 #-------------------------------------------------------------
 
@@ -301,7 +301,11 @@ func attack_hit(enemy, damage, knock, knock_power=50):
 		knock_direction = (position - enemy.position).normalized()
 		knock_speed = knock_power
 	
-	var dist = position.distance_to(enemy.position)
+	var dist
+	if is_instance_valid(enemy):
+		dist = position.distance_to(enemy.position)
+	else:
+		dist = 120
 	dist = clamp(dist, 0, 120)
 	var mitigation = defense * (dist / 120)
 	

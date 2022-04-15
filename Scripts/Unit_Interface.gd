@@ -31,7 +31,7 @@ func _ready():
 func set_initial_values(unit):
 	shown_unit = unit
 	upgrade_cost_tooltip.visible = false
-	unit_tooltip_label.text = unit.description
+	unit_tooltip_label.bbcode_text = Global.UNIT_TEXT[unit.label]
 	
 	if unit.picture != null:
 		$Unit_Pic.texture = unit.picture
@@ -53,7 +53,7 @@ func set_initial_values(unit):
 func update_values():
 	if is_instance_valid(shown_unit):
 		if shown_unit.upgradable:
-			if (Global.money < shown_unit.upgrade_cost) or shown_unit.active:
+			if (Global.money < shown_unit.upgrade_cost) or !shown_unit.bound:
 				upgrade_disabled = true
 				upgrade_button.disabled = true
 		hp_bar.value = int(shown_unit.current_hp)
@@ -68,22 +68,22 @@ func update_upgrade():
 
 func _on_Attack_Symbol_mouse_entered():
 	tooltip.visible = true
-	tooltip_label.text = "Power: affects damage dealt by all attacks"
+	tooltip_label.bbcode_text = "[color=#b13e53]Power[/color]: affects damage dealt by all attacks"
 
 
 func _on_Defense_Symbol_mouse_entered():
 	tooltip.visible = true
-	tooltip_label.text = "Defense: mitigates all damage by flat amount. Is more effective with distance."
+	tooltip_label.bbcode_text = "[color=#3b5dc9]Defense[/color]: mitigates all damage by flat amount. Is more effective with distance."
 
 
 func _on_AttSpeed_Symbol_mouse_entered():
 	tooltip.visible = true
-	tooltip_label.text = "Attack Speed: affects speed of regular attacks"
+	tooltip_label.bbcode_text = "[color=#ffcd75]Attack Speed[/color]: affects speed of regular attacks"
 
 
 func _on_Movement_Symbol_mouse_entered():
 	tooltip.visible = true
-	tooltip_label.text = "Movement Speed: more = fast"
+	tooltip_label.bbcode_text = "[color=#38b764]Movement Speed[/color]: more = fast"
 
 
 func _on_Unit_Interface_mouse_exited():

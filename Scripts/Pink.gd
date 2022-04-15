@@ -18,6 +18,7 @@ var _timer = null
 var retarget_loop = true
 #temp
 var active = false
+var bound = true
 var first_target = false
 
 var speed = 0
@@ -77,12 +78,13 @@ onready var animation_manager = $AnimationPlayer
 onready var sfx = $SFX
 onready var raycasts_node = $Raycasts
 onready var hp_bar = $Bars/HP_Bar
+onready var sprite = $Sprite
 
 var attack_sfx = preload("res://Assets/Sounds/SFX/pink_attack_sfx.wav")
 var picture = preload("res://Assets/Sprites/red.png")
 
-var damage_number_scene = preload("res://Scenes/Damage_Number.tscn")
-var apple_death_scene = preload("res://Scenes/Apple_Death.tscn")
+var damage_number_scene = preload("res://Scenes/Other/Damage_Number.tscn")
+var apple_death_scene = preload("res://Scenes/Other/Apple_Death.tscn")
 
 var upgrade_scene = preload("res://Scenes/Units/Big_Pink.tscn")
 #-------------------------------------------------------------
@@ -158,21 +160,21 @@ func _physics_process(delta):
 # process mouse_input
 func process_mouse(_delta):
 	if mouse_hover or mouse_select:
-		$Sprite.material.set_shader_param("width", 1.0)
-		$Sprite.z_index = 1
+		sprite.material.set_shader_param("width", 1.0)
+		sprite.z_index = 1
 	else:
-		$Sprite.material.set_shader_param("width", 0.0)
-		$Sprite.z_index = 0
+		sprite.material.set_shader_param("width", 0.0)
+		sprite.z_index = 0
 		
 	if position_invalid:
-		$Sprite.material.set_shader_param("outline_color", Color(1,0.2,0.2,1))
+		sprite.material.set_shader_param("outline_color", Color(1,0.2,0.2,1))
 	elif mouse_select:
-		$Sprite.material.set_shader_param("outline_color", Color(1,0.75,0.2,1))
+		sprite.material.set_shader_param("outline_color", Color(1,0.75,0.2,1))
 	else:
-		$Sprite.material.set_shader_param("outline_color", Color(0.99,1,0.25,1))
+		sprite.material.set_shader_param("outline_color", Color(0.99,1,0.25,1))
 		
 	# Keep character in window
-	if not active:
+	if bound:
 		global_position.x = clamp(global_position.x, 0, get_viewport().size.x)
 		global_position.y = clamp(global_position.y, 0, get_viewport().size.y)
 	else:
@@ -194,7 +196,7 @@ func process_movement(delta):
 		# Movement towards target
 		if (target != null) and (!attacking):
 			movement_target = set_movement_target()
-			$Sprite.set_flip_h(global_position.x > target.global_position.x)
+			sprite.set_flip_h(global_position.x > target.global_position.x)
 			speed += ACCEL * delta
 			direction += calculate_local_avoidance()
 			direction += (15/global_position.distance_to(movement_target))*(movement_target - global_position)
@@ -205,7 +207,7 @@ func process_movement(delta):
 		# Attack target
 		elif (target != null) and attacking:
 			movement_target = set_movement_target()
-			$Sprite.set_flip_h(global_position.x > target.global_position.x)
+			sprite.set_flip_h(global_position.x > target.global_position.x)
 			speed -= DEACCEL * delta
 	
 			direction += (15/global_position.distance_to(movement_target))*(movement_target - global_position)
@@ -237,10 +239,10 @@ func process_movement(delta):
 	velocity += knock_direction * knock_speed
 	velocity = move_and_slide(velocity)
 	
-	if $Sprite.flip_h:
-		$Sprite.offset = Vector2(-32, 0)
+	if sprite.flip_h:
+		sprite.offset = Vector2(-32, 0)
 	else:
-		$Sprite.offset = Vector2(32, 0)
+		sprite.offset = Vector2(32, 0)
 		
 	if knock_speed > 0:
 		knock_speed -= 100 * delta
@@ -379,7 +381,11 @@ func attack_hit(enemy, damage, knock, knock_power=50):
 			knock_direction = (position - enemy.position).normalized()
 			knock_speed = knock_power
 	
-	var dist = position.distance_to(enemy.position)
+	var dist
+	if is_instance_valid(enemy):
+		dist = position.distance_to(enemy.position)
+	else:
+		dist = 120
 	dist = clamp(dist, 0, 120)
 	var mitigation = defense * (dist / 120)
 	
@@ -435,6 +441,6 @@ func upgrade():
 	var new_apple = upgrade_scene.instance()
 	new_apple.initial_pos = global_position
 	get_parent().add_child(new_apple)
-	emit_signal("new_unit", new_apple)
+	call_deferred("emit_signal", "new_unit", new_apple)
 	
 	call_deferred("free")

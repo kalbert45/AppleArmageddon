@@ -4,7 +4,7 @@ extends KinematicBody2D
 #------------------------------------------------------------------
 #--********************************************************-----
 signal death
-signal spawn_enemies
+
 
 const IDLE_ANIM_NAME = "Idle"
 const MOVEMENT_ANIM_NAME = "Move"
@@ -32,10 +32,10 @@ var attacking = false
 var casting = false
 #----------------------------------------------------------
 # Unit stats
-var max_hp = 150
-var current_hp = 150
+var max_hp = 200
+var current_hp = 200
 
-var attack_damage = 10
+var attack_damage = 20
 var attack_speed = 1.0
 var defense = 10
 var movement_speed = 40
@@ -56,7 +56,7 @@ var mouse_select = false
 var label = "Tractor"
 var description = "Tractor: Punches apples on sight."
 
-const BLOOD = 15
+const BLOOD = 9
 #------------------------------------------------------
 
 onready var attack_range = $Attack_Range
@@ -69,8 +69,8 @@ onready var hp_bar = $Bars/HP_Bar
 var attack_sfx = preload("res://Assets/Sounds/SFX/punch_sfx.wav")
 var picture = preload("res://Assets/Sprites/soldier.png")
 
-var damage_number_scene = preload("res://Scenes/Damage_Number.tscn")
-var apple_death_scene = preload("res://Scenes/Person_Death.tscn")
+var damage_number_scene = preload("res://Scenes/Other/Damage_Number.tscn")
+var apple_death_scene = preload("res://Scenes/Other/Person_Death.tscn")
 
 #-------------------------------------------------------------
 
@@ -305,7 +305,11 @@ func attack_hit(enemy, damage, _knock, _knock_power=50):
 	#	knock_direction = (global_position - enemy_position).normalized()
 	#	knock_speed = knock_power
 	
-	var dist = global_position.distance_to(enemy.position)
+	var dist
+	if is_instance_valid(enemy):
+		dist = position.distance_to(enemy.position)
+	else:
+		dist = 120
 	dist = clamp(dist, 0, 120)
 	var mitigation = defense * (dist / 120)
 	

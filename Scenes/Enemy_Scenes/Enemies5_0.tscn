@@ -1,0 +1,319 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Scenes/Enemy_Scenes/Enemy_Scene.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Scenes/Enemy_Scenes/Benchwarmers/Benchwarmer.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Scripts/Regular_Enemy_Stage.gd" type="Script" id=3]
+
+[node name="Enemies5_0" instance=ExtResource( 1 )]
+script = ExtResource( 3 )
+
+[node name="Background" parent="." index="0"]
+visible = false
+
+[node name="Benchwarmer8" parent="." index="1" instance=ExtResource( 2 )]
+position = Vector2( 1041, 203 )
+
+[node name="Benchwarmer10" parent="." index="2" instance=ExtResource( 2 )]
+position = Vector2( 1038, 155 )
+
+[node name="Benchwarmer11" parent="." index="3" instance=ExtResource( 2 )]
+position = Vector2( 1035, 86 )
+group_label = 3
+
+[node name="Benchwarmer12" parent="." index="4" instance=ExtResource( 2 )]
+position = Vector2( 1044, 278 )
+group_label = 3
+
+[node name="Benchwarmer7" parent="." index="5" instance=ExtResource( 2 )]
+position = Vector2( 1079, 287 )
+enemy_label = 1
+group_label = 1
+
+[node name="Benchwarmer9" parent="." index="6" instance=ExtResource( 2 )]
+position = Vector2( 1090, 228 )
+enemy_label = 2
+group_label = 5
+
+[node name="Benchwarmer13" parent="." index="7" instance=ExtResource( 2 )]
+position = Vector2( 1073, 305 )
+enemy_label = 1
+group_label = 1
+
+[node name="Benchwarmer14" parent="." index="8" instance=ExtResource( 2 )]
+position = Vector2( 1078, 69 )
+enemy_label = 1
+group_label = 2
+
+[node name="Benchwarmer15" parent="." index="9" instance=ExtResource( 2 )]
+position = Vector2( 1083, 84 )
+enemy_label = 1
+group_label = 2
+
+[node name="Benchwarmer16" parent="." index="10" instance=ExtResource( 2 )]
+position = Vector2( 1088, 94 )
+enemy_label = 1
+group_label = 2
+
+[node name="Benchwarmer17" parent="." index="11" instance=ExtResource( 2 )]
+position = Vector2( 1089, 137 )
+enemy_label = 2
+group_label = 4
+
+[node name="Benchwarmer18" parent="." index="12" instance=ExtResource( 2 )]
+position = Vector2( 1086, 267 )
+enemy_label = 1
+group_label = 1
+
+[node name="Benchwarmer19" parent="." index="13" instance=ExtResource( 2 )]
+position = Vector2( 1028, 190 )
+
+[node name="Benchwarmer20" parent="." index="14" instance=ExtResource( 2 )]
+position = Vector2( 1044, 129 )
+
+[node name="Benchwarmer21" parent="." index="15" instance=ExtResource( 2 )]
+position = Vector2( 1049, 87 )
+group_label = 3
+
+[node name="Benchwarmer22" parent="." index="16" instance=ExtResource( 2 )]
+position = Vector2( 1055, 273 )
+group_label = 3
+
+[node name="Benchwarmer23" parent="." index="17" instance=ExtResource( 2 )]
+position = Vector2( 1094, 287 )
+enemy_label = 1
+group_label = 1
+
+[node name="Benchwarmer25" parent="." index="18" instance=ExtResource( 2 )]
+position = Vector2( 1088, 306 )
+enemy_label = 1
+group_label = 1
+
+[node name="Benchwarmer26" parent="." index="19" instance=ExtResource( 2 )]
+position = Vector2( 1092, 71 )
+enemy_label = 1
+group_label = 2
+
+[node name="Benchwarmer27" parent="." index="20" instance=ExtResource( 2 )]
+position = Vector2( 1097, 83 )
+enemy_label = 1
+group_label = 2
+
+[node name="Benchwarmer28" parent="." index="21" instance=ExtResource( 2 )]
+position = Vector2( 1101, 94 )
+enemy_label = 1
+group_label = 2
+
+[node name="Benchwarmer30" parent="." index="22" instance=ExtResource( 2 )]
+position = Vector2( 1100, 267 )
+enemy_label = 1
+group_label = 1
+
+[node name="Benchwarmer31" parent="." index="23" instance=ExtResource( 2 )]
+position = Vector2( 1044, 221 )
+
+[node name="Benchwarmer32" parent="." index="24" instance=ExtResource( 2 )]
+position = Vector2( 1027, 156 )
+
+[node name="Benchwarmer33" parent="." index="25" instance=ExtResource( 2 )]
+position = Vector2( 1030, 96 )
+group_label = 3
+
+[node name="Benchwarmer34" parent="." index="26" instance=ExtResource( 2 )]
+position = Vector2( 1037, 265 )
+group_label = 3
+
+[node name="Benchwarmer35" parent="." index="27" instance=ExtResource( 2 )]
+position = Vector2( 1043, 188 )
+
+[node name="Benchwarmer36" parent="." index="28" instance=ExtResource( 2 )]
+position = Vector2( 1038, 142 )
+
+[node name="Benchwarmer37" parent="." index="29" instance=ExtResource( 2 )]
+position = Vector2( 1040, 75 )
+group_label = 3
+
+[node name="Benchwarmer38" parent="." index="30" instance=ExtResource( 2 )]
+position = Vector2( 1047, 262 )
+group_label = 3
+
+[node name="Benchwarmer39" parent="." index="31" instance=ExtResource( 2 )]
+position = Vector2( 1029, 225 )
+
+[node name="Benchwarmer40" parent="." index="32" instance=ExtResource( 2 )]
+position = Vector2( 1030, 130 )
+
+[node name="Benchwarmer41" parent="." index="33" instance=ExtResource( 2 )]
+position = Vector2( 1043, 97 )
+group_label = 3
+
+[node name="Benchwarmer42" parent="." index="34" instance=ExtResource( 2 )]
+position = Vector2( 1049, 289 )
+group_label = 3
+
+[node name="Benchwarmer43" parent="." index="35" instance=ExtResource( 2 )]
+position = Vector2( 1027, 207 )
+
+[node name="Benchwarmer44" parent="." index="36" instance=ExtResource( 2 )]
+position = Vector2( 1028, 142 )
+
+[node name="Benchwarmer45" parent="." index="37" instance=ExtResource( 2 )]
+position = Vector2( 1023, 106 )
+group_label = 3
+
+[node name="Benchwarmer46" parent="." index="38" instance=ExtResource( 2 )]
+position = Vector2( 1031, 253 )
+group_label = 3
+
+[node name="Benchwarmer24" parent="." index="39" instance=ExtResource( 2 )]
+position = Vector2( 926, 204 )
+
+[node name="Benchwarmer29" parent="." index="40" instance=ExtResource( 2 )]
+position = Vector2( 923, 156 )
+
+[node name="Benchwarmer47" parent="." index="41" instance=ExtResource( 2 )]
+position = Vector2( 920, 87 )
+group_label = 3
+
+[node name="Benchwarmer48" parent="." index="42" instance=ExtResource( 2 )]
+position = Vector2( 929, 279 )
+group_label = 3
+
+[node name="Benchwarmer49" parent="." index="43" instance=ExtResource( 2 )]
+position = Vector2( 964, 288 )
+enemy_label = 1
+group_label = 1
+
+[node name="Benchwarmer50" parent="." index="44" instance=ExtResource( 2 )]
+position = Vector2( 975, 229 )
+enemy_label = 2
+group_label = 5
+
+[node name="Benchwarmer51" parent="." index="45" instance=ExtResource( 2 )]
+position = Vector2( 958, 306 )
+enemy_label = 1
+group_label = 1
+
+[node name="Benchwarmer52" parent="." index="46" instance=ExtResource( 2 )]
+position = Vector2( 963, 70 )
+enemy_label = 1
+group_label = 2
+
+[node name="Benchwarmer53" parent="." index="47" instance=ExtResource( 2 )]
+position = Vector2( 968, 85 )
+enemy_label = 1
+group_label = 2
+
+[node name="Benchwarmer54" parent="." index="48" instance=ExtResource( 2 )]
+position = Vector2( 973, 95 )
+enemy_label = 1
+group_label = 2
+
+[node name="Benchwarmer55" parent="." index="49" instance=ExtResource( 2 )]
+position = Vector2( 974, 138 )
+enemy_label = 2
+group_label = 4
+
+[node name="Benchwarmer56" parent="." index="50" instance=ExtResource( 2 )]
+position = Vector2( 971, 268 )
+enemy_label = 1
+group_label = 1
+
+[node name="Benchwarmer57" parent="." index="51" instance=ExtResource( 2 )]
+position = Vector2( 913, 191 )
+
+[node name="Benchwarmer58" parent="." index="52" instance=ExtResource( 2 )]
+position = Vector2( 929, 130 )
+
+[node name="Benchwarmer59" parent="." index="53" instance=ExtResource( 2 )]
+position = Vector2( 934, 88 )
+group_label = 3
+
+[node name="Benchwarmer60" parent="." index="54" instance=ExtResource( 2 )]
+position = Vector2( 940, 274 )
+group_label = 3
+
+[node name="Benchwarmer61" parent="." index="55" instance=ExtResource( 2 )]
+position = Vector2( 979, 288 )
+enemy_label = 1
+group_label = 1
+
+[node name="Benchwarmer62" parent="." index="56" instance=ExtResource( 2 )]
+position = Vector2( 973, 307 )
+enemy_label = 1
+group_label = 1
+
+[node name="Benchwarmer63" parent="." index="57" instance=ExtResource( 2 )]
+position = Vector2( 977, 72 )
+enemy_label = 1
+group_label = 2
+
+[node name="Benchwarmer64" parent="." index="58" instance=ExtResource( 2 )]
+position = Vector2( 982, 84 )
+enemy_label = 1
+group_label = 2
+
+[node name="Benchwarmer65" parent="." index="59" instance=ExtResource( 2 )]
+position = Vector2( 986, 95 )
+enemy_label = 1
+group_label = 2
+
+[node name="Benchwarmer66" parent="." index="60" instance=ExtResource( 2 )]
+position = Vector2( 985, 268 )
+enemy_label = 1
+group_label = 1
+
+[node name="Benchwarmer67" parent="." index="61" instance=ExtResource( 2 )]
+position = Vector2( 929, 222 )
+
+[node name="Benchwarmer68" parent="." index="62" instance=ExtResource( 2 )]
+position = Vector2( 912, 157 )
+
+[node name="Benchwarmer69" parent="." index="63" instance=ExtResource( 2 )]
+position = Vector2( 915, 97 )
+group_label = 3
+
+[node name="Benchwarmer70" parent="." index="64" instance=ExtResource( 2 )]
+position = Vector2( 922, 266 )
+group_label = 3
+
+[node name="Benchwarmer71" parent="." index="65" instance=ExtResource( 2 )]
+position = Vector2( 928, 189 )
+
+[node name="Benchwarmer72" parent="." index="66" instance=ExtResource( 2 )]
+position = Vector2( 923, 143 )
+
+[node name="Benchwarmer73" parent="." index="67" instance=ExtResource( 2 )]
+position = Vector2( 925, 76 )
+group_label = 3
+
+[node name="Benchwarmer74" parent="." index="68" instance=ExtResource( 2 )]
+position = Vector2( 932, 263 )
+group_label = 3
+
+[node name="Benchwarmer75" parent="." index="69" instance=ExtResource( 2 )]
+position = Vector2( 914, 226 )
+
+[node name="Benchwarmer76" parent="." index="70" instance=ExtResource( 2 )]
+position = Vector2( 915, 131 )
+
+[node name="Benchwarmer77" parent="." index="71" instance=ExtResource( 2 )]
+position = Vector2( 928, 98 )
+group_label = 3
+
+[node name="Benchwarmer78" parent="." index="72" instance=ExtResource( 2 )]
+position = Vector2( 934, 290 )
+group_label = 3
+
+[node name="Benchwarmer79" parent="." index="73" instance=ExtResource( 2 )]
+position = Vector2( 912, 208 )
+
+[node name="Benchwarmer80" parent="." index="74" instance=ExtResource( 2 )]
+position = Vector2( 913, 143 )
+
+[node name="Benchwarmer81" parent="." index="75" instance=ExtResource( 2 )]
+position = Vector2( 908, 107 )
+group_label = 3
+
+[node name="Benchwarmer82" parent="." index="76" instance=ExtResource( 2 )]
+position = Vector2( 916, 254 )
+group_label = 3

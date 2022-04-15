@@ -14,7 +14,7 @@ var burst = false
 var t = 0
 
 var splat_sfx = preload("res://Assets/Sounds/SFX/golden_lob_splat_sfx2.wav")
-var sfx_scene = preload("res://Scenes/SFX.tscn")
+var sfx_scene = preload("res://Scenes/Other/SFX.tscn")
 
 var Golden1 = false
 

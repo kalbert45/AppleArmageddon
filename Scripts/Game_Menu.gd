@@ -12,7 +12,7 @@ onready var menu_button = $Menu_Button
 
 var active = false
 
-var defeat_screen_scene = preload("res://Scenes/Defeat_Screen.tscn")
+var defeat_screen_scene = preload("res://Scenes/Other/Defeat_Screen.tscn")
 
 func _ready():
 	resume()

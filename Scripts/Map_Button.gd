@@ -21,9 +21,30 @@ func _ready():
 			button.texture_pressed = load("res://Assets/Sprites/GUI/map_question_button_pressed.png")
 			button.texture_disabled = load("res://Assets/Sprites/GUI/map_question_button_disabled.png")
 		"Augment":
-			pass
+			button.texture_normal = load("res://Assets/Sprites/GUI/map_augment_button.png")
+			button.texture_hover = load("res://Assets/Sprites/GUI/map_augment_button_hovered.png")
+			button.texture_pressed = load("res://Assets/Sprites/GUI/map_augment_button_pressed.png")
+			button.texture_disabled = load("res://Assets/Sprites/GUI/map_augment_button_disabled.png")
+		"Boss":
+			button.texture_normal = load("res://Assets/Sprites/GUI/map_boss_button.png")
+			button.texture_hover = load("res://Assets/Sprites/GUI/map_boss_button_hovered.png")
+			button.texture_pressed = load("res://Assets/Sprites/GUI/map_boss_button_pressed.png")
+			button.texture_disabled = load("res://Assets/Sprites/GUI/map_boss_button_disabled.png")
+
+func clear():
+	button.texture_disabled = load("res://Assets/Sprites/GUI/stage_cleared.png")
+	
+func possible():
+	match type:
+		"Normal":
+			button.texture_disabled = load("res://Assets/Sprites/GUI/map_button_possible.png")
+		"Question":
+			button.texture_disabled = load("res://Assets/Sprites/GUI/map_question_button_possible.png")
+		"Augment":
+			button.texture_disabled = load("res://Assets/Sprites/GUI/map_augment_button_possible.png")
 		"Boss":
 			pass
+	
 	
 func undisable():
 	disabled = false

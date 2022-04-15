@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Scenes/Enemy_Scenes/Enemy_Scene.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Scenes/Enemy_Scenes/Benchwarmers/Benchwarmer.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Scripts/Regular_Enemy_Stage.gd" type="Script" id=3]
+
+[node name="Enemies1_2" instance=ExtResource( 1 )]
+script = ExtResource( 3 )
+
+[node name="Background" parent="." index="0"]
+visible = false
+
+[node name="Benchwarmer3" parent="." index="1" instance=ExtResource( 2 )]
+position = Vector2( 1107, 222 )
+enemy_label = 1
+
+[node name="Benchwarmer4" parent="." index="2" instance=ExtResource( 2 )]
+position = Vector2( 1058, 177 )
+enemy_label = 1
+group_label = 1
+
+[node name="Benchwarmer5" parent="." index="3" instance=ExtResource( 2 )]
+position = Vector2( 1057, 223 )
+enemy_label = 1
+group_label = 1
+
+[node name="Benchwarmer6" parent="." index="4" instance=ExtResource( 2 )]
+position = Vector2( 1108, 176 )
+enemy_label = 1

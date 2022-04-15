@@ -17,6 +17,7 @@ var _timer = null
 var retarget_loop = true
 #temp
 var active = false
+var bound = true
 var first_target = false
 
 var speed = 0
@@ -31,8 +32,8 @@ var attacking = false
 var casting = false
 #----------------------------------------------------------
 # Unit stats
-var max_hp = 100
-var current_hp = 100
+var max_hp = 120
+var current_hp = 120
 
 var attack_damage = 10
 var attack_speed = 0
@@ -75,13 +76,14 @@ onready var sfx = $SFX
 onready var hp_bar = $Bars/HP_Bar
 onready var juice_bar = $Bars/Juice_Bar
 onready var raycasts_node = $Raycasts
+onready var sprite = $Sprite
 
 var attack_sfx = preload("res://Assets/Sounds/SFX/green_attack_sfx.wav")
 var cast_sfx = preload("res://Assets/Sounds/SFX/green_cast_sfx.wav")
 var picture = preload("res://Assets/Sprites/green2.png")
 
-var damage_number_scene = preload("res://Scenes/Damage_Number.tscn")
-var apple_death_scene = preload("res://Scenes/Apple_Death.tscn")
+var damage_number_scene = preload("res://Scenes/Other/Damage_Number.tscn")
+var apple_death_scene = preload("res://Scenes/Other/Apple_Death.tscn")
 
 #-------------------------------------------------------------
 
@@ -161,21 +163,21 @@ func process_stat_values(_delta):
 # process mouse_input
 func process_mouse(_delta):
 	if mouse_hover or mouse_select:
-		$Sprite.material.set_shader_param("width", 1.0)
-		$Sprite.z_index = 1
+		sprite.material.set_shader_param("width", 1.0)
+		sprite.z_index = 1
 	else:
-		$Sprite.material.set_shader_param("width", 0.0)
-		$Sprite.z_index = 0
+		sprite.material.set_shader_param("width", 0.0)
+		sprite.z_index = 0
 		
 	if position_invalid:
-		$Sprite.material.set_shader_param("outline_color", Color(1,0.2,0.2,1))
+		sprite.material.set_shader_param("outline_color", Color(1,0.2,0.2,1))
 	elif mouse_select:
-		$Sprite.material.set_shader_param("outline_color", Color(1,0.75,0.2,1))
+		sprite.material.set_shader_param("outline_color", Color(1,0.75,0.2,1))
 	else:
-		$Sprite.material.set_shader_param("outline_color", Color(0.99,1,0.25,1))
+		sprite.material.set_shader_param("outline_color", Color(0.99,1,0.25,1))
 		
 	# Keep character in window
-	if not active:
+	if bound:
 		global_position.x = clamp(global_position.x, 0, get_viewport().size.x)
 		global_position.y = clamp(global_position.y, 0, get_viewport().size.y)
 	else:
@@ -198,7 +200,7 @@ func process_movement(delta):
 	#if animation_manager.current_state != CAST_ANIM_NAME:
 	# Movement towards target
 	if (target != null) and (!attacking):
-		$Sprite.set_flip_h(global_position.x > target.global_position.x)
+		sprite.set_flip_h(global_position.x > target.global_position.x)
 		speed += ACCEL * delta
 		direction += calculate_local_avoidance()
 		direction += (15/global_position.distance_to(target.global_position))*(target.global_position - global_position)
@@ -208,7 +210,7 @@ func process_movement(delta):
 		
 	# Attack target
 	elif (target != null) and attacking:
-		$Sprite.set_flip_h(global_position.x > target.global_position.x)
+		sprite.set_flip_h(global_position.x > target.global_position.x)
 		speed -= DEACCEL * delta
 
 		direction += (15/global_position.distance_to(target.global_position))*(target.global_position - global_position)
@@ -239,10 +241,7 @@ func process_movement(delta):
 	velocity += knock_direction * knock_speed
 	velocity = move_and_slide(velocity)
 	
-	if $Sprite.flip_h:
-		$Sprite.position = Vector2(6, 0)
-	else:
-		$Sprite.position = Vector2(0, 0)
+
 	
 	if knock_speed > 0:
 		knock_speed -= 100 * delta
@@ -348,9 +347,13 @@ func cast_attack():
 	#var heal_target = self
 	#var min_hp = -1
 	var bodies = attack_range.get_overlapping_bodies()
+	var counter = 0
 	for body in bodies:
 		if body.is_in_group("Units"):
 			body.heal(self, attack_damage)
+			counter += 1
+			if counter >= 10:
+				break
 	#		if min_hp < 0:
 	#			heal_target = body
 	#			min_hp = body.current_hp
@@ -377,16 +380,19 @@ func attack_hit(enemy, damage, knock, knock_power=50):
 			knock_direction = (position - enemy.position).normalized()
 			knock_speed = knock_power
 	
-	var dist = position.distance_to(enemy.position)
+	var dist
+	if is_instance_valid(enemy):
+		dist = position.distance_to(enemy.position)
+	else:
+		dist = 120
 	dist = clamp(dist, 0, 120)
 	var mitigation = defense * (dist / 120)
-	
 	var dmg = damage - mitigation
 	dmg = clamp(dmg, 0, damage)
 	current_hp -= dmg
 	hp_bar.value = current_hp
 	if current_hp <= 0:
-		die(dmg)
+		die()
 	
 	#var damage_number = damage_number_scene.instance()
 	#damage_number.amount = dmg
@@ -404,7 +410,7 @@ func heal(unit, amount):
 	damage_number.type = "Heal"
 	add_child(damage_number)
 		
-func die(damage):
+func die():
 	emit_signal("death")
 	
 	var apple_death = apple_death_scene.instance()

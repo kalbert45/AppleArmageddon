@@ -78,9 +78,9 @@ var attack_sfx = preload("res://Assets/Sounds/SFX/rifle_sfx2.wav")
 var picture = preload("res://Assets/Sprites/turret.png")
 
 #var damage_number_scene = preload("res://Scenes/Damage_Number.tscn")
-var apple_death_scene = preload("res://Scenes/Turret_Death.tscn")
+var apple_death_scene = preload("res://Scenes/Other/Turret_Death.tscn")
 var rifleman_scene = preload("res://Scenes/Enemies/Rifleman.tscn")
-var bullet_scene = preload("res://Scenes/Rifle_Bullet.tscn")
+var bullet_scene = preload("res://Scenes/Other/Rifle_Bullet.tscn")
 
 #-------------------------------------------------------------
 

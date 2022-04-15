@@ -25,8 +25,8 @@ var dragging = false
 
 var shop
 
-var unit_UI_scene = preload("res://Scenes/Unit_Interface.tscn")
-var enemy_UI_scene = preload("res://Scenes/Enemy_Interface.tscn")
+var unit_UI_scene = preload("res://Scenes/Other/Unit_Interface.tscn")
+var enemy_UI_scene = preload("res://Scenes/Other/Enemy_Interface.tscn")
 var unit_UI
 var enemy_UI
 
@@ -303,19 +303,20 @@ func _physics_process(_delta):
 	#--------------------------------------------
 	# Upgrade button
 	if not selected.empty():
-		if selected[0].is_in_group("Units"):
-			if selected[0].upgradable:
-				var enable_button = true
-				var unit_label = selected[0].label
-				for unit in selected:
-					if unit.label != unit_label:
-						enable_button = false
-						break
-				if enable_button:
-					unit_UI.upgrade_disabled = false
-				else:
-					unit_UI.upgrade_disabled = true
-				unit_UI.update_upgrade()
+		if is_instance_valid(selected[0]):
+			if selected[0].is_in_group("Units"):
+				if selected[0].upgradable:
+					var enable_button = true
+					var unit_label = selected[0].label
+					for unit in selected:
+						if unit.label != unit_label:
+							enable_button = false
+							break
+					if enable_button:
+						unit_UI.upgrade_disabled = false
+					else:
+						unit_UI.upgrade_disabled = true
+					unit_UI.update_upgrade()
 	else:
 		unit_UI.upgrade_disabled = true
 		unit_UI.update_upgrade()
@@ -338,7 +339,7 @@ func _physics_process(_delta):
 	# unit upgrades
 	if not unit_UI.upgrade_disabled:
 		if Input.is_action_just_pressed("upgrade"):
-			if not selected[0].active:
+			if selected[0].bound:
 				selected[0].upgrade()
 				selected.remove(0)
 			

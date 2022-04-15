@@ -35,10 +35,10 @@ var casting = false
 var max_hp = 100
 var current_hp = 100
 
-var attack_damage = 20
+var attack_damage = 30
 var attack_speed = 1.0
 var defense = 0
-var movement_speed = 60
+var movement_speed = 90
 
 
 
@@ -54,10 +54,10 @@ var mouse_select = false
 #-****************************************************---
 #--------------------------------------------------------
 
-var label = "Rifleman"
+var label = "Rifleman Horseback"
 var description = "Shoots heavy bullets that knock apples backwards a short distance."
 
-const BLOOD = 10
+const BLOOD = 9
 #------------------------------------------------------
 
 onready var attack_range = $Attack_Range
@@ -69,9 +69,9 @@ onready var hp_bar = $Bars/HP_Bar
 var attack_sfx = preload("res://Assets/Sounds/SFX/rifle_sfx2.wav")
 var picture = preload("res://Assets/Sprites/rifleman.png")
 
-var damage_number_scene = preload("res://Scenes/Damage_Number.tscn")
-var apple_death_scene = preload("res://Scenes/Person_Death.tscn")
-var bullet_scene = preload("res://Scenes/Rifle_Bullet.tscn")
+var damage_number_scene = preload("res://Scenes/Other/Damage_Number.tscn")
+var apple_death_scene = preload("res://Scenes/Other/Person_Death.tscn")
+var bullet_scene = preload("res://Scenes/Other/Rifle_Bullet.tscn")
 
 #-------------------------------------------------------------
 
@@ -319,7 +319,11 @@ func attack_hit(enemy, damage, knock, knock_power=50):
 		knock_direction = (position - enemy.position).normalized()
 		knock_speed = knock_power
 	
-	var dist = position.distance_to(enemy.position)
+	var dist
+	if is_instance_valid(enemy):
+		dist = position.distance_to(enemy.position)
+	else:
+		dist = 120
 	dist = clamp(dist, 0, 120)
 	var mitigation = defense * (dist / 120)
 	

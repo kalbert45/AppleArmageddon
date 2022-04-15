@@ -1,6 +1,6 @@
 extends Node2D
 
-signal update_money
+#signal update_money
 signal new_unit(unit)
 
 var disabled = false
@@ -23,8 +23,8 @@ var tree_shake_sfx1 = preload("res://Assets/Sounds/SFX/tree_shake_sfx1.wav")
 var tree_shake_sfx2 = preload("res://Assets/Sounds/SFX/tree_shake_sfx2.wav")
 var tree_shake_sfx3 = preload("res://Assets/Sounds/SFX/tree_shake_sfx3.wav")
 
-var sfx_scene = preload("res://Scenes/SFX.tscn")
-var shop_sprite_scene = preload("res://Scenes/Shop_Sprite.tscn")
+var sfx_scene = preload("res://Scenes/Other/SFX.tscn")
+var shop_sprite_scene = preload("res://Scenes/Other/Shop_Sprite.tscn")
 var shop_sprite
 
 # store scene, shop sprite, price in each variable
@@ -101,7 +101,7 @@ func reroll_shop():
 		return
 		
 	Global.money -= 1
-	emit_signal("update_money")
+	#emit_signal("update_money")
 	
 	for i in range(shop_spots.size()):
 		if is_instance_valid(shop_spots[i]):
@@ -138,7 +138,7 @@ func buy_unit(unit):
 		return
 
 	Global.money -= unit.price
-	emit_signal("update_money")
+	#emit_signal("update_money")
 	
 	var new_unit = unit.unit_scene.instance()
 	new_unit.initial_pos = unit.global_position
@@ -164,7 +164,7 @@ func sell_unit(unit):
 	eat = true
 	unit.die(-1)
 	Global.money += 1
-	emit_signal("update_money")
+	#emit_signal("update_money")
 	
 	var i = randi() % 2
 	if i == 0:
@@ -208,6 +208,7 @@ func disable():
 func enable():
 	animation_player.play("Intro")
 	disabled = false
+	Global.money += 1
 	reroll_shop()
 
 func speak():

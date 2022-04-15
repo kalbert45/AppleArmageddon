@@ -1,6 +1,6 @@
 extends Node2D
 
-signal update_money
+#signal update_money
 signal stage_cleared
 signal defeat
 signal enable_all
@@ -13,9 +13,9 @@ var units
 var difficulty = 0
 
 var enemy_scene = null
-var enemy_generator_scene = preload("res://Scenes/Enemy_Generator.tscn")
+var enemy_generator_scene = preload("res://Scenes/Other/Enemy_Generator.tscn")
 
-var shop_scene = preload("res://Scenes/Shop.tscn")
+var shop_scene = preload("res://Scenes/Other/Shop.tscn")
 var shop
 
 var apple_scene = preload("res://Scenes/Units/Apple.tscn")
@@ -33,13 +33,16 @@ var big_pink_scene = preload("res://Scenes/Units/Big_Pink.tscn")
 onready var units_node = $TileMap/YSort
 
 func _ready():
+	var enemy_generator = enemy_generator_scene.instance()
+	var enemy_node
 	if enemy_scene == null:
-		var enemy_generator = enemy_generator_scene.instance()
-		enemy_generator.generate_enemies(difficulty, units_node)
-		enemy_generator.queue_free()
+		enemy_node = enemy_generator.generate_enemies(difficulty, units_node)
 	else:
-		var enemy_node = enemy_scene.instance()
-		units_node.add_child(enemy_node)
+		enemy_node = enemy_generator.generate_enemies(difficulty, units_node, enemy_scene)
+	enemy_generator.queue_free()
+	units_node.add_child(enemy_node)
+	#yield(enemy_node, "ready")
+	if enemy_node.has_signal("dialog_end"):
 		enemy_node.connect("dialog_end", self, "_on_dialog_end")
 	
 	enemies = get_tree().get_nodes_in_group("Enemies")
@@ -47,7 +50,8 @@ func _ready():
 	
 	for enemy in enemies:
 		enemy.connect("death", self, "_on_enemy_death")
-		enemy.connect("spawn_enemies", self, "_on_enemy_spawn")
+		if enemy.has_signal("spawn_enemies"):
+			enemy.connect("spawn_enemies", self, "_on_enemy_spawn")
 	for unit in units:
 		unit.connect("death", self, "_on_unit_death")
 		unit.connect("new_unit", self, "_on_new_unit")
@@ -55,21 +59,21 @@ func _ready():
 	shop = shop_scene.instance()
 	shop.global_position = Vector2(480, 40)
 	shop.units_node_target = units_node
-	shop.connect("update_money", self, "_on_update_money")
+	#shop.connect("update_money", self, "_on_update_money")
 	shop.connect("new_unit", self, "_on_new_unit")
 	if intro:
 		shop.disabled = true
 	$TileMap.add_child(shop)
 	
 func _on_enemy_death():
-	emit_signal("update_money")
+	#emit_signal("update_money")
+	yield(get_tree().create_timer(0.5), "timeout")
 	enemies = get_tree().get_nodes_in_group("Enemies")
-	if enemies.size() <= 1:
-		yield(get_tree().create_timer(0.5), "timeout")
-		enemies = get_tree().get_nodes_in_group("Enemies")
-		if enemies.empty():
-			#Global.money += 20 * (difficulty + 1)
-			emit_signal("stage_cleared")
+	if enemies.empty():
+		units = get_tree().get_nodes_in_group("Units")
+		for unit in units:
+			unit.active = false
+		emit_signal("stage_cleared")
 
 func _on_enemy_spawn():
 	enemies = get_tree().get_nodes_in_group("Enemies")
@@ -94,6 +98,8 @@ func load_data():
 	for unit in Global.units:
 		var instance = unit[0].instance()
 		instance.initial_pos = unit[1]
+		instance.current_hp = unit[2]
+		instance.current_mana = unit[3]
 		
 		#Augments
 		if Global.augments["General0"]:
@@ -117,38 +123,38 @@ func save_data():
 	for unit in get_tree().get_nodes_in_group("Units"):
 		match unit.label:
 			"Apple":
-				units.append([apple_scene, unit.initial_pos])
+				units.append([apple_scene, unit.initial_pos, unit.current_hp, unit.current_mana])
 			"Crabapple":
-				units.append([crabapple_scene, unit.initial_pos])
+				units.append([crabapple_scene, unit.initial_pos, unit.current_hp, unit.current_mana])
 			"Golden":
-				units.append([golden_scene, unit.initial_pos])
+				units.append([golden_scene, unit.initial_pos, unit.current_hp, unit.current_mana])
 			"Green":
-				units.append([green_scene, unit.initial_pos])
+				units.append([green_scene, unit.initial_pos, unit.current_hp, unit.current_mana])
 			"Pink":
-				units.append([pink_scene, unit.initial_pos])
+				units.append([pink_scene, unit.initial_pos, unit.current_hp, unit.current_mana])
 				
 			"Brappler":
-				units.append([big_apple_scene, unit.initial_pos])
+				units.append([big_apple_scene, unit.initial_pos, unit.current_hp, unit.current_mana])
 			"Golden Malicious":
-				units.append([big_golden_scene, unit.initial_pos])
+				units.append([big_golden_scene, unit.initial_pos, unit.current_hp, unit.current_mana])
 			"Dogapple":
-				units.append([big_crabapple_scene, unit.initial_pos])
+				units.append([big_crabapple_scene, unit.initial_pos, unit.current_hp, unit.current_mana])
 			"Big Green":
-				units.append([big_green_scene, unit.initial_pos])
+				units.append([big_green_scene, unit.initial_pos, unit.current_hp, unit.current_mana])
 			"Big Pink":
-				units.append([big_pink_scene, unit.initial_pos])
+				units.append([big_pink_scene, unit.initial_pos, unit.current_hp, unit.current_mana])
 				
 		
 	Global.units = units
 
-func _on_update_money():
-	emit_signal("update_money")
+#func _on_update_money():
+#	emit_signal("update_money")
 	
 func _on_new_unit(unit):
-	emit_signal("update_money")
 	unit.connect("death", self, "_on_unit_death")
 	if unit.has_signal("new_unit"):
 		unit.connect("new_unit", self, "_on_new_unit")
+	#emit_signal("update_money")
 	
 func disable_shop():
 	shop.disable()
@@ -158,7 +164,6 @@ func _on_dialog_end(timeline_name):
 		"intro_timeline":
 			activate = true
 			_on_enemy_spawn()
-			
 			
 func _input(event):
 	if activate:

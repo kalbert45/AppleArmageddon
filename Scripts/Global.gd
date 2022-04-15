@@ -9,6 +9,8 @@ var current_point = null
 var current_path = []
 var map_stages = {}
 
+const MAX_DIFFICULTY = 5
+
 # Augments:
 #Red0: red apples invulnerable to knockback
 #Red1: red apples explode on death
@@ -35,6 +37,7 @@ var augments = {"Red0": false, "Red1":false,
 				"General0": false, "General1":false,"General2": false, "General3":false
 				}
 
+
 const AUGMENT_TEXT = {"Red0":"All red apples are invulnerable to knockback", 
 					"Red1":"Red apples explode upon death dealing 10% of their maximum hp",
 					"Green0":"Green apples only require half the juice to cast",
@@ -50,6 +53,27 @@ const AUGMENT_TEXT = {"Red0":"All red apples are invulnerable to knockback",
 					"General2":"All apples gain 2 power",
 					"General3":"All apples gain up to 50% attack speed as hp decreases (maximum at 20% hp)",
 					"Add_blood":"Gain 40 blood",
+					}
+
+const UNIT_TEXT = {"Apple": "[color=teal]Attack[/color]: Deal damage equal to [color=#b13e53]POWER[/color]\n[color=teal]Range[/color]: Close",
+				"Brappler": "[color=teal]Attack[/color]: Deal damage equal to [color=#b13e53]POWER[/color]\n[color=teal]Range[/color]: Close\n[color=teal]Special[/color]: When moving at a certain speed, gain 10 defense",
+				"Green": "[color=teal]Attack[/color]: Deal damage equal to [color=#b13e53]POWER[/color]\n[color=teal]Range[/color]: Mid\n[color=teal]Cast[/color]: Heal the lowest hp target for 6*[color=#b13e53]POWER[/color]",
+				"Big Green": "[color=teal]Range[/color]: Mid\n[color=teal]Cast[/color]: Heal up to 10 apples for [color=#b13e53]POWER[/color]\n[color=teal]Special[/color]: Does not attack, but gains 10 juice per second",
+				"Pink": "[color=teal]Attack[/color]: Deal damage and knockback\n[color=teal]Range[/color]: Mid",
+				"Big Pink": "[color=teal]Attack[/color]: Deal damage and knockback\n[color=teal]Range[/color]: Mid\n[color=teal]Cast[/color]: Swipe front area for 2*[color=#b13e53]POWER[/color]",
+				"Golden": "[color=teal]Attack[/color]: Deal damage equal to [color=#b13e53]POWER[/color]\n[color=teal]Range[/color]: Far\n[color=teal]Cast[/color]: Fire a juice lob that hits an area for [color=#b13e53]POWER[/color]",
+				"Golden Malicious": "[color=teal]Attack[/color]: Deal damage equal to [color=#b13e53]POWER[/color]\n[color=teal]Range[/color]: Far\n[color=teal]Cast[/color]: Fire a juice(?) lob that hits an area for [color=#b13e53]POWER[/color]",
+				"Crabapple": "[color=teal]Attack[/color]: Deal damage equal to [color=#b13e53]POWER[/color]\n[color=teal]Range[/color]: Close\n[color=teal]Special[/color]: Runs until hitting an enemy or the right stage end",
+				"Dogapple": "[color=teal]Attack[/color]: Deal damage equal to [color=#b13e53]POWER[/color]\n[color=teal]Range[/color]: Close"
+				}
+
+const ENEMY_TEXT = {"Axeman": "[color=teal]Attack[/color]: Deal damage equal to [color=#b13e53]POWER[/color]\n[color=teal]Range[/color]: Close",
+					"Gunman": "[color=teal]Attack[/color]: Deal damage equal to [color=#b13e53]POWER[/color]\n[color=teal]Range[/color]: Far",
+					"Grunt":"[color=teal]Attack[/color]: Deal damage and knockback\n[color=teal]Range[/color]: Close",
+					"Molotovman": "[color=teal]Attack[/color]: Throw a molotov that deals [color=#b13e53]POWER[/color] damage in an area\n [color=teal]Range[/color]: Far",
+					"Rifleman": "[color=teal]Attack[/color]: Deal damage and knockback\n[color=teal]Range[/color]: Far",
+					"Rifleman Horseback": "[color=teal]Attack[/color]: Deal damage equal to [color=#b13e53]POWER[/color]\n[color=teal]Range[/color]: Far",
+					"Tractor": "[color=teal]Attack[/color]: Deal damage and knockback in an area\n[color=teal]Range[/color]: Close"
 					}
 
 # timelines. boolean for animation or not
