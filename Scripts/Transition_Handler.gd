@@ -2,14 +2,17 @@ extends CanvasLayer
 
 onready var animation_player = $AnimationPlayer
 onready var color_rect = $ColorRect
+onready var color_rect2 = $ColorRect2
 
 func _ready():
 	color_rect.visible = false
+	color_rect2.visible = false
 	
 # from scenes array to free, to scenes array of arrays along with parents
 func transition(from_scenes, to_scenes):
 	get_tree().paused = true
 	color_rect.visible = true
+	color_rect2.visible = true
 	animation_player.play("fade_out")
 	yield(animation_player, "animation_finished")
 	for from_scene in from_scenes:

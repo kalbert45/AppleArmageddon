@@ -28,7 +28,7 @@ func _on_VisibilityNotifier2D_screen_exited():
 
 func spawn_unit():
 	var gunman = load("res://Scenes/Enemies/Gunman.tscn").instance()
-	gunman.position = Vector2(1000, 180)
+	gunman.position = Vector2(1000, 120)
 	gunman.dialog_label = dialog_label
 	get_parent().add_child(gunman)
 	call_deferred("free")

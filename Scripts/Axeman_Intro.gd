@@ -30,7 +30,7 @@ func _on_VisibilityNotifier2D_screen_exited():
 func spawn_unit():
 	get_parent().get_node("Dialog_Handler").emit_signal("dialog_end")
 	var axeman = load("res://Scenes/Enemies/Axeman.tscn").instance()
-	axeman.position = Vector2(800, 180)
+	axeman.position = Vector2(940, 100)
 	axeman.flip_h = true
 	axeman.dialog_label = dialog_label
 	get_parent().add_child(axeman)

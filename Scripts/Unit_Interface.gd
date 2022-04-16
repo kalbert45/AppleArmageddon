@@ -19,6 +19,7 @@ onready var upgrade_button = $Upgrade_Rect/Upgrade_Button
 onready var hp_bar = $HP_Bar
 onready var hp_bar_label = $HP_Bar/Label2
 onready var juice_bar = $Juice_Bar
+onready var juice_bar_label = $Juice_Bar/Label2\
 
 func _ready():
 	upgrade_button.disabled = true
@@ -37,9 +38,9 @@ func set_initial_values(unit):
 		$Unit_Pic.texture = unit.picture
 		
 	if unit.max_mana == 1:
-		$Juice_Bar.visible = false
+		juice_bar.visible = false
 	else:
-		$Juice_Bar.visible = true
+		juice_bar.visible = true
 		
 	$Attack_Symbol/Label.text = str(unit.attack_damage)
 	$Defense_Symbol/Label.text = str(unit.defense)
@@ -48,7 +49,9 @@ func set_initial_values(unit):
 	hp_bar.value = int(unit.current_hp)
 	hp_bar.max_value = unit.max_hp
 	hp_bar_label.text = str(int(unit.current_hp)) + "/" + str(unit.max_hp)
+	juice_bar.value = int(unit.current_mana)
 	juice_bar.max_value = unit.max_mana
+	juice_bar_label.text = str(int(unit.current_mana)) + "/" + str(unit.max_mana)
 	
 func update_values():
 	if is_instance_valid(shown_unit):
@@ -58,7 +61,8 @@ func update_values():
 				upgrade_button.disabled = true
 		hp_bar.value = int(shown_unit.current_hp)
 		hp_bar_label.text = str(int(shown_unit.current_hp)) + "/" + str(shown_unit.max_hp)
-		juice_bar.value = shown_unit.current_mana
+		juice_bar.value = int(shown_unit.current_mana)
+		juice_bar_label.text = str(int(shown_unit.current_mana)) + "/" + str(shown_unit.max_mana)
 
 func update_upgrade():
 	upgrade_button.disabled = upgrade_disabled

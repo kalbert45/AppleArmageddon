@@ -5,6 +5,7 @@ var lifetime = 1
 var full_rotation = 0
 
 var source = null
+var source_position = Vector2.ZERO
 var target = Vector2.ZERO
 var curve_point = Vector2.ZERO
 
@@ -24,11 +25,13 @@ onready var splatter = $Splatter
 onready var tween = $Tween
 
 func _ready():
+	source_position = source.position
+	
 	lob.visible = true
 	splatter.visible = false
 	
 	rng.randomize()
-	curve_point = Vector2((source.position.x + target.x)/2, min(source.position.y, target.y) - 40)
+	curve_point = Vector2((source_position.x + target.x)/2, min(source_position.y, target.y) - 40)
 	full_rotation = rng.randi_range(-720,720) 
 	var scale_factor = rng.randf_range(1, 1.2)
 	scale = Vector2(scale_factor, scale_factor)
@@ -40,7 +43,7 @@ func _ready():
 func _process(delta):
 	if not burst:
 		rotation_degrees = lerp(0, full_rotation, t)
-		global_position = _quadratic_bezier(source.position, curve_point, target, t)
+		global_position = _quadratic_bezier(source_position, curve_point, target, t)
 		t += delta/lifetime
 		t = clamp(t, 0, 1)
 		

@@ -6,12 +6,16 @@ signal next_stage
 var pool = ["Add blood"]
 var choices = [null, null, null]
 
+onready var sfx = $SFX
+
 func _ready():
+	pool = ["Add blood"]
 	var possible_augments = Global.augments.keys()
 	for augment in possible_augments:
 		if Global.augments[augment]:
 			continue
-		pool.append(augment)
+		else:
+			pool.append(augment)
 
 	randomize()
 	for i in range(3):
@@ -33,27 +37,31 @@ func _on_Augment_Button1_pressed():
 	else:
 		Global.augments[choices[0]] = true
 	disable_buttons()
-
+	sfx.play()
 
 func _on_Augment_Button2_pressed():
-	if choices[0] == "Add Blood":
+	if choices[1] == "Add Blood":
 		Global.money += 40
 	else:
 		Global.augments[choices[1]] = true
 	disable_buttons()
+	sfx.play()
 
 
 func _on_Augment_Button3_pressed():
-	if choices[0] == "Add Blood":
+	if choices[2] == "Add Blood":
 		Global.money += 40
 	else:
 		Global.augments[choices[2]] = true
 	disable_buttons()
+	sfx.play()
 
 
 func _on_Continue_Button_pressed():
 	#print(Global.augments)
+	sfx.play()
 	emit_signal("next_stage")
+
 
 func disable_buttons():
 	$Augment_Button1.disabled = true

@@ -69,5 +69,6 @@ animation = "Idle"
 [node name="Tween" type="Tween" parent="."]
 
 [node name="SFX" type="AudioStreamPlayer" parent="."]
+pause_mode = 2
 stream = ExtResource( 4 )
 bus = "SFX"

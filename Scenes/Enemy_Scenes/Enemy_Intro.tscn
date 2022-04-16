@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Scenes/Enemy_Scenes/Enemy_Scene.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scenes/Enemy_Scenes/Benchwarmers/Axeman_Intro.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Scenes/Other/Dialog_Handler.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Scripts/Enemy_Intro.gd" type="Script" id=4]
 [ext_resource path="res://Scenes/Enemy_Scenes/Benchwarmers/Gunman_Intro.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Scenes/Enemies/Enemy_Dummy.tscn" type="PackedScene" id=6]
 
 [node name="Enemy_Scene" instance=ExtResource( 1 )]
 script = ExtResource( 4 )
@@ -21,3 +22,6 @@ dialog_label = 1
 
 [node name="Gunman_Intro" parent="." index="3" instance=ExtResource( 5 )]
 position = Vector2( 506, 98 )
+
+[node name="Enemy_Dummy" parent="." index="4" instance=ExtResource( 6 )]
+position = Vector2( 1028, 136 )

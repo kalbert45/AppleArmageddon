@@ -4,7 +4,8 @@ var damage = 10
 var lifetime = 1
 var full_rotation = 0
 
-var source = Vector2.ZERO
+var source = null
+var source_position = Vector2.ZERO
 var target = Vector2.ZERO
 var curve_point = Vector2.ZERO
 
@@ -26,7 +27,7 @@ func _ready():
 	splatter.visible = false
 	
 	rng.randomize()
-	curve_point = Vector2((source.x + target.x)/2, min(source.y, target.y) - 40)
+	curve_point = Vector2((source_position.x + target.x)/2, min(source_position.y, target.y) - 40)
 	full_rotation = rng.randi_range(-720,720) 
 	var scale_factor = rng.randf_range(1, 1.2)
 	scale = Vector2(scale_factor, scale_factor)
@@ -35,7 +36,7 @@ func _ready():
 func _process(delta):
 	if not burst:
 		rotation_degrees = lerp(0, full_rotation, t)
-		global_position = _quadratic_bezier(source, curve_point, target, t)
+		global_position = _quadratic_bezier(source_position, curve_point, target, t)
 		t += delta/lifetime
 		t = clamp(t, 0, 1)
 		
@@ -59,7 +60,7 @@ func explode():
 	var bodies = aoe.get_overlapping_bodies()
 	for body in bodies:
 		if body.is_in_group("Units"):
-			body.attack_hit(self, damage, false)
+			body.attack_hit(source, damage, false)
 			
 	tween.interpolate_property(self, 'modulate', Color(1,1,1,1), Color(1,1,1,0), 1, Tween.TRANS_LINEAR, Tween.TRANS_LINEAR, 1)
 	tween.start()

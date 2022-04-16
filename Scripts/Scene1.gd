@@ -156,6 +156,15 @@ func _on_new_unit(unit):
 		unit.connect("new_unit", self, "_on_new_unit")
 	#emit_signal("update_money")
 	
+	if Global.augments["General0"]:
+		unit.movement_speed += 10
+	if Global.augments["General1"]:
+		unit.General1 = true
+	if Global.augments["General2"]:
+		unit.attack_damage += 2
+	if Global.augments["General3"]:
+		unit.General3 = true
+	
 func disable_shop():
 	shop.disable()
 

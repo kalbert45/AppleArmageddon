@@ -127,7 +127,7 @@ margin_left = 34.0
 margin_top = 4.0
 margin_right = 114.0
 margin_bottom = 12.0
-value = 50.0
+value = 100.0
 texture_under = ExtResource( 8 )
 texture_over = ExtResource( 7 )
 texture_progress = ExtResource( 12 )
@@ -192,6 +192,19 @@ bbcode_enabled = true
 bbcode_text = "[color=black]JUICE[/color]"
 text = "JUICE"
 scroll_active = false
+
+[node name="Label2" type="Label" parent="Juice_Bar"]
+margin_left = 38.0
+margin_top = -3.0
+margin_right = 78.0
+margin_bottom = 11.0
+grow_horizontal = 0
+theme = ExtResource( 16 )
+text = "100/100"
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Tooltip" type="NinePatchRect" parent="."]
 margin_top = -28.0

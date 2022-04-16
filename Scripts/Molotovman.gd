@@ -289,7 +289,8 @@ func basic_attack():
 	if target != null:
 		var lob = lob_scene.instance()
 		lob.damage = attack_damage
-		lob.source = $Bullet_Position.global_position
+		lob.source = self
+		lob.source_position = $Bullet_Position.global_position
 		lob.target = target.global_position
 		get_parent().add_child(lob)
 		

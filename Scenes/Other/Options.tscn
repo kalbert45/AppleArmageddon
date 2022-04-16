@@ -1,0 +1,97 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Assets/Themes/GUI_Label_Theme.tres" type="Theme" id=1]
+[ext_resource path="res://Assets/Themes/menu_button_theme.tres" type="Theme" id=2]
+[ext_resource path="res://Scripts/Options.gd" type="Script" id=3]
+
+[node name="Options" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+margin_left = 244.0
+margin_top = 110.0
+margin_right = 404.0
+margin_bottom = 198.0
+custom_constants/separation = 20
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Master_Slider" type="HSlider" parent="VBoxContainer"]
+margin_right = 160.0
+margin_bottom = 16.0
+max_value = 1.0
+step = 0.01
+
+[node name="Label" type="Label" parent="VBoxContainer/Master_Slider"]
+margin_top = -15.0
+margin_right = 160.0
+margin_bottom = -2.0
+theme = ExtResource( 1 )
+text = "Master"
+align = 1
+valign = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Music_Slider" type="HSlider" parent="VBoxContainer"]
+margin_top = 36.0
+margin_right = 160.0
+margin_bottom = 52.0
+max_value = 1.0
+step = 0.01
+
+[node name="Label2" type="Label" parent="VBoxContainer/Music_Slider"]
+margin_top = -15.0
+margin_right = 160.0
+margin_bottom = -1.0
+theme = ExtResource( 1 )
+text = "Music/Ambience"
+align = 1
+valign = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Sound_Slider" type="HSlider" parent="VBoxContainer"]
+margin_top = 72.0
+margin_right = 160.0
+margin_bottom = 88.0
+max_value = 1.0
+step = 0.01
+
+[node name="Label3" type="Label" parent="VBoxContainer/Sound_Slider"]
+margin_top = -15.0
+margin_right = 160.0
+margin_bottom = -1.0
+theme = ExtResource( 1 )
+text = "Sound"
+align = 1
+valign = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Back_Button" type="Button" parent="."]
+margin_left = 284.0
+margin_top = 228.0
+margin_right = 364.0
+margin_bottom = 247.0
+focus_mode = 0
+theme = ExtResource( 2 )
+enabled_focus_mode = 0
+text = "Back"
+flat = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="value_changed" from="VBoxContainer/Master_Slider" to="." method="_on_Master_Slider_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/Music_Slider" to="." method="_on_Music_Slider_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/Sound_Slider" to="." method="_on_Sound_Slider_value_changed"]
