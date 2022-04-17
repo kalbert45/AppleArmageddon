@@ -38,7 +38,7 @@ func _ready():
 
 	if Golden1:
 		scale *= 1.6
-		$AOE/CollisionShape2D.shape.radius += 15
+		#$AOE/CollisionShape2D.shape.radius += 15
 	
 func _process(delta):
 	if not burst:

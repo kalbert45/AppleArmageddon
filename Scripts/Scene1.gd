@@ -82,13 +82,10 @@ func _on_enemy_spawn():
 			enemy.connect("death", self, "_on_enemy_death")
 		
 func _on_unit_death():
-	
+	yield(get_tree().create_timer(0.5), "timeout")
 	units = get_tree().get_nodes_in_group("Units")
-	if units.size() <= 1:
-		yield(get_tree().create_timer(0.5), "timeout")
-		units = get_tree().get_nodes_in_group("Units")
-		if units.empty():
-			emit_signal("defeat")
+	if units.empty():
+		emit_signal("defeat")
 
 # saved_data is dictionary with keys: Money, Units, Enemies, Tilemap
 func load_data():

@@ -33,8 +33,20 @@ func _ready():
 		back_button.disabled = true
 		back_button.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		play_button.disabled = true
+		
+func _process(delta):
+	if not disabled:
+		if get_tree().get_nodes_in_group("Units").empty():
+
+			play_button.disabled = true
+			play_button.visible = false
+		else:
+
+			play_button.disabled = false
+			play_button.visible = true
 	
 func enable():
+	disabled = false
 	scout_button.disabled = false
 	play_button.disabled = false
 	
@@ -74,6 +86,7 @@ func _on_Play_Button_pressed():
 	tween.interpolate_property(scout_button, "modulate", scout_button.modulate, Color(1,1,1,0), 0.4, Tween.TRANS_LINEAR, Tween.EASE_OUT)
 	tween.interpolate_property(back_button, "modulate", back_button.modulate, Color(1,1,1,0), 0.4, Tween.TRANS_LINEAR, Tween.EASE_OUT)
 	tween.interpolate_property(play_button, "modulate", play_button.modulate, Color(1,1,1,0), 0.4, Tween.TRANS_LINEAR, Tween.EASE_OUT)
+	tween.interpolate_property(play_button, "rect_position", play_button.rect_position, play_button.rect_position + Vector2(50, 0), 0.4, Tween.TRANS_LINEAR, Tween.EASE_OUT)
 	tween.start()
 	
 	for unit in get_tree().get_nodes_in_group("Units"):
@@ -83,6 +96,7 @@ func _on_Play_Button_pressed():
 		enemy.active = true
 		
 	emit_signal("disable_shop")
+	disabled = true
 
 
 func _on_Next_Stage_Button_pressed():

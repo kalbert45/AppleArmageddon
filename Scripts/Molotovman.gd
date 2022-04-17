@@ -65,6 +65,8 @@ onready var animation_manager = $AnimationPlayer
 onready var sfx = $SFX
 onready var raycasts_node = $Raycasts
 onready var hp_bar = $Bars/HP_Bar
+onready var sprite = $Sprite
+onready var bullet_position = $Bullet_Position
 
 var attack_sfx = preload("res://Assets/Sounds/SFX/rifle_sfx2.wav")
 var picture = preload("res://Assets/Sprites/rifleman.png")
@@ -120,16 +122,16 @@ func _physics_process(delta):
 # process mouse_input
 func process_mouse(_delta):
 	if mouse_hover or mouse_select:
-		$Sprite.material.set_shader_param("width", 1.0)
-		$Sprite.z_index = 1
+		sprite.material.set_shader_param("width", 1.0)
+		sprite.z_index = 1
 	else:
-		$Sprite.material.set_shader_param("width", 0.0)
-		$Sprite.z_index = 0
+		sprite.material.set_shader_param("width", 0.0)
+		sprite.z_index = 0
 		
 	if mouse_select:
-		$Sprite.material.set_shader_param("outline_color", Color(1,0.2,0.2,1))
+		sprite.material.set_shader_param("outline_color", Color(1,0.2,0.2,1))
 	else:
-		$Sprite.material.set_shader_param("outline_color", Color(1,0.2,0.2,1))
+		sprite.material.set_shader_param("outline_color", Color(1,0.2,0.2,1))
 		
 	# Keep character in window
 
@@ -152,7 +154,7 @@ func process_movement(delta):
 	if animation_manager.current_state != CAST_ANIM_NAME:
 		# Movement towards target
 		if (target != null) and (!attacking):
-			$Sprite.set_flip_h(global_position.x < target.global_position.x)
+			sprite.set_flip_h(global_position.x < target.global_position.x)
 			speed += ACCEL * delta
 			direction += calculate_local_avoidance()
 			direction += (15/global_position.distance_to(target.global_position))*(target.global_position - global_position)
@@ -162,7 +164,7 @@ func process_movement(delta):
 			
 		# Attack target
 		elif (target != null) and attacking:
-			$Sprite.set_flip_h(global_position.x < target.global_position.x)
+			sprite.set_flip_h(global_position.x < target.global_position.x)
 			speed -= DEACCEL * delta
 			direction += (15/global_position.distance_to(target.global_position))*(target.global_position - global_position)
 			attacking = attack_range.overlaps_body(target)
@@ -194,10 +196,10 @@ func process_movement(delta):
 		if first_target and !attacking:
 			target_closest(null)
 	
-	if $Sprite.flip_h:
-		$Bullet_Position.position.x = 12.5
+	if sprite.flip_h:
+		bullet_position.position.x = 12.5
 	else:
-		$Bullet_Position.position.x = -12.5
+		bullet_position.position.x = -12.5
 		
 #----------------------------------------------------------
 # use raycasts for retargetting or stopping
@@ -290,7 +292,7 @@ func basic_attack():
 		var lob = lob_scene.instance()
 		lob.damage = attack_damage
 		lob.source = self
-		lob.source_position = $Bullet_Position.global_position
+		lob.source_position = bullet_position.global_position
 		lob.target = target.global_position
 		get_parent().add_child(lob)
 		

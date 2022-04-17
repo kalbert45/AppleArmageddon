@@ -49,6 +49,7 @@ func popup():
 	quit_title_button.visible = true
 	quit_game_button.visible = true
 	
+	$VBoxContainer.mouse_filter = Control.MOUSE_FILTER_PASS
 	color_rect.mouse_filter = color_rect.MOUSE_FILTER_STOP
 	resume_button.mouse_filter = resume_button.MOUSE_FILTER_STOP
 	controls_button.mouse_filter = Control.MOUSE_FILTER_STOP
@@ -81,6 +82,7 @@ func resume():
 	quit_title_button.visible = false
 	quit_game_button.visible = false
 	
+	$VBoxContainer.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	color_rect.mouse_filter = color_rect.MOUSE_FILTER_IGNORE
 	resume_button.mouse_filter = resume_button.MOUSE_FILTER_IGNORE
 	controls_button.mouse_filter = Control.MOUSE_FILTER_IGNORE

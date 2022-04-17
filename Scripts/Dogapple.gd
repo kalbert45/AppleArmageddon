@@ -116,7 +116,7 @@ func ready_bars():
 	hp_bar.max_value = max_hp
 	hp_bar.value = current_hp
 	hp_bar.rect_size = Vector2(int(max_hp/10), 3)
-	hp_bar.rect_position = Vector2(ceil(-hp_bar.rect_size.x/2)-1, -16)
+	hp_bar.rect_position = Vector2(ceil(-hp_bar.rect_size.x/2)-1, -14)
 	
 	
 func _process(delta):
@@ -130,6 +130,9 @@ func _process(delta):
 func _physics_process(delta):
 	if active:
 		process_movement(delta)
+	else:
+		if animation_manager.current_state != IDLE_ANIM_NAME:
+			animation_manager.set_animation(IDLE_ANIM_NAME)
 
 		if General3:
 			var extra_att_speed = (1.25)*((max_hp-current_hp) / max_hp)
@@ -389,7 +392,8 @@ func heal(unit, amount):
 	add_child(damage_number)
 		
 func die(damage):
-	emit_signal("death")
+	if active:
+		emit_signal("death")
 	
 	var apple_death = apple_death_scene.instance()
 	apple_death.global_position = global_position
