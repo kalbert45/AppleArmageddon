@@ -105,6 +105,9 @@ common/enable_pause_aware_picking=true
 
 [rendering]
 
+quality/intended_usage/framebuffer_allocation=1
 2d/snapping/use_gpu_pixel_snap=true
+quality/shadows/filter_mode=0
+quality/shading/force_vertex_shading=true
 environment/default_environment="res://default_env.tres"
 quality/dynamic_fonts/use_oversampling=false

@@ -131,7 +131,6 @@ position = Vector2( -0.5, 2.5 )
 texture = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-visible = false
 shape = SubResource( 1 )
 
 [node name="Attack_Range" type="Area2D" parent="."]
@@ -190,5 +189,3 @@ volume_db = -10.0
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Aggro_Area"]
 visible = false
 shape = SubResource( 11 )
-
-[connection signal="body_exited" from="Aggro_Area" to="." method="_on_Aggro_Area_body_exited"]

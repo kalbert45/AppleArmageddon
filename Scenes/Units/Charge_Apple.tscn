@@ -212,4 +212,3 @@ volume_db = -7.0
 bus = "SFX"
 
 [connection signal="body_entered" from="CollisionShape2D/Aggro_Area" to="." method="_on_Aggro_Area_body_entered"]
-[connection signal="body_exited" from="CollisionShape2D/Aggro_Area" to="." method="_on_Aggro_Area_body_exited"]

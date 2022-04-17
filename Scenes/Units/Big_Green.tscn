@@ -78,6 +78,7 @@ position = Vector2( 0, -13 )
 shape = SubResource( 1 )
 
 [node name="Aggro_Area" type="Area2D" parent="."]
+visible = false
 position = Vector2( 0, -13 )
 collision_mask = 2
 
@@ -85,6 +86,7 @@ collision_mask = 2
 shape = SubResource( 2 )
 
 [node name="Attack_Range" type="Area2D" parent="."]
+visible = false
 position = Vector2( 0, -13 )
 collision_mask = 2
 
@@ -150,4 +152,3 @@ volume_db = -10.0
 pitch_scale = 0.8
 
 [connection signal="body_entered" from="Aggro_Area" to="." method="_on_Aggro_Area_body_entered"]
-[connection signal="body_exited" from="Aggro_Area" to="." method="_on_Aggro_Area_body_exited"]

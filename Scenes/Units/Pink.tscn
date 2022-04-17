@@ -226,4 +226,3 @@ volume_db = -15.0
 pitch_scale = 0.8
 
 [connection signal="body_entered" from="Aggro_Area" to="." method="_on_Aggro_Area_body_entered"]
-[connection signal="body_exited" from="Aggro_Area" to="." method="_on_Aggro_Area_body_exited"]

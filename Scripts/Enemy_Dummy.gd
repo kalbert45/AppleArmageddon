@@ -64,6 +64,7 @@ onready var animation_manager = $AnimationPlayer
 onready var sfx = $SFX
 onready var raycasts_node = $Raycasts
 onready var hp_bar = $Bars/HP_Bar
+onready var sprite = $Sprite
 
 var attack_sfx = preload("res://Assets/Sounds/SFX/punch_sfx.wav")
 var picture = preload("res://Assets/Sprites/soldier.png")
@@ -118,16 +119,16 @@ func _physics_process(delta):
 # process mouse_input
 func process_mouse(_delta):
 	if mouse_hover or mouse_select:
-		$Sprite.material.set_shader_param("width", 1.0)
-		$Sprite.z_index = 1
-	else:
-		$Sprite.material.set_shader_param("width", 0.0)
-		$Sprite.z_index = 0
+		sprite.material.set_shader_param("width", 1.0)
+		sprite.z_index = 1
 		
-	if mouse_select:
-		$Sprite.material.set_shader_param("outline_color", Color(1,0.2,0.2,1))
+		if mouse_select:
+			sprite.material.set_shader_param("outline_color", Color(1,0.2,0.2,1))
+		else:
+			sprite.material.set_shader_param("outline_color", Color(1,0.2,0.2,1))
 	else:
-		$Sprite.material.set_shader_param("outline_color", Color(1,0.2,0.2,1))
+		sprite.material.set_shader_param("width", 0.0)
+		sprite.z_index = 0
 		
 	# Keep character in window
 
@@ -141,8 +142,8 @@ func process_mouse(_delta):
 func process_movement(delta):
 	if not is_instance_valid(target):
 		target = null
-	if (first_target) and (target == null) and (retarget_loop):
-		target_closest(null)
+	if (first_target) and (retarget_loop):
+		target_closest(target)
 		retarget_loop = false
 		_timer.start()
 	
@@ -150,20 +151,22 @@ func process_movement(delta):
 	if animation_manager.current_state != CAST_ANIM_NAME:
 		# Movement towards target
 		if (target != null) and (!attacking):
-			$Sprite.set_flip_h(global_position.x < target.global_position.x)
+			sprite.set_flip_h(global_position.x < target.global_position.x)
 			speed += ACCEL * delta
-			direction += calculate_local_avoidance()
-			direction += (15/global_position.distance_to(target.global_position))*(target.global_position - global_position)
+			#direction += calculate_local_avoidance()
+			#direction += (15/global_position.distance_to(target.global_position))*(target.global_position - global_position)
+			direction += target.global_position - global_position
 			attacking = attack_range.overlaps_body(target)
 			if (animation_manager.current_state != MOVEMENT_ANIM_NAME) and (speed > 10):
 				animation_manager.set_animation(MOVEMENT_ANIM_NAME)
 			
 		# Attack target
 		elif (target != null) and attacking:
-			$Sprite.set_flip_h(global_position.x < target.global_position.x)
+			sprite.set_flip_h(global_position.x < target.global_position.x)
 			speed -= DEACCEL * delta
 
-			direction += (15/global_position.distance_to(target.global_position))*(target.global_position - global_position)
+			#direction += (15/global_position.distance_to(target.global_position))*(target.global_position - global_position)
+			direction += target.global_position - global_position
 			attacking = attack_range.overlaps_body(target)
 			if animation_manager.current_state != ATTACK_ANIM_NAME:
 				animation_manager.set_animation(ATTACK_ANIM_NAME)
@@ -189,14 +192,16 @@ func process_movement(delta):
 		knock_speed -= 100 * delta
 	knock_speed = clamp(knock_speed, 0, 100)
 	
-	var slide_count = get_slide_count()
-	if slide_count:
-		if first_target and !attacking:
-			target_closest(null)
+	#var slide_count = get_slide_count()
+	#if slide_count:
+	#	if first_target and !attacking:
+	#		target_closest(null)
 			
 #----------------------------------------------------------
 # use raycasts for retargetting or stopping
 func process_raycasts(potential_target):
+	if !is_instance_valid(potential_target):
+		return
 	var retarget = true
 	var new_target = null
 	var raycasts = raycasts_node.get_children()
@@ -218,18 +223,20 @@ func process_raycasts(potential_target):
 		#	target_closest(null)
 #--------------------------------------------------------------
 # Local Avoidance algorithm
-func calculate_local_avoidance():
-	var total = Vector2.ZERO
-	var weight
-	var dist2
-	for body in get_tree().get_nodes_in_group("Enemies"):
-		if self == body:
-			continue
-		if is_instance_valid(body):
-			dist2 = global_position.distance_squared_to(body.global_position)
-			weight = 10/ dist2
-			total += weight * (global_position - body.global_position)
-	return total
+#func calculate_local_avoidance():
+#	var total = Vector2.ZERO
+#	var weight
+#	var dist2
+#	for body in body_area.get_overlapping_bodies():
+#		if !is_instance_valid(body):
+#			continue
+#		if self == body:
+#			continue
+#		if body.is_in_group("Enemies"):
+#			dist2 = global_position.distance_squared_to(body.global_position)
+#			weight = 10/ dist2
+#			total += weight * (global_position - body.global_position)
+#	return total
 	
 #--------------------------------------------------------------
 
@@ -238,17 +245,20 @@ func calculate_local_avoidance():
 func _on_Aggro_Area_body_entered(body):
 	if target == null:
 		if body.is_in_group("Units"):
+			active = true
 			target = body
 			first_target = true
-			
+			$Aggro_Area/CollisionShape2D.set_deferred("disabled", true)
 
 #Re-targeting
-func _on_Aggro_Area_body_exited(body):
-	if target == body:
-		target = null
+#func _on_Aggro_Area_body_exited(body):
+#	if target == body:
+#		target = null
 		
 # Target closest enemy when there is no target
 func target_closest(body):
+	if attacking and target != null:
+		return
 	if not first_target:
 		return
 	if not active:
@@ -259,6 +269,15 @@ func target_closest(body):
 	if enemies.empty():
 		return
 	
+	if body != null:
+		if attack_range.overlaps_body(body):
+			target = body
+			return
+		var new_target = process_raycasts(body)
+		if new_target != null:
+			target = new_target
+			return
+	
 	var closest = null
 	var min_dist = 0
 	for enemy in enemies:
@@ -266,19 +285,22 @@ func target_closest(body):
 			continue
 		if closest == null:
 			closest = enemy
-			min_dist = global_position.distance_to(closest.position)
+			min_dist = global_position.distance_squared_to(closest.position)
 		else:
-			var dist = global_position.distance_to(enemy.position)
+			var dist = global_position.distance_squared_to(enemy.position)
 			if dist < min_dist:
 				closest = enemy
 				min_dist = dist
-	target = process_raycasts(closest)
+	if attack_range.overlaps_body(closest):
+		target = closest
+	else:
+		target = process_raycasts(closest)
 #----------------------------------------------------------------------------
 
 #------------------------------------------------------------------------
 #Attacks
 func basic_attack():
-	if target != null:
+	if is_instance_valid(target):
 		target.attack_hit(self, attack_damage, true, 40)
 		
 		sfx.stream = attack_sfx

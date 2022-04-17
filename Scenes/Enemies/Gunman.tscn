@@ -1,7 +1,6 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://Assets/Shaders/outline_shader.tres" type="Shader" id=1]
-[ext_resource path="res://Assets/Sprites/soldier_shadow.png" type="Texture" id=2]
 [ext_resource path="res://Scripts/Gunman.gd" type="Script" id=3]
 [ext_resource path="res://Assets/Sprites/gunman_spritesheet.png" type="Texture" id=4]
 [ext_resource path="res://Scripts/Apple_Animation_Manager.gd" type="Script" id=5]
@@ -14,6 +13,7 @@ shader_param/width = 0.0
 shader_param/outline_color = Color( 1, 0.2, 0.2, 1 )
 
 [sub_resource type="CircleShape2D" id=2]
+custom_solver_bias = 1.0
 radius = 7.0
 
 [sub_resource type="CircleShape2D" id=4]
@@ -156,11 +156,6 @@ hframes = 10
 vframes = 3
 frame = 20
 
-[node name="Shadow" type="Sprite" parent="Sprite"]
-show_behind_parent = true
-position = Vector2( -0.5, 10.5 )
-texture = ExtResource( 2 )
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 visible = false
 shape = SubResource( 2 )
@@ -226,4 +221,3 @@ script = ExtResource( 5 )
 volume_db = -10.0
 
 [connection signal="body_entered" from="Aggro_Area" to="." method="_on_Aggro_Area_body_entered"]
-[connection signal="body_exited" from="Aggro_Area" to="." method="_on_Aggro_Area_body_exited"]
