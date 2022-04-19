@@ -2,7 +2,7 @@ extends AnimatedSprite
 
 export var dialog_label = 0
 
-signal intro_ended
+#signal intro_ended
 
 func _ready():
 	play("Idle")
@@ -15,7 +15,7 @@ func _process(delta):
 func _on_Axeman_Intro_animation_finished():
 	
 	if animation == "Pour blood":
-		play("Idle")
+		play("After")
 		get_parent().get_node("Dialog_Handler").continue_dialog()
 	elif animation == "Run":
 		get_parent().get_node("Dialog_Handler").continue_dialog()

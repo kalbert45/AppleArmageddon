@@ -4,7 +4,6 @@ extends KinematicBody2D
 #------------------------------------------------------------------
 #--********************************************************-----
 signal death
-signal spawn_enemies
 
 const IDLE_ANIM_NAME = "Idle"
 const MOVEMENT_ANIM_NAME = "Move"
@@ -298,7 +297,7 @@ func target_closest(body):
 			if dist < min_dist:
 				closest = enemy
 				min_dist = dist
-	if attack_range.overlaps_body(closest):
+	if closest != null and attack_range.overlaps_body(closest):
 		target = closest
 	else:
 		target = process_raycasts(closest)

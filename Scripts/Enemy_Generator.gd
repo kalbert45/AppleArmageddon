@@ -11,7 +11,7 @@ func _ready():
 	pass
 
 # returns a node with enemies/placeholders as children
-func generate_enemies(difficulty, spawn_node, template=null):
+func generate_enemies(difficulty, _spawn_node, template=null):
 	var enemies_instance
 	if template != null:
 		enemies_instance = template.instance()

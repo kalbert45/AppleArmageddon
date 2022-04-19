@@ -63,7 +63,7 @@ var position_invalid = false
 #--------------------------------------------------------
 # Apple exclusive variable
 var label = "Apple"
-var description = "Red Delicious: Actually disgusting. Runs to nearest enemy and hits close range."
+#var description = "Red Delicious: Actually disgusting. Runs to nearest enemy and hits close range."
 var upgradable = true
 var upgrade_cost = 3
 #------------------------------------------------------
@@ -82,7 +82,7 @@ onready var hp_bar = $Bars/HP_Bar
 onready var sprite = $Sprite
 
 var attack_sfx = preload("res://Assets/Sounds/SFX/attack_sfx.wav")
-var picture = preload("res://Assets/Sprites/apple.png")
+var picture = preload("res://Assets/Sprites/apple2.png")
 
 var damage_number_scene = preload("res://Scenes/Other/Damage_Number.tscn")
 var apple_death_scene = preload("res://Scenes/Other/Apple_Death.tscn")
@@ -341,7 +341,7 @@ func target_closest(body):
 			if dist < min_dist:
 				closest = enemy
 				min_dist = dist
-	if attack_range.overlaps_body(closest):
+	if closest != null and attack_range.overlaps_body(closest):
 		target = closest
 	else:
 		target = process_raycasts(closest)
@@ -391,7 +391,7 @@ func attack_hit(enemy, damage, knock, knock_power=50):
 	current_hp -= dmg
 	hp_bar.value = current_hp
 	if current_hp <= 0:
-		die(dmg)
+		die()
 	
 	#var damage_number = damage_number_scene.instance()
 	#damage_number.amount = dmg
@@ -409,7 +409,7 @@ func heal(_unit, amount):
 	damage_number.type = "Heal"
 	add_child(damage_number)
 		
-func die(damage):
+func die():
 	if active:
 		emit_signal("death")
 	
@@ -426,7 +426,7 @@ func die(damage):
 		var targets = attack_range.get_overlapping_bodies()
 		for thing in targets:
 			if thing.is_in_group("Enemies"):
-				thing.attack_hit(self, max_hp/10, true, 50)
+				thing.attack_hit(self, max_hp/2, true, 50)
 	
 	#if damage >= 0:
 	#	var damage_number = damage_number_scene.instance()
@@ -452,6 +452,6 @@ func upgrade():
 	var new_apple = upgrade_scene.instance()
 	new_apple.initial_pos = global_position
 	get_parent().add_child(new_apple)
-	call_deferred("emit_signal", "new_unit", new_apple)
-	#emit_signal("new_unit", new_apple)
+	#call_deferred("emit_signal", "new_unit", new_apple)
+	emit_signal("new_unit", new_apple)
 	call_deferred("free")

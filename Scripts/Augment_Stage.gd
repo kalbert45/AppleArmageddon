@@ -3,25 +3,30 @@ extends Node2D
 signal next_stage
 
 
-var pool = ["Add blood"]
+var pool = ["Add_blood"]
 var choices = [null, null, null]
 
 onready var sfx = $SFX
 
 func _ready():
-	pool = ["Add blood"]
+	randomize()
+	pool = ["Add_blood"]
 	var possible_augments = Global.augments.keys()
 	for augment in possible_augments:
 		if Global.augments[augment]:
 			continue
 		else:
 			pool.append(augment)
+			
+	print(pool)
 
-	randomize()
+
 	for i in range(3):
 		var rand = randi() % possible_augments.size()
 		choices[i] = possible_augments[rand]
 		possible_augments.remove(rand)
+
+	print(possible_augments)
 
 	button_setup()
 
@@ -32,7 +37,7 @@ func button_setup():
 	$Continue_Button.disabled = true
 
 func _on_Augment_Button1_pressed():
-	if choices[0] == "Add Blood":
+	if choices[0] == "Add_blood":
 		Global.money += 40
 	else:
 		Global.augments[choices[0]] = true
@@ -40,7 +45,7 @@ func _on_Augment_Button1_pressed():
 	sfx.play()
 
 func _on_Augment_Button2_pressed():
-	if choices[1] == "Add Blood":
+	if choices[1] == "Add_blood":
 		Global.money += 40
 	else:
 		Global.augments[choices[1]] = true
@@ -49,7 +54,7 @@ func _on_Augment_Button2_pressed():
 
 
 func _on_Augment_Button3_pressed():
-	if choices[2] == "Add Blood":
+	if choices[2] == "Add_blood":
 		Global.money += 40
 	else:
 		Global.augments[choices[2]] = true

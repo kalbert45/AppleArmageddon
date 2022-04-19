@@ -4,7 +4,6 @@ extends KinematicBody2D
 #------------------------------------------------------------------
 #--********************************************************-----
 signal death
-signal spawn_enemies
 
 const IDLE_ANIM_NAME = "Idle"
 const MOVEMENT_ANIM_NAME = "Move"
@@ -291,7 +290,7 @@ func target_closest(body):
 			if dist < min_dist:
 				closest = enemy
 				min_dist = dist
-	if attack_range.overlaps_body(closest):
+	if closest != null and attack_range.overlaps_body(closest):
 		target = closest
 	else:
 		target = process_raycasts(closest)
@@ -339,7 +338,7 @@ func attack_hit(enemy, damage, knock, knock_power=50):
 		if enemy.General1:
 			if is_instance_valid(enemy):
 				enemy.heal(self, enemy.max_hp / 10)
-		die(dmg)
+		die()
 	
 	#var damage_number = damage_number_scene.instance()
 	#damage_number.amount = dmg
@@ -347,7 +346,7 @@ func attack_hit(enemy, damage, knock, knock_power=50):
 	#add_child(damage_number)
 	
 		
-func die(damage):
+func die():
 	Global.money += BLOOD
 	emit_signal("death")
 	

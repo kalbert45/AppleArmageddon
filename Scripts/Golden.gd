@@ -350,7 +350,7 @@ func target_closest(body):
 			if dist < min_dist:
 				closest = enemy
 				min_dist = dist
-	if attack_range.overlaps_body(closest):
+	if closest != null and attack_range.overlaps_body(closest):
 		target = closest
 	else:
 		target = process_raycasts(closest)
@@ -417,7 +417,7 @@ func attack_hit(enemy, damage, knock, knock_power=50):
 	current_hp -= dmg
 	hp_bar.value = current_hp
 	if current_hp <= 0:
-		die(dmg)
+		die()
 	
 	#var damage_number = damage_number_scene.instance()
 	#damage_number.amount = dmg
@@ -425,7 +425,7 @@ func attack_hit(enemy, damage, knock, knock_power=50):
 	#add_child(damage_number)
 	
 # Receive heal
-func heal(unit, amount):
+func heal(_unit, amount):
 	current_hp += amount
 	current_hp = clamp(current_hp, 0, max_hp)
 	hp_bar.value = current_hp
@@ -435,7 +435,7 @@ func heal(unit, amount):
 	damage_number.type = "Heal"
 	add_child(damage_number)
 		
-func die(damage):
+func die():
 	if active:
 		emit_signal("death")
 	
@@ -466,5 +466,6 @@ func upgrade():
 	var new_apple = upgrade_scene.instance()
 	new_apple.initial_pos = global_position
 	get_parent().add_child(new_apple)
-	call_deferred("emit_signal", "new_unit", new_apple)
+	emit_signal("new_unit", new_apple)
+	#call_deferred("emit_signal", "new_unit", new_apple)
 	call_deferred("free")

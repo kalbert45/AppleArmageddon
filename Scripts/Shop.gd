@@ -46,7 +46,7 @@ func _ready():
 	dialog_box.character_wait = 0.1
 	
 	if disabled:
-		$Sprite.frame = 31
+		$Sprite.frame = 30
 	else:
 		$Sprite.frame = 0
 	#animation_player.seek(0)

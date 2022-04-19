@@ -14,5 +14,5 @@ func enable():
 	tween.interpolate_property(money, "modulate", money.modulate, Color(1,1,1,1), 1, Tween.TRANS_LINEAR, Tween.EASE_OUT)
 	tween.start()
 
-func _process(delta):
+func _process(_delta):
 	money_label.text = str(Global.money)

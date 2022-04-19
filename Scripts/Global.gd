@@ -39,7 +39,7 @@ var augments = {"Red0": false, "Red1":false,
 
 
 const AUGMENT_TEXT = {"Red0":"All red apples are invulnerable to knockback", 
-					"Red1":"Red apples explode upon death dealing 10% of their maximum hp",
+					"Red1":"Red apples explode upon death dealing 50% of their maximum hp",
 					"Green0":"Green apples only require half the juice to cast",
 					"Green1":"Green apples gain 10 defense",
 					"Golden0":"Golden apples have increased range",

@@ -16,6 +16,8 @@ onready var sfx = $SFX
 
 func _ready():
 	back_button.modulate.a = 0
+	back_button.disabled = true
+	back_button.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	
 	camera.position = Vector2(320, 180)
 	camera.current = true
@@ -26,15 +28,12 @@ func _ready():
 	
 	if disabled:
 		scout_button.modulate.a = 0
-		back_button.modulate.a = 0
 		play_button.modulate.a = 0
 		
 		scout_button.disabled = true
-		back_button.disabled = true
-		back_button.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		play_button.disabled = true
 		
-func _process(delta):
+func _process(_delta):
 	if not disabled:
 		if get_tree().get_nodes_in_group("Units").empty():
 

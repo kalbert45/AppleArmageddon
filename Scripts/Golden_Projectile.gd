@@ -9,7 +9,7 @@ var velocity = Vector2.ZERO
 var lifetime = 1
 
 func _ready():
-	$Timer.wait_time = 1
+	$Timer.wait_time = lifetime
 	velocity = direction * BULLET_SPEED
 	#source = global_position
 	
