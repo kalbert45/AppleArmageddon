@@ -55,7 +55,7 @@ var mouse_select = false
 var label = "Axeman"
 var description = "Chump: Punches apples on sight."
 
-const BLOOD = 3
+const BLOOD = 2
 export var dialog_label = 0
 export var flip_h = false
 #------------------------------------------------------
@@ -95,6 +95,7 @@ func _ready():
 	
 func ready_bars():
 	hp_bar.max_value = max_hp
+	hp_bar.value = max_hp
 	hp_bar.rect_size = Vector2(int(max_hp/10), 3)
 	hp_bar.rect_position = Vector2(ceil(-hp_bar.rect_size.x/2)-1, -15)
 	
@@ -326,8 +327,9 @@ func attack_hit(enemy, damage, knock, knock_power=50):
 		return
 	
 	if knock:
-		knock_direction = (position - enemy.position).normalized()
-		knock_speed = knock_power
+		if is_instance_valid(enemy):
+			knock_direction = (position - enemy.position).normalized()
+			knock_speed = knock_power
 	
 	var dist
 	if is_instance_valid(enemy):
@@ -342,8 +344,8 @@ func attack_hit(enemy, damage, knock, knock_power=50):
 	current_hp -= dmg
 	hp_bar.value = current_hp
 	if current_hp <= 0:
-		if enemy.General1:
-			if is_instance_valid(enemy):
+		if is_instance_valid(enemy):
+			if enemy.General1:
 				enemy.heal(self, enemy.max_hp / 10)
 		die(dmg)
 	

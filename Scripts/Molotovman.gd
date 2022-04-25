@@ -56,7 +56,7 @@ var mouse_select = false
 var label = "Molotovman"
 var description = "Shoots heavy bullets that knock apples backwards a short distance."
 
-const BLOOD = 5
+const BLOOD = 3
 #------------------------------------------------------
 
 onready var attack_range = $Attack_Range
@@ -333,8 +333,9 @@ func attack_hit(enemy, damage, knock, knock_power=50):
 		return
 	
 	if knock:
-		knock_direction = (position - enemy.position).normalized()
-		knock_speed = knock_power
+		if is_instance_valid(enemy):
+			knock_direction = (position - enemy.position).normalized()
+			knock_speed = knock_power
 	
 	var dist
 	if is_instance_valid(enemy):
@@ -349,8 +350,8 @@ func attack_hit(enemy, damage, knock, knock_power=50):
 	current_hp -= dmg
 	hp_bar.value = current_hp
 	if current_hp <= 0:
-		if enemy.General1:
-			if is_instance_valid(enemy):
+		if is_instance_valid(enemy):
+			if enemy.General1:
 				enemy.heal(self, enemy.max_hp / 10)
 		die()
 	

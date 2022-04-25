@@ -164,7 +164,8 @@ frame = 18
 
 [node name="Shadow" type="Sprite" parent="Sprite"]
 show_behind_parent = true
-position = Vector2( -0.5, 10.5 )
+position = Vector2( 0, 13 )
+scale = Vector2( 1.5, 1 )
 texture = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -247,7 +248,7 @@ anims/RESET = SubResource( 7 )
 script = ExtResource( 5 )
 
 [node name="SFX" type="AudioStreamPlayer2D" parent="."]
-volume_db = -15.0
+volume_db = -7.0
 pitch_scale = 0.8
 
 [connection signal="body_entered" from="Aggro_Area" to="." method="_on_Aggro_Area_body_entered"]

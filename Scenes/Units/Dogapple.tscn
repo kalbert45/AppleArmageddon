@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://Assets/Shaders/outline_shader.tres" type="Shader" id=1]
 [ext_resource path="res://Assets/Sprites/apple_shadow.png" type="Texture" id=2]
@@ -15,9 +15,6 @@ shader_param/outline_color = Color( 1, 0.2, 0.2, 1 )
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 5.09902
-
-[sub_resource type="CircleShape2D" id=2]
-radius = 172.754
 
 [sub_resource type="CircleShape2D" id=3]
 radius = 18.0278
@@ -128,18 +125,11 @@ frame = 20
 
 [node name="Shadow" type="Sprite" parent="Sprite"]
 show_behind_parent = true
-position = Vector2( 0.5, 12.5 )
+position = Vector2( 0, 13 )
 texture = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )
-
-[node name="Aggro_Area" type="Area2D" parent="CollisionShape2D"]
-visible = false
-collision_mask = 2
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionShape2D/Aggro_Area"]
-shape = SubResource( 2 )
 
 [node name="Attack_Range" type="Area2D" parent="CollisionShape2D"]
 visible = false
@@ -192,5 +182,3 @@ script = ExtResource( 5 )
 [node name="SFX" type="AudioStreamPlayer2D" parent="."]
 volume_db = -7.0
 bus = "SFX"
-
-[connection signal="body_entered" from="CollisionShape2D/Aggro_Area" to="." method="_on_Aggro_Area_body_entered"]

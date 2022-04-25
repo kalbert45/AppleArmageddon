@@ -70,7 +70,7 @@ hframes = 6
 [node name="Shadow" type="Sprite" parent="Sprite"]
 show_behind_parent = true
 position = Vector2( 0, 28 )
-scale = Vector2( 1.41176, 1 )
+scale = Vector2( 1.5, 1 )
 texture = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

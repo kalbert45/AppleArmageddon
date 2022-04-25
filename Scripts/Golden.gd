@@ -39,7 +39,7 @@ var current_hp = 80
 var attack_damage = 10
 var attack_speed = 1.0
 var defense = 0
-var movement_speed = 40
+var movement_speed = 50
 
 #var attacking_modes = ["Default", "Stand by", "Chase"]
 #var attacking_mode = "Default"
@@ -367,7 +367,7 @@ func basic_attack():
 		projectile.rotation = projectile.direction.angle()
 		projectile.source = self
 		if Golden0:
-			projectile.lifetime = 1.5
+			projectile.lifetime = 2
 		get_node("/root/Main/World").add_child(projectile)
 		current_mana += 20
 		juice_bar.value = current_mana

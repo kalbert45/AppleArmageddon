@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://Assets/Shaders/outline_shader.tres" type="Shader" id=1]
 [ext_resource path="res://Assets/Sprites/soldier_shadow.png" type="Texture" id=2]
@@ -110,9 +110,6 @@ tracks/1/keys = {
 "values": [ Vector2( 0, 2 ) ]
 }
 
-[sub_resource type="CircleShape2D" id=11]
-radius = 136.938
-
 [node name="Crabapple" type="KinematicBody2D" groups=["Units"]]
 collision_mask = 7
 input_pickable = true
@@ -127,7 +124,7 @@ frame = 20
 
 [node name="Shadow" type="Sprite" parent="Sprite"]
 show_behind_parent = true
-position = Vector2( -0.5, 2.5 )
+position = Vector2( 0, 3 )
 texture = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -183,9 +180,3 @@ script = ExtResource( 5 )
 
 [node name="SFX" type="AudioStreamPlayer2D" parent="."]
 volume_db = -10.0
-
-[node name="Aggro_Area" type="Area2D" parent="."]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Aggro_Area"]
-visible = false
-shape = SubResource( 11 )

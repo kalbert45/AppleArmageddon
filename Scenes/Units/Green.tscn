@@ -183,7 +183,7 @@ frame = 20
 
 [node name="Shadow" type="Sprite" parent="Sprite"]
 show_behind_parent = true
-position = Vector2( -1, 9.5 )
+position = Vector2( -1, 10 )
 scale = Vector2( 1.41176, 1 )
 texture = ExtResource( 2 )
 

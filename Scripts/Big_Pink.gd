@@ -80,7 +80,8 @@ onready var raycasts_node = $Raycasts
 onready var hp_bar = $Bars/HP_Bar
 onready var juice_bar = $Bars/Juice_Bar
 
-var attack_sfx = preload("res://Assets/Sounds/SFX/pink_attack_sfx.wav")
+var attack_sfx = preload("res://Assets/Sounds/SFX/big_pink_attack_sfx.wav")
+var cast_sfx = preload("res://Assets/Sounds/SFX/big_pink_swipe_sfx.wav")
 var picture = preload("res://Assets/Sprites/red.png")
 
 var damage_number_scene = preload("res://Scenes/Other/Damage_Number.tscn")
@@ -218,8 +219,8 @@ func process_movement(delta):
 			direction += movement_target - global_position
 			attacking = attack_range.overlaps_body(target)
 			if animation_manager.current_state != ATTACK_ANIM_NAME:
-				sfx.stream = attack_sfx
-				sfx.play()
+				#sfx.stream = attack_sfx
+				#sfx.play()
 				animation_manager.set_animation(ATTACK_ANIM_NAME)
 			
 		# Run until first target, else return to idle
@@ -404,7 +405,7 @@ func cast_attack():
 					thing.attack_hit(self, 2*attack_damage, true, 70)
 		
 		#target.attack_hit(self, 2*attack_damage, false)
-		sfx.stream = attack_sfx
+		sfx.stream = cast_sfx
 		sfx.play()
 #------------------------------------------------------------------------
 

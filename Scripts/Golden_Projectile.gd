@@ -11,6 +11,7 @@ var lifetime = 1
 func _ready():
 	$Timer.wait_time = lifetime
 	velocity = direction * BULLET_SPEED
+	$Timer.start()
 	#source = global_position
 	
 func _process(delta):

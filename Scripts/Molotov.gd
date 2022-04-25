@@ -14,7 +14,7 @@ var rng = RandomNumberGenerator.new()
 var burst = false
 var t = 0
 
-var splat_sfx = preload("res://Assets/Sounds/SFX/golden_lob_splat_sfx2.wav")
+var splat_sfx = preload("res://Assets/Sounds/SFX/molotov_sound.wav")
 var sfx_scene = preload("res://Scenes/Other/SFX.tscn")
 
 onready var aoe = $AOE
@@ -49,7 +49,7 @@ func explode():
 	
 	var sfx = sfx_scene.instance()
 	sfx.stream = splat_sfx
-	sfx.pitch_scale = 1.0
+	sfx.pitch_scale = rand_range(0.8,1.2)
 	get_node("/root/Main/World").add_child(sfx)
 	
 	lob.visible = false

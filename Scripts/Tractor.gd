@@ -54,9 +54,9 @@ var mouse_select = false
 #--------------------------------------------------------
 # Grunt exclusive variable
 var label = "Tractor"
-var description = "Tractor: Punches apples on sight."
+#var description = "Tractor: Punches apples on sight."
 
-const BLOOD = 9
+const BLOOD = 4
 #------------------------------------------------------
 
 onready var attack_range = $Attack_Range
@@ -93,6 +93,7 @@ func _ready():
 	
 func ready_bars():
 	hp_bar.max_value = max_hp
+	hp_bar.value = max_hp
 	hp_bar.rect_size = Vector2(int(max_hp/10), 3)
 	hp_bar.rect_position = Vector2(ceil(-hp_bar.rect_size.x/2)-1, -15)
 	
@@ -341,8 +342,8 @@ func attack_hit(enemy, damage, _knock, _knock_power=50):
 	current_hp -= dmg
 	hp_bar.value = current_hp
 	if current_hp <= 0:
-		if enemy.General1:
-			if is_instance_valid(enemy):
+		if is_instance_valid(enemy):
+			if enemy.General1:
 				enemy.heal(self, enemy.max_hp / 10)
 		die()
 	

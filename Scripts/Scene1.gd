@@ -95,8 +95,8 @@ func load_data():
 	for unit in Global.units:
 		var instance = unit[0].instance()
 		instance.initial_pos = unit[1]
-		instance.current_hp = unit[2]
-		instance.current_mana = unit[3]
+		#instance.current_hp = unit[2]
+		#instance.current_mana = unit[3]
 		
 		#Augments
 		if Global.augments["General0"]:
@@ -120,26 +120,26 @@ func save_data():
 	for unit in get_tree().get_nodes_in_group("Units"):
 		match unit.label:
 			"Apple":
-				units.append([apple_scene, unit.initial_pos, unit.current_hp, unit.current_mana])
+				units.append([apple_scene, unit.initial_pos])
 			"Crabapple":
-				units.append([crabapple_scene, unit.initial_pos, unit.current_hp, unit.current_mana])
+				units.append([crabapple_scene, unit.initial_pos])
 			"Golden":
-				units.append([golden_scene, unit.initial_pos, unit.current_hp, unit.current_mana])
+				units.append([golden_scene, unit.initial_pos])
 			"Green":
-				units.append([green_scene, unit.initial_pos, unit.current_hp, unit.current_mana])
+				units.append([green_scene, unit.initial_pos])
 			"Pink":
-				units.append([pink_scene, unit.initial_pos, unit.current_hp, unit.current_mana])
+				units.append([pink_scene, unit.initial_pos])
 				
 			"Brappler":
-				units.append([big_apple_scene, unit.initial_pos, unit.current_hp, unit.current_mana])
+				units.append([big_apple_scene, unit.initial_pos])
 			"Golden Malicious":
-				units.append([big_golden_scene, unit.initial_pos, unit.current_hp, unit.current_mana])
+				units.append([big_golden_scene, unit.initial_pos])
 			"Dogapple":
-				units.append([big_crabapple_scene, unit.initial_pos, unit.current_hp, unit.current_mana])
+				units.append([big_crabapple_scene, unit.initial_pos])
 			"Big Green":
-				units.append([big_green_scene, unit.initial_pos, unit.current_hp, unit.current_mana])
+				units.append([big_green_scene, unit.initial_pos])
 			"Big Pink":
-				units.append([big_pink_scene, unit.initial_pos, unit.current_hp, unit.current_mana])
+				units.append([big_pink_scene, unit.initial_pos])
 				
 		
 	Global.units = units

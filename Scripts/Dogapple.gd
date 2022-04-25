@@ -38,7 +38,7 @@ var current_hp = 80
 var attack_damage = 15
 var attack_speed = 1.5
 var defense = 0
-var movement_speed = 100
+var movement_speed = 80
 
 #var attacking_modes = ["Default", "Stand by", "Chase"]
 #var attacking_mode = "Default"
@@ -190,6 +190,11 @@ func process_movement(delta):
 		retarget_loop = false
 		_timer.start()
 	
+	# specific movement pattern of crabapple
+	if not first_target and global_position.x > 2*get_viewport().size.x - 30:
+		first_target = true
+		target_closest(null)
+	
 	if animation_manager.current_state != CAST_ANIM_NAME:
 		# Movement towards target
 		if (target != null) and (!attacking):
@@ -240,10 +245,15 @@ func process_movement(delta):
 		knock_speed -= 100 * delta
 	knock_speed = clamp(knock_speed, 0, 100)
 	
-	#var slide_count = get_slide_count()
-	#if slide_count:
-	#	if first_target and !attacking:
-	#		target_closest(null)
+	var slide_count = get_slide_count()
+	if slide_count:
+		if first_target and !attacking:
+			target_closest(null)
+		else:
+			var colliding_body = get_slide_collision(0).collider
+			if colliding_body.is_in_group("Enemies"):
+				first_target = true
+				target = colliding_body
 	
 #----------------------------------------------------------
 # use raycasts for retargetting or stopping
@@ -290,12 +300,12 @@ func process_raycasts(potential_target):
 
 #----------------------------------------------------------------
 #Targeting
-func _on_Aggro_Area_body_entered(body):
-	if target == null:
-		if body.is_in_group("Enemies"):
-			target = body
-			first_target = true
-			$CollisionShape2D/Aggro_Area/CollisionShape2D.set_deferred("disabled", true)
+#func _on_Aggro_Area_body_entered(body):
+#	if target == null:
+#		if body.is_in_group("Enemies"):
+#			target = body
+#			first_target = true
+#			$CollisionShape2D/Aggro_Area/CollisionShape2D.set_deferred("disabled", true)
 			
 
 #Re-targeting

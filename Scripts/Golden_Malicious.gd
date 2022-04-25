@@ -38,7 +38,7 @@ var current_hp = 100
 var attack_damage = 20
 var attack_speed = 1.0
 var defense = 0
-var movement_speed = 40
+var movement_speed = 50
 
 #var attacking_modes = ["Default", "Stand by", "Chase"]
 #var attacking_mode = "Default"
@@ -363,7 +363,7 @@ func basic_attack():
 		projectile.direction = (target.global_position - global_position).normalized()
 		projectile.rotation = projectile.direction.angle()
 		if Golden0:
-			projectile.lifetime = 2
+			projectile.lifetime = 2.5
 		else:
 			projectile.lifetime = 1.5
 		projectile.source = self

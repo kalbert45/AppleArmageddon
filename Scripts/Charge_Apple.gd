@@ -10,7 +10,7 @@ const MOVEMENT_ANIM_NAME = "Move"
 const ATTACK_ANIM_NAME = "Attack"
 const CAST_ANIM_NAME = "Cast"
 
-const ACCEL = 20
+const ACCEL = 100
 const DEACCEL = 120
 
 var _timer = null
@@ -38,7 +38,7 @@ var current_hp = 120
 var attack_damage = 20
 var attack_speed = 1.0
 var defense = 5
-var movement_speed = 80
+var movement_speed = 50
 
 #var attacking_modes = ["Default", "Stand by", "Chase"]
 #var attacking_mode = "Default"
@@ -195,7 +195,7 @@ func process_movement(delta):
 		#direction += (15/global_position.distance_to(target.global_position))*(target.global_position - global_position)
 		direction += target.global_position - global_position
 		attacking = attack_range.overlaps_body(target)
-		if (speed > 75):
+		if (speed > 45):
 			animation_manager.set_animation(CAST_ANIM_NAME)
 		elif (animation_manager.current_state != MOVEMENT_ANIM_NAME) and (speed > 10):
 			animation_manager.set_animation(MOVEMENT_ANIM_NAME)

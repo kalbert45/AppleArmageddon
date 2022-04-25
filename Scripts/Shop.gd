@@ -27,12 +27,12 @@ var sfx_scene = preload("res://Scenes/Other/SFX.tscn")
 var shop_sprite_scene = preload("res://Scenes/Other/Shop_Sprite.tscn")
 var shop_sprite
 
-# store scene, shop sprite, price in each variable
-var apple = [preload("res://Scenes/Units/Apple.tscn"), preload("res://Assets/Sprites/apple2.png"), 2]
-var crabapple = [preload("res://Scenes/Units/Crabapple.tscn"), preload("res://Assets/Sprites/crabapple.png"), 1]
-var golden = [preload("res://Scenes/Units/Golden.tscn"), preload("res://Assets/Sprites/golden.png"), 4]
-var green = [preload("res://Scenes/Units/Green.tscn"), preload("res://Assets/Sprites/green2.png"), 3]
-var pink = [preload("res://Scenes/Units/Pink.tscn"), preload("res://Assets/Sprites/red.png"), 3]
+# store scene, shop sprite, price, label in each variable
+var apple = [preload("res://Scenes/Units/Apple.tscn"), preload("res://Assets/Sprites/apple2.png"), 2, "Apple"]
+var crabapple = [preload("res://Scenes/Units/Crabapple.tscn"), preload("res://Assets/Sprites/crabapple.png"), 1, "Crabapple"]
+var golden = [preload("res://Scenes/Units/Golden.tscn"), preload("res://Assets/Sprites/golden.png"), 4, "Golden"]
+var green = [preload("res://Scenes/Units/Green.tscn"), preload("res://Assets/Sprites/green2.png"), 3, "Green"]
+var pink = [preload("res://Scenes/Units/Pink.tscn"), preload("res://Assets/Sprites/red.png"), 3, "Pink"]
 
 onready var reroll_button = $Reroll_Button
 onready var animation_player = $AnimationPlayer
@@ -72,6 +72,7 @@ func _ready():
 			shop_sprite.unit_scene = roll[0]
 			shop_sprite.set_sprite_texture(roll[1])
 			shop_sprite.price = roll[2]
+			shop_sprite.text = Global.UNIT_TEXT[roll[3]]
 			shop_spots[i] = shop_sprite
 			shop_sprite.initial_pos = Vector2(global_position.x-40 + 40*i, global_position.y)
 			add_child(shop_sprite)
@@ -112,6 +113,7 @@ func reroll_shop():
 		shop_sprite.unit_scene = roll[0]
 		shop_sprite.set_sprite_texture(roll[1])
 		shop_sprite.price = roll[2]
+		shop_sprite.text = Global.UNIT_TEXT[roll[3]]
 		shop_spots[i] = shop_sprite
 		shop_sprite.initial_pos = Vector2(global_position.x-40 + 40*i, global_position.y)
 		add_child(shop_sprite)
@@ -162,7 +164,7 @@ func sell_unit(unit):
 		return false
 		
 	eat = true
-	unit.die(-1)
+	unit.die()
 	Global.money += 1
 	#emit_signal("update_money")
 	

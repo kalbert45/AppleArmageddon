@@ -1,10 +1,11 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://Assets/Shaders/outline_shader.tres" type="Shader" id=1]
+[ext_resource path="res://Assets/Sprites/soldier_shadow.png" type="Texture" id=2]
 [ext_resource path="res://Scripts/Rifleman_Horseback.gd" type="Script" id=3]
 [ext_resource path="res://Assets/Sprites/rifleman_spritesheet.png" type="Texture" id=4]
 [ext_resource path="res://Scripts/Apple_Animation_Manager.gd" type="Script" id=5]
-[ext_resource path="res://Assets/Themes/health_bar.tres" type="Theme" id=6]
+[ext_resource path="res://Assets/Themes/enemy_health_bar.tres" type="Theme" id=6]
 
 [sub_resource type="ShaderMaterial" id=1]
 resource_local_to_scene = true
@@ -150,12 +151,16 @@ collision_mask = 7
 script = ExtResource( 3 )
 
 [node name="Sprite" type="Sprite" parent="."]
-modulate = Color( 0.972549, 0.560784, 0.12549, 1 )
+self_modulate = Color( 0.713726, 0.545098, 0.25098, 1 )
 material = SubResource( 1 )
 texture = ExtResource( 4 )
 hframes = 10
 vframes = 3
 frame = 20
+
+[node name="Shadow" type="Sprite" parent="Sprite"]
+position = Vector2( 0, 11 )
+texture = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 visible = false

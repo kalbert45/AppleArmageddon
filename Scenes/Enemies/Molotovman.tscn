@@ -1,10 +1,11 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://Assets/Shaders/outline_shader.tres" type="Shader" id=1]
+[ext_resource path="res://Assets/Sprites/soldier_shadow.png" type="Texture" id=2]
 [ext_resource path="res://Scripts/Molotovman.gd" type="Script" id=3]
 [ext_resource path="res://Assets/Sprites/molotovman_spritesheet.png" type="Texture" id=4]
 [ext_resource path="res://Scripts/Apple_Animation_Manager.gd" type="Script" id=5]
-[ext_resource path="res://Assets/Themes/health_bar.tres" type="Theme" id=6]
+[ext_resource path="res://Assets/Themes/enemy_health_bar.tres" type="Theme" id=6]
 
 [sub_resource type="ShaderMaterial" id=1]
 resource_local_to_scene = true
@@ -155,6 +156,11 @@ texture = ExtResource( 4 )
 hframes = 22
 vframes = 3
 frame = 44
+
+[node name="Shadow" type="Sprite" parent="Sprite"]
+show_behind_parent = true
+position = Vector2( 0, 11 )
+texture = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 visible = false

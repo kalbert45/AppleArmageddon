@@ -2,44 +2,31 @@
 
 [ext_resource path="res://Assets/Fonts/PressStart2P.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Scripts/Title_Screen.gd" type="Script" id=2]
-[ext_resource path="res://Assets/Sprites/apple_spritesheet.png" type="Texture" id=3]
-[ext_resource path="res://Assets/Themes/menu_button_theme.tres" type="Theme" id=4]
+[ext_resource path="res://Assets/Themes/augment_button_theme.tres" type="Theme" id=3]
+[ext_resource path="res://Assets/Sprites/apple_spritesheet2.png" type="Texture" id=4]
+[ext_resource path="res://Assets/Sprites/Title_separated.png" type="Texture" id=5]
+[ext_resource path="res://Assets/Tilesets/ground.png" type="Texture" id=6]
+[ext_resource path="res://Scripts/ParallaxBackground.gd" type="Script" id=7]
 
 [sub_resource type="DynamicFont" id=1]
 size = 32
 font_data = ExtResource( 1 )
 
-[sub_resource type="AtlasTexture" id=2]
-atlas = ExtResource( 3 )
-region = Rect2( 0, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=3]
-atlas = ExtResource( 3 )
-region = Rect2( 32, 0, 32, 32 )
-
-[sub_resource type="SpriteFrames" id=4]
-animations = [ {
-"frames": [ SubResource( 2 ), SubResource( 3 ) ],
-"loop": true,
-"name": "default",
-"speed": 2.0
-} ]
-
-[sub_resource type="AtlasTexture" id=5]
-atlas = ExtResource( 3 )
+[sub_resource type="AtlasTexture" id=9]
+atlas = ExtResource( 4 )
 region = Rect2( 0, 64, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=6]
-atlas = ExtResource( 3 )
+[sub_resource type="AtlasTexture" id=10]
+atlas = ExtResource( 4 )
 region = Rect2( 32, 64, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=7]
-atlas = ExtResource( 3 )
+[sub_resource type="AtlasTexture" id=11]
+atlas = ExtResource( 4 )
 region = Rect2( 64, 64, 32, 32 )
 
 [sub_resource type="SpriteFrames" id=8]
 animations = [ {
-"frames": [ SubResource( 5 ), SubResource( 6 ), SubResource( 7 ), SubResource( 6 ) ],
+"frames": [ SubResource( 9 ), SubResource( 10 ), SubResource( 11 ), SubResource( 10 ) ],
 "loop": true,
 "name": "default",
 "speed": 5.0
@@ -53,13 +40,15 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ColorRect" type="ColorRect" parent="."]
-anchor_right = 1.0
-anchor_bottom = 1.0
-color = Color( 0.164706, 0.243137, 0.392157, 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="ColorRect" type="ParallaxBackground" parent="."]
+script = ExtResource( 7 )
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ColorRect"]
+motion_mirroring = Vector2( 960, 0 )
+
+[node name="Sprite" type="Sprite" parent="ColorRect/ParallaxLayer"]
+position = Vector2( 320, 180 )
+texture = ExtResource( 6 )
 
 [node name="Play_Button" type="Button" parent="."]
 anchor_left = 0.5
@@ -70,58 +59,25 @@ margin_left = -37.0
 margin_top = 43.0
 margin_right = 31.0
 margin_bottom = 64.0
-theme = ExtResource( 4 )
+theme = ExtResource( 3 )
 text = "Play"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="RichTextLabel" type="RichTextLabel" parent="."]
+visible = false
 margin_left = 178.0
 margin_top = 87.0
 margin_right = 538.0
 margin_bottom = 187.0
 custom_fonts/normal_font = SubResource( 1 )
 bbcode_enabled = true
-bbcode_text = "[wave] Apple Armageddon [/wave]"
-text = " Apple Armageddon "
+bbcode_text = "[center]Apple Armageddon"
+text = "Apple Armageddon"
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
-position = Vector2( 143, 108 )
-frames = SubResource( 4 )
-frame = 1
-playing = true
-
-[node name="AnimatedSprite2" type="AnimatedSprite" parent="."]
-position = Vector2( 136, 136 )
-frames = SubResource( 4 )
-frame = 1
-playing = true
-
-[node name="AnimatedSprite3" type="AnimatedSprite" parent="."]
-position = Vector2( 121, 162 )
-frames = SubResource( 4 )
-playing = true
-
-[node name="AnimatedSprite4" type="AnimatedSprite" parent="."]
-position = Vector2( 534, 114 )
-frames = SubResource( 4 )
-frame = 1
-playing = true
-
-[node name="AnimatedSprite5" type="AnimatedSprite" parent="."]
-position = Vector2( 546, 144 )
-frames = SubResource( 4 )
-frame = 1
-playing = true
-
-[node name="AnimatedSprite6" type="AnimatedSprite" parent="."]
-position = Vector2( 555, 173 )
-frames = SubResource( 4 )
-playing = true
 
 [node name="AnimatedSprite7" type="AnimatedSprite" parent="."]
 position = Vector2( 383, 230 )
@@ -129,10 +85,14 @@ frames = SubResource( 8 )
 frame = 3
 playing = true
 
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 320, 180 )
+texture = ExtResource( 5 )
+
 [node name="AnimatedSprite8" type="AnimatedSprite" parent="."]
-position = Vector2( 253, 229 )
+position = Vector2( 250, 230 )
 frames = SubResource( 8 )
+frame = 1
 playing = true
-flip_h = true
 
 [connection signal="pressed" from="Play_Button" to="." method="_on_Play_Button_pressed"]

@@ -5,11 +5,16 @@ var mouse_select = false
 var position_invalid = false
 var initial_pos = Vector2.ZERO
 var active = false
+var text = ""
 
 var unit_scene = ""
 var price = 0
 
+onready var tooltip = $Shop_Tooltip
+onready var tooltip_label = $Shop_Tooltip/RichTextLabel
+
 func _ready():
+	tooltip_label.bbcode_text = text
 	global_position = initial_pos
 	
 func set_sprite_texture(texture):
@@ -28,6 +33,11 @@ func _process(delta):
 	
 # process mouse_input
 func process_mouse(_delta):
+	if mouse_hover:
+		tooltip.visible = true
+	else:
+		tooltip.visible = false
+	
 	if mouse_hover or mouse_select:
 		$Sprite.material.set_shader_param("width", 1.0)
 		$Sprite.z_index = 1

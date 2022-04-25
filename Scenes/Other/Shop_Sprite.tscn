@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Assets/Shaders/outline_shader.tres" type="Shader" id=1]
 [ext_resource path="res://Scripts/Shop_Sprite.gd" type="Script" id=2]
 [ext_resource path="res://Assets/Sprites/apple.png" type="Texture" id=3]
+[ext_resource path="res://Scenes/Other/Shop_Tooltip.tscn" type="PackedScene" id=4]
 
 [sub_resource type="ShaderMaterial" id=1]
 resource_local_to_scene = true
@@ -31,3 +32,6 @@ collision_mask = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Body_Area"]
 shape = SubResource( 3 )
+
+[node name="Shop_Tooltip" parent="." instance=ExtResource( 4 )]
+visible = false

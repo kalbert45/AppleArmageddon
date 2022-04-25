@@ -38,7 +38,7 @@ var current_hp = 120
 var attack_damage = 10
 var attack_speed = 0
 var defense = 5
-var movement_speed = 40
+var movement_speed = 50
 
 
 

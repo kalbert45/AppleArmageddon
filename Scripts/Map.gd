@@ -73,11 +73,12 @@ func generate():
 	var map_generator = map_generator_scene.instance()
 	paths = map_generator.generate()
 	map_generator.queue_free()
+	#print(paths)
 	# preprocess points
 	for i in range(paths.size()):
 		for j in range(paths[i].size()):
-			paths[i][j] *= 40
-			paths[i][j] += Vector2(180, -300) 
+			#paths[i][j] *= 40
+			paths[i][j] += Vector2(180, 140) 
 	
 	current_point= paths[0][0]
 	current_path.append(current_point)
@@ -125,7 +126,7 @@ func _draw():
 				buttons[path[i]] = map_button
 				map_stages[path[i]] = [map_button.difficulty, map_button.type]
 			if i != 0:
-				draw_line(path[i-1], path[i], Color(0.5,0.5,0.5,1), 2, true)
+				draw_line(path[i-1], path[i], Color(0.5,0.5,0.5,1), 2)
 				
 	# draw available paths in white, enable appropriate buttons
 	for path in paths:
@@ -136,7 +137,7 @@ func _draw():
 					index = i
 				buttons[path[i]].possible()
 			#available paths
-			draw_line(path[index], path[index+1], Color("859e72"), 2, true)
+			draw_line(path[index], path[index+1], Color("859e72"), 2)
 			#enable buttons
 			var button = buttons[path[index+1]]
 			button.undisable()
@@ -145,7 +146,7 @@ func _draw():
 	for i in range(current_path.size()):
 		buttons[current_path[i]].clear()
 		if i > 0:
-			draw_line(current_path[i-1], current_path[i], Color("b06a76"), 2, true)
+			draw_line(current_path[i-1], current_path[i], Color("b06a76"), 2)
 
 
 

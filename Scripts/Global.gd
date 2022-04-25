@@ -37,6 +37,15 @@ var augments = {"Red0": false, "Red1":false,
 				"General0": false, "General1":false,"General2": false, "General3":false
 				}
 
+const AUGMENT_TEXTURES = {"Red0": preload("res://Assets/Sprites/GUI/Augment_Red0.png"), "Red1": preload("res://Assets/Sprites/GUI/Augment_Red1.png"),
+				"Green0": preload("res://Assets/Sprites/GUI/Augment_Green0.png"), "Green1": preload("res://Assets/Sprites/GUI/Augment_Green1.png"),
+				"Pink0": preload("res://Assets/Sprites/GUI/Augment_Pink0.png"), "Pink1": preload("res://Assets/Sprites/GUI/Augment_Pink1.png"),
+				"Golden0": preload("res://Assets/Sprites/GUI/Augment_Golden0.png"), "Golden1": preload("res://Assets/Sprites/GUI/Augment_Golden1.png"),
+				"Crab0": preload("res://Assets/Sprites/GUI/Augment_Crab0.png"), "Crab1": preload("res://Assets/Sprites/GUI/Augment_Crab1.png"),
+				"General0": preload("res://Assets/Sprites/GUI/Augment_General0.png"), "General1": preload("res://Assets/Sprites/GUI/Augment_General1.png"),
+				"General2":  preload("res://Assets/Sprites/GUI/Augment_General2.png"), "General3": preload("res://Assets/Sprites/GUI/Augment_General3.png"),
+				"Add_blood": preload("res://Assets/Sprites/GUI/GUI_Blood_Mini.png")
+				}
 
 const AUGMENT_TEXT = {"Red0":"All red apples are invulnerable to knockback", 
 					"Red1":"Red apples explode upon death dealing 50% of their maximum hp",
@@ -52,7 +61,7 @@ const AUGMENT_TEXT = {"Red0":"All red apples are invulnerable to knockback",
 					"General1":"All apples heal 10% of their maximum hp upon killing someone",
 					"General2":"All apples gain 2 power",
 					"General3":"All apples gain up to 50% attack speed as hp decreases (maximum at 20% hp)",
-					"Add_blood":"Gain 40 blood",
+					"Add_blood":"Gain 30 blood",
 					}
 
 const UNIT_TEXT = {"Apple": "[color=teal]Attack[/color]: Deal damage equal to [color=#b13e53]POWER[/color]\n[color=teal]Range[/color]: Close",
@@ -63,8 +72,8 @@ const UNIT_TEXT = {"Apple": "[color=teal]Attack[/color]: Deal damage equal to [c
 				"Big Pink": "[color=teal]Attack[/color]: Deal damage and knockback\n[color=teal]Range[/color]: Mid\n[color=teal]Cast[/color]: Swipe front area for 2*[color=#b13e53]POWER[/color]",
 				"Golden": "[color=teal]Attack[/color]: Deal damage equal to [color=#b13e53]POWER[/color]\n[color=teal]Range[/color]: Far\n[color=teal]Cast[/color]: Fire a juice lob that hits an area for [color=#b13e53]POWER[/color]",
 				"Golden Malicious": "[color=teal]Attack[/color]: Deal damage equal to [color=#b13e53]POWER[/color]\n[color=teal]Range[/color]: Far\n[color=teal]Cast[/color]: Fire a juice(?) lob that hits an area for [color=#b13e53]POWER[/color]",
-				"Crabapple": "[color=teal]Attack[/color]: Deal damage equal to [color=#b13e53]POWER[/color]\n[color=teal]Range[/color]: Close\n[color=teal]Special[/color]: Runs until hitting an enemy or the right stage end",
-				"Dogapple": "[color=teal]Attack[/color]: Deal damage equal to [color=#b13e53]POWER[/color]\n[color=teal]Range[/color]: Close"
+				"Crabapple": "[color=teal]Attack[/color]: Deal damage equal to [color=#b13e53]POWER[/color]\n[color=teal]Range[/color]: Close\n[color=teal]Special[/color]: Moves faster. Runs until hitting an enemy or the right stage end",
+				"Dogapple": "[color=teal]Attack[/color]: Deal damage equal to [color=#b13e53]POWER[/color]\n[color=teal]Range[/color]: Close\n[color=teal]Special[/color]: Moves faster. Runs until hitting an enemy or the right stage end"
 				}
 
 const ENEMY_TEXT = {"Axeman": "[color=teal]Attack[/color]: Deal damage equal to [color=#b13e53]POWER[/color]\n[color=teal]Range[/color]: Close",
@@ -73,7 +82,7 @@ const ENEMY_TEXT = {"Axeman": "[color=teal]Attack[/color]: Deal damage equal to 
 					"Molotovman": "[color=teal]Attack[/color]: Throw a molotov that deals [color=#b13e53]POWER[/color] damage in an area\n [color=teal]Range[/color]: Far",
 					"Rifleman": "[color=teal]Attack[/color]: Deal damage and knockback\n[color=teal]Range[/color]: Far",
 					"Rifleman Horseback": "[color=teal]Attack[/color]: Deal damage equal to [color=#b13e53]POWER[/color]\n[color=teal]Range[/color]: Far",
-					"Tractor": "[color=teal]Attack[/color]: Deal damage and knockback in an area\n[color=teal]Range[/color]: Close"
+					"Tractor": "[color=teal]Attack[/color]: Deal damage and knockback in an area\n[color=teal]Range[/color]: Close\n[color=teal]Special[/color]: Immune to knockback"
 					}
 
 # timelines. boolean for animation or not

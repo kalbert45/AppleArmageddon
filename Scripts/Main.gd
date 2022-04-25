@@ -14,6 +14,7 @@ var camera_control = preload("res://Scenes/Other/Camera_Control.tscn")
 var money_control = preload("res://Scenes/Other/Money_Control.tscn")
 var game_menu = preload("res://Scenes/Other/Game_Menu.tscn")
 var title_screen = preload("res://Scenes/Other/Title_Screen.tscn")
+var end_screen = preload("res://Scenes/Other/End_Screen.tscn")
 var map_scene = preload("res://Scenes/Other/Map.tscn")
 var tutorial_scene = preload("res://Scenes/Other/Tutorial.tscn")
 
@@ -29,7 +30,7 @@ var tutorial
 
 func reset():
 	Global.units = []
-	Global.money = 10
+	Global.money = 15
 	
 	Global.paths = []
 	Global.current_point = null
@@ -38,6 +39,9 @@ func reset():
 
 	for augment in Global.augments.keys():
 		Global.augments[augment] = false
+	
+	if is_instance_valid(money_HUD):
+		money_HUD.clear_augments()
 
 func _ready():
 	
@@ -97,12 +101,19 @@ func _on_game_menu_quit_to_title():
 func _on_camera_control_next_stage():
 	map = map_scene.instance()
 
-	if stage.has_method("save_data"):
-		stage.save_data()
+	#if stage.has_method("save_data"):
+	#	stage.save_data()
 	
 	transition_handler.transition([stage, camera_UI], [[world, map]])
 	
+	money_HUD.update_augments()
+	
 	map.connect("begin_stage", self, "_on_map_begin_stage")
+	
+func _on_game_end():
+	var end = end_screen.instance()
+	
+	transition_handler.transition([stage, camera_UI], [[world, end]])
 	
 func _on_map_begin_stage(difficulty, type):
 	match type:
@@ -155,7 +166,7 @@ func _on_map_begin_stage(difficulty, type):
 			stage.connect("stage_cleared", self, "_on_stage_cleared")
 			stage.connect("defeat", self, "_on_stage_defeat")
 		#	stage.connect("update_money", self, "_on_update_money")
-			camera_UI.connect("next_stage", self, "_on_camera_control_next_stage")
+			camera_UI.connect("next_stage", self, "_on_game_end")
 			camera_UI.connect("disable_shop", self, "_on_disable_shop")
 	
 func _on_retry():
