@@ -7,6 +7,7 @@ onready var color_rect = $ColorRect
 onready var resume_button = $VBoxContainer/Resume_Button
 onready var controls_button = $VBoxContainer/Controls_Button
 onready var options_button = $VBoxContainer/Options_Button
+onready var retry_button = $VBoxContainer/Retry_Button
 onready var quit_title_button = $VBoxContainer/Quit_Title_Button
 onready var quit_game_button = $VBoxContainer/Quit_Game_Button
 onready var menu_button = $Menu_Button
@@ -46,6 +47,7 @@ func popup():
 	resume_button.visible = true
 	controls_button.visible = true
 	options_button.visible = true
+	retry_button.visible = true
 	quit_title_button.visible = true
 	quit_game_button.visible = true
 	
@@ -54,12 +56,14 @@ func popup():
 	resume_button.mouse_filter = resume_button.MOUSE_FILTER_STOP
 	controls_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	options_button.mouse_filter = options_button.MOUSE_FILTER_STOP
+	retry_button.mouse_filter = retry_button.MOUSE_FILTER_STOP
 	quit_title_button.mouse_filter = quit_title_button.MOUSE_FILTER_STOP
 	quit_game_button.mouse_filter = quit_game_button.MOUSE_FILTER_STOP
 	
 	resume_button.disabled = false
 	controls_button.disabled = false
 	options_button.disabled = false
+	retry_button.disabled = false
 	quit_title_button.disabled = false
 	quit_game_button.disabled = false
 	
@@ -79,6 +83,7 @@ func resume():
 	resume_button.visible = false
 	controls_button.visible = false
 	options_button.visible = false
+	retry_button.visible = false
 	quit_title_button.visible = false
 	quit_game_button.visible = false
 	
@@ -87,12 +92,14 @@ func resume():
 	resume_button.mouse_filter = resume_button.MOUSE_FILTER_IGNORE
 	controls_button.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	options_button.mouse_filter = options_button.MOUSE_FILTER_IGNORE
+	retry_button.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	quit_title_button.mouse_filter = quit_title_button.MOUSE_FILTER_IGNORE
 	quit_game_button.mouse_filter = quit_game_button.MOUSE_FILTER_IGNORE
 	
 	resume_button.disabled = true
 	controls_button.disabled = true
 	options_button.disabled = true
+	retry_button.disabled = true
 	quit_title_button.disabled = true
 	quit_game_button.disabled = true
 
@@ -106,6 +113,7 @@ func _on_Controls_Button_pressed():
 	resume_button.visible = false
 	controls_button.visible = false
 	options_button.visible = false
+	retry_button.visible = false
 	quit_title_button.visible = false
 	quit_game_button.visible = false
 	
@@ -113,12 +121,14 @@ func _on_Controls_Button_pressed():
 	resume_button.mouse_filter = resume_button.MOUSE_FILTER_IGNORE
 	controls_button.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	options_button.mouse_filter = options_button.MOUSE_FILTER_IGNORE
+	retry_button.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	quit_title_button.mouse_filter = quit_title_button.MOUSE_FILTER_IGNORE
 	quit_game_button.mouse_filter = quit_game_button.MOUSE_FILTER_IGNORE
 	
 	resume_button.disabled = true
 	controls_button.disabled = true
 	options_button.disabled = true
+	retry_button.disabled = true
 	quit_title_button.disabled = true
 	quit_game_button.disabled = true
 	
@@ -128,6 +138,7 @@ func _on_Options_Button_pressed():
 	resume_button.visible = false
 	controls_button.visible = false
 	options_button.visible = false
+	retry_button.visible = false
 	quit_title_button.visible = false
 	quit_game_button.visible = false
 	
@@ -135,12 +146,14 @@ func _on_Options_Button_pressed():
 	resume_button.mouse_filter = resume_button.MOUSE_FILTER_IGNORE
 	controls_button.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	options_button.mouse_filter = options_button.MOUSE_FILTER_IGNORE
+	retry_button.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	quit_title_button.mouse_filter = quit_title_button.MOUSE_FILTER_IGNORE
 	quit_game_button.mouse_filter = quit_game_button.MOUSE_FILTER_IGNORE
 	
 	resume_button.disabled = true
 	controls_button.disabled = true
 	options_button.disabled = true
+	retry_button.disabled = true
 	quit_title_button.disabled = true
 	quit_game_button.disabled = true
 
@@ -161,6 +174,7 @@ func _on_Back_Button_pressed():
 	resume_button.visible = true
 	controls_button.visible = true
 	options_button.visible = true
+	retry_button.visible = true
 	quit_title_button.visible = true
 	quit_game_button.visible = true
 	
@@ -168,12 +182,14 @@ func _on_Back_Button_pressed():
 	resume_button.mouse_filter = resume_button.MOUSE_FILTER_STOP
 	controls_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	options_button.mouse_filter = options_button.MOUSE_FILTER_STOP
+	retry_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	quit_title_button.mouse_filter = quit_title_button.MOUSE_FILTER_STOP
 	quit_game_button.mouse_filter = quit_game_button.MOUSE_FILTER_STOP
 	
 	resume_button.disabled = false
 	controls_button.disabled = false
 	options_button.disabled = false
+	retry_button.disabled = false
 	quit_title_button.disabled = false
 	quit_game_button.disabled = false
 
@@ -184,4 +200,8 @@ func defeat():
 	add_child(defeat_screen)
 	
 func _on_retry():
+	emit_signal("retry")
+
+
+func _on_Retry_Button_pressed():
 	emit_signal("retry")

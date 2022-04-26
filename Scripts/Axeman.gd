@@ -55,7 +55,7 @@ var mouse_select = false
 var label = "Axeman"
 var description = "Chump: Punches apples on sight."
 
-const BLOOD = 2
+const BLOOD = 1
 export var dialog_label = 0
 export var flip_h = false
 #------------------------------------------------------

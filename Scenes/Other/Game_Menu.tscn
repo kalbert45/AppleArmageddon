@@ -39,9 +39,9 @@ __meta__ = {
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 margin_left = 282.0
-margin_top = 120.0
+margin_top = 100.0
 margin_right = 358.0
-margin_bottom = 251.0
+margin_bottom = 274.0
 custom_constants/separation = 12
 __meta__ = {
 "_edit_use_anchors_": false
@@ -85,10 +85,20 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Quit_Title_Button" type="Button" parent="VBoxContainer"]
+[node name="Retry_Button" type="Button" parent="VBoxContainer"]
 margin_top = 93.0
 margin_right = 76.0
 margin_bottom = 112.0
+focus_mode = 0
+theme = ExtResource( 5 )
+enabled_focus_mode = 0
+text = "Retry"
+flat = true
+
+[node name="Quit_Title_Button" type="Button" parent="VBoxContainer"]
+margin_top = 124.0
+margin_right = 76.0
+margin_bottom = 143.0
 focus_mode = 0
 theme = ExtResource( 5 )
 enabled_focus_mode = 0
@@ -99,9 +109,9 @@ __meta__ = {
 }
 
 [node name="Quit_Game_Button" type="Button" parent="VBoxContainer"]
-margin_top = 124.0
+margin_top = 155.0
 margin_right = 76.0
-margin_bottom = 143.0
+margin_bottom = 174.0
 focus_mode = 0
 theme = ExtResource( 5 )
 enabled_focus_mode = 0
@@ -120,5 +130,6 @@ visible = false
 [connection signal="pressed" from="VBoxContainer/Resume_Button" to="." method="_on_Resume_Button_pressed"]
 [connection signal="pressed" from="VBoxContainer/Controls_Button" to="." method="_on_Controls_Button_pressed"]
 [connection signal="pressed" from="VBoxContainer/Options_Button" to="." method="_on_Options_Button_pressed"]
+[connection signal="pressed" from="VBoxContainer/Retry_Button" to="." method="_on_Retry_Button_pressed"]
 [connection signal="pressed" from="VBoxContainer/Quit_Title_Button" to="." method="_on_Quit_Title_Button_pressed"]
 [connection signal="pressed" from="VBoxContainer/Quit_Game_Button" to="." method="_on_Quit_Game_Button_pressed"]

@@ -28,7 +28,7 @@ func _ready():
 		current_point = Global.current_point
 		current_path = Global.current_path
 		map_stages = Global.map_stages
-		update()
+		button_update()
 		
 	camera.position.x = current_point.x
 	
@@ -40,7 +40,7 @@ func _process(delta):
 		camera.position.x += 200*delta
 	elif Input.is_action_pressed("ui_left"):
 		camera.position.x -= 200*delta
-	camera.position.x = clamp(camera.position.x, 320, 960)
+	camera.position.x = clamp(camera.position.x, 320, 640)
 
 func _on_Next_Stage_Button_pressed(point, difficulty, type):
 	if apple.animation == "Walk":
@@ -83,9 +83,10 @@ func generate():
 	current_point= paths[0][0]
 	current_path.append(current_point)
 
+	button_update()
 	update()
-				
-func _draw():
+	
+func button_update():
 	# if map already exists, add all buttons
 	for index in map_stages:
 		var button_properties = map_stages[index]
@@ -98,7 +99,7 @@ func _draw():
 		add_child(map_button)
 		map_button.point = index
 		buttons[index] = map_button
-	
+		
 	# draw entire map in grey, add disabled buttons if necessary
 	for path in paths:
 		for i in range(path.size()):
@@ -107,11 +108,11 @@ func _draw():
 				# set difficulty of map stage based on progress in path
 				map_button.difficulty = int(floor(i * (Global.MAX_DIFFICULTY + 1) / path.size()))
 				# randomly make some points mystery stages and augment stages
-				if i % 2 == 1:
-					var rand = randi() % 2
-					if rand == 0:
+				if i % 3 == 2:
+					var rand = randi() % 3
+					if rand != 0:
 						map_button.type = "Question"
-				if i % 5 == 4:
+				if i % 5 == 3:
 					var rand = randi() % 2
 					if rand == 0:
 						map_button.type = "Augment"
@@ -125,26 +126,62 @@ func _draw():
 				map_button.point = path[i]
 				buttons[path[i]] = map_button
 				map_stages[path[i]] = [map_button.difficulty, map_button.type]
+				
+# draw available paths in white, enable appropriate buttons
+	for path in paths:
+		if current_point in path:
+			var path_list = [path]
+			var index = null
+			for i in range(path.size()):
+				if path[i] == current_point:
+					index = i
+				if index != null:
+					for possible_path in path_list:
+						buttons[possible_path[i]].possible()
+					#make sure merged paths are included
+					for other_path in paths:
+						if not other_path in path_list:
+							if path[i] in other_path:
+								path_list.append(other_path)
+					
+			#enable buttons
+			var button = buttons[path[index+1]]
+			button.undisable()
+			
+	for i in range(current_path.size()):
+		buttons[current_path[i]].clear()
+				
+func _draw():
+
+	
+	# draw entire map in grey, add disabled buttons if necessary
+	for path in paths:
+		for i in range(path.size()):
 			if i != 0:
 				draw_line(path[i-1], path[i], Color(0.5,0.5,0.5,1), 2)
 				
 	# draw available paths in white, enable appropriate buttons
 	for path in paths:
 		if current_point in path:
-			var index = 0
+			var index = null
 			for i in range(path.size()):
 				if path[i] == current_point:
 					index = i
-				buttons[path[i]].possible()
+					break
+					
 			#available paths
 			draw_line(path[index], path[index+1], Color("859e72"), 2)
-			#enable buttons
-			var button = buttons[path[index+1]]
-			button.undisable()
+
+
+	#fill out possible paths with nested loop
+	#for path in paths:
+	#	if current_point in path:
+	#		for point in path:
+	#			if buttons[point].possible:
+					
 
 	# draw path thus far
 	for i in range(current_path.size()):
-		buttons[current_path[i]].clear()
 		if i > 0:
 			draw_line(current_path[i-1], current_path[i], Color("b06a76"), 2)
 

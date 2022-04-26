@@ -3,6 +3,7 @@ extends Node2D
 signal pressed(point, difficulty, type)
 
 var disabled = true
+var possible = false
 var point = Vector2.ZERO
 
 var difficulty = 0
@@ -35,6 +36,7 @@ func clear():
 	button.texture_disabled = load("res://Assets/Sprites/GUI/stage_cleared.png")
 	
 func possible():
+	possible = true
 	match type:
 		"Normal":
 			button.texture_disabled = load("res://Assets/Sprites/GUI/map_button_possible.png")

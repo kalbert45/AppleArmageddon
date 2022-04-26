@@ -10,9 +10,10 @@ config_version=4
 
 [application]
 
-config/name="FruitAutoBattler"
+config/name="AppleArmageddon"
 run/main_scene="res://Scenes/Other/Main.tscn"
-config/icon="res://icon.png"
+config/icon="res://Assets/Sprites/apple2.png"
+config/windows_native_icon="res://Assets/Sprites/apple2.ico"
 
 [autoload]
 
@@ -98,6 +99,10 @@ upgrade={
 2d_physics/layer_1="Units"
 2d_physics/layer_2="Enemies"
 2d_physics/layer_3="World"
+
+[locale]
+
+locale_filter=[ 0, [  ] ]
 
 [physics]
 

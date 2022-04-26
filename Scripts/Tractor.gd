@@ -56,7 +56,7 @@ var mouse_select = false
 var label = "Tractor"
 #var description = "Tractor: Punches apples on sight."
 
-const BLOOD = 4
+const BLOOD = 3
 #------------------------------------------------------
 
 onready var attack_range = $Attack_Range

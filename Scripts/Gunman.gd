@@ -55,7 +55,7 @@ var mouse_select = false
 var label = "Gunman"
 var description = "Gunman: Shoots apples on sight."
 
-const BLOOD = 2
+const BLOOD = 1
 var dialog_label = -1
 #------------------------------------------------------
 

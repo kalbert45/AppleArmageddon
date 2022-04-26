@@ -25,6 +25,7 @@ var camera_UI
 var money_HUD
 var menu
 var title
+var end
 var map
 var tutorial
 
@@ -94,7 +95,7 @@ func _on_game_menu_quit_to_title():
 	if is_instance_valid(stage):
 		stage.save_data()
 	
-	transition_handler.transition([stage, map, unit_UI, camera_UI, money_HUD, menu], [[HUD, title]])
+	transition_handler.transition([stage, map, unit_UI, camera_UI, money_HUD, menu, end], [[HUD, title]])
 	
 	title.connect("start_game", self, "_on_Title_Screen_start_game")
 	
@@ -106,12 +107,13 @@ func _on_camera_control_next_stage():
 	
 	transition_handler.transition([stage, camera_UI], [[world, map]])
 	
+	#map.button_update()
 	money_HUD.update_augments()
 	
 	map.connect("begin_stage", self, "_on_map_begin_stage")
 	
 func _on_game_end():
-	var end = end_screen.instance()
+	end = end_screen.instance()
 	
 	transition_handler.transition([stage, camera_UI], [[world, end]])
 	
@@ -174,9 +176,11 @@ func _on_retry():
 
 	var new_stage = scene1.instance()
 	var new_camera_UI = camera_control.instance()
+	var new_money_HUD = money_control.instance()
 	var new_menu = game_menu.instance()
 	
-	transition_handler.transition([stage, camera_UI, menu], [[world, new_stage], [HUD, new_camera_UI],[HUD, new_menu]])
+	transition_handler.transition([stage, camera_UI, menu, money_HUD], [[world, new_stage], [HUD, new_camera_UI],[HUD, new_menu],[HUD, new_money_HUD]])
+	money_HUD = new_money_HUD
 	stage = new_stage
 	camera_UI = new_camera_UI
 	menu = new_menu

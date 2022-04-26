@@ -55,7 +55,7 @@ var mouse_select = false
 var label = "Grunt"
 var description = "Chump: Punches apples on sight."
 
-const BLOOD = 2
+const BLOOD = 1
 #------------------------------------------------------
 
 onready var attack_range = $Attack_Range

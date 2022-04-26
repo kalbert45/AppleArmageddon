@@ -60,8 +60,8 @@ func generate():
 		if id_path.size() == 0:
 			break
 			
-
-		paths.append(astar.get_point_path(0,1))
+		if id_path.size() == PLANE_WIDTH+1:
+			paths.append(astar.get_point_path(0,1))
 		
 		# step 4: nodes dropout for multiple paths
 		#for _j in range(randi() % 2 + 1):
@@ -69,6 +69,8 @@ func generate():
 			
 		var id = id_path[index]
 		astar.set_point_disabled(id)
+		
+			
 			
 	return paths
 

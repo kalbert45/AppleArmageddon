@@ -56,7 +56,7 @@ var mouse_select = false
 var label = "Rifleman Horseback"
 #var description = "Shoots heavy bullets that knock apples backwards a short distance."
 
-const BLOOD = 4
+const BLOOD = 3
 #------------------------------------------------------
 
 onready var attack_range = $Attack_Range
